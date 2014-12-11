@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamLauncher.WpfApplication", "StreamLauncher.WpfApplication\StreamLauncher.WpfApplication.csproj", "{E6CADDF4-B09A-4544-9883-9EF8B7E60A9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A7A3E0E2-A68A-4B41-9310-9A20DA13FD83}"
@@ -9,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A7A3E0
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamLauncher", "StreamLauncher.Providers\StreamLauncher.csproj", "{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +24,10 @@ Global
 		{E6CADDF4-B09A-4544-9883-9EF8B7E60A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6CADDF4-B09A-4544-9883-9EF8B7E60A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6CADDF4-B09A-4544-9883-9EF8B7E60A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
