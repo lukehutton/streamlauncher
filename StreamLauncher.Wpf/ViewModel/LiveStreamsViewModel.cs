@@ -4,7 +4,7 @@ using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 
-namespace StreamLauncher.WpfApplication.ViewModel
+namespace StreamLauncher.Wpf.ViewModel
 {
     public class LiveStreamsViewModel : ViewModelBase
     {

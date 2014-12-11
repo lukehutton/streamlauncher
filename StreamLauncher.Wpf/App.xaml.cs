@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace StreamLauncher.WpfApplication
+namespace StreamLauncher.Wpf
 {
     /// <summary>
     /// Interaction logic for App.xaml
