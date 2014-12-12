@@ -3,11 +3,11 @@
 namespace StreamLauncher.Wpf.Views
 {
     /// <summary>
-    /// Interaction logic for LiveStreams.xaml
+    /// Interaction logic for StreamsView.xaml
     /// </summary>
-    public partial class LiveStreams : UserControl
+    public partial class StreamsView : UserControl
     {
-        public LiveStreams()
+        public StreamsView()
         {
             InitializeComponent();
         }

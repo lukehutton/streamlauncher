@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using StreamLauncher.Models;
 
 namespace StreamLauncher.Repositories
 {
     public interface IHockeyStreamRepository
     {
-        IEnumerable<HockeyStream> GetLiveStreams();
+        Task<IEnumerable<HockeyStream>> GetLiveStreams();
     }
 }

@@ -12,8 +12,10 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -30,18 +32,19 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
+            if (ViewModelBase.IsInDesignModeStatic)
+            {
+                // Create design time view services and models
+                SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
+            }
+            else
+            {
+                // Create run time view services and models
+                SimpleIoc.Default.Register<IHockeyStreamRepository, HockeyStreamRepository>();
+            }
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<StreamsViewModel>();
         }
 
         public MainViewModel Main
@@ -49,6 +52,13 @@ namespace StreamLauncher.Wpf.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+        public StreamsViewModel Streams
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<StreamsViewModel>();
             }
         }
         
