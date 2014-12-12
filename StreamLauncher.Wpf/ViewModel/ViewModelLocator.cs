@@ -15,6 +15,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using StreamLauncher.Filters;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -36,11 +37,13 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 // Create design time view services and models
                 SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
+                SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
             }
             else
             {
                 // Create run time view services and models
                 SimpleIoc.Default.Register<IHockeyStreamRepository, HockeyStreamRepository>();
+                SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

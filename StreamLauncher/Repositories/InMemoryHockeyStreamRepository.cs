@@ -21,10 +21,15 @@ namespace StreamLauncher.Repositories
         {
             return new HockeyStream
             {
-                Id = index,
+                HomeStreamId = index,
+                AwayStreamId = index,
                 EventType = EventType.Nhl,
                 HomeTeam = "Home Team {0}".Fmt(index),
-                AwayTeam = "Away Team {0} Canucks".Fmt(index)
+                AwayTeam = "Away Team {0}".Fmt(index),
+                Score = "1 - 0 Home Team {0}".Fmt(index),
+                StartTime = "7:30 PM PST",
+                Period = "1",
+                IsPlaying = true
             };
         }
     }

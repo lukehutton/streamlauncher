@@ -38,7 +38,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }            
         }
 
-        public RelayCommand RefreshCommand
+        public RelayCommand GetLiveStreamsCommand
         {
             get
             {
