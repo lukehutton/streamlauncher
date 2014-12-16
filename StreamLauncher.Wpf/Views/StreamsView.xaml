@@ -2,10 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"                           
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:StreamLauncher.Wpf.Infrastructure.Converters"
              mc:Ignorable="d" 
              DataContext="{Binding Path=Streams, Source={StaticResource Locator}}"
              d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">
+    <UserControl.Resources>
+        <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
+        <converters:ConvertTextToImage x:Key="ConvertTextToImage" />
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0*"/>
@@ -21,7 +26,24 @@
         <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="314,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
         <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="471,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
         <Image Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="40" Margin="0,481,0,-1" Grid.RowSpan="2" VerticalAlignment="Top" Width="40" Source="..\Images\hs40x40.png" RenderTransformOrigin="0.75,0.575"/>
-        <Button Grid.ColumnSpan="2" Content="Refresh" HorizontalAlignment="Left" Margin="810,14,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="75"/>
-        <DataGrid Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,52,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="429" Width="885" ItemsSource="{Binding Streams}" IsReadOnly="True" />
+        <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875"/>
+        <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="429" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Height="50" Width="90" Source="{Binding HomeImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding HomeTeam}" />                        
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

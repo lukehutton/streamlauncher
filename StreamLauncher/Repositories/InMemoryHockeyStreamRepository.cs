@@ -24,11 +24,13 @@ namespace StreamLauncher.Repositories
                 HomeStreamId = index,
                 AwayStreamId = index,
                 EventType = EventType.Nhl,
+                HomeImagePath = @"../Images/Teams/Vancouver.png",                
                 HomeTeam = "Home Team {0}".Fmt(index),
                 AwayTeam = "Away Team {0}".Fmt(index),
-                Score = "1 - 0 Home Team {0}".Fmt(index),
+                AwayImagePath = @"../Images/Teams/Toronto.png",
+                Score = "1 - 0",
                 StartTime = "7:30 PM PST",
-                Period = "1",
+                Period = "1",                
                 IsPlaying = true
             };
         }
