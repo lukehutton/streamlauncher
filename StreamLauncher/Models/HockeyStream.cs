@@ -12,7 +12,7 @@
         public string Score { get; set; }
         public string StartTime { get; set; }
         public string Period { get; set; }
-        public bool IsPlaying { get; set; }                
+        public bool IsPlaying { get; set; }        
     }
 
     public enum EventType

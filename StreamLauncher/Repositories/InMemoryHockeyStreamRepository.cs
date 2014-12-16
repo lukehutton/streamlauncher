@@ -31,7 +31,7 @@ namespace StreamLauncher.Repositories
                 Score = "1 - 0",
                 StartTime = "7:30 PM PST",
                 Period = "1",                
-                IsPlaying = true
+                IsPlaying = true                
             };
         }
     }

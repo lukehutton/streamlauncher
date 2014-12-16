@@ -8,8 +8,14 @@
              DataContext="{Binding Path=Streams, Source={StaticResource Locator}}"
              d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">
     <UserControl.Resources>
-        <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
+        <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />        
         <converters:ConvertTextToImage x:Key="ConvertTextToImage" />
+        <DataTemplate x:Key="HomeFeedButton">
+            <Image Source="../Images/Buttons/homefeed.png" />
+        </DataTemplate>
+        <DataTemplate x:Key="AwayFeedButton">
+            <Image Source="../Images/Buttons/awayfeed.png" />
+        </DataTemplate>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,28 +28,76 @@
         </Grid.ColumnDefinitions>
         <ComboBox HorizontalAlignment="Left" Margin="0,10,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2"/>
         <ComboBox HorizontalAlignment="Left" Margin="159,10,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2"/>
-        <Label Grid.ColumnSpan="2" Content="Powered by HockeyStreams.com" HorizontalAlignment="Left" Margin="45,494.04,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleLabel}" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="15.96" Width="172.727"/>
         <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="314,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
         <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="471,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
-        <Image Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="40" Margin="0,481,0,-1" Grid.RowSpan="2" VerticalAlignment="Top" Width="40" Source="..\Images\hs40x40.png" RenderTransformOrigin="0.75,0.575"/>
         <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875"/>
-        <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="429" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="">
+                <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Height="50" Width="90" Source="{Binding HomeImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                            <Image Stretch="None" Source="{Binding HomeImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Home">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label MinWidth="140" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />             
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Away">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label MinWidth="140" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding HomeTeam}" />                        
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
+                            <Image Source="{Binding AwayImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Start Time">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding StartTime}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Period">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Period}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Score">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button ContentTemplate="{StaticResource HomeFeedButton}" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button ContentTemplate="{StaticResource AwayFeedButton}" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <Image Grid.ColumnSpan="2" Margin="635,467,0,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
     </Grid>
 </UserControl>

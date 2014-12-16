@@ -165,6 +165,15 @@
   <ItemGroup>
     <Resource Include="Images\Teams\Vancouver.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hockeystreamslogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\homefeed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\awayfeed.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
