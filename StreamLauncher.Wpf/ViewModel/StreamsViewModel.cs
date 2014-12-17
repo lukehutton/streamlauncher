@@ -35,7 +35,19 @@ namespace StreamLauncher.Wpf.ViewModel
             GetLiveStreams();
             GetLocations();
 
-            SelectedLocation = "Location 2";
+            SetPreferredLocation();
+        }
+
+        private void SetPreferredLocation()
+        {
+            if (IsInDesignModeStatic)
+            {
+                SelectedLocation = "Location 2";
+            }
+            else
+            {
+                SelectedLocation = "North America - West"; // todo read from persisted settings
+            }
         }
 
         public string SelectedLocation

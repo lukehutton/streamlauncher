@@ -1,1 +1,3 @@
 * resize main window and stretch all contents (file size bigger etc.?)
+* settingsrepo - save preference of location, sd or hd, vlc install location, favourite teams, timezone
+* don't commit api key, add to .gitignore config file
