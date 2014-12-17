@@ -44,7 +44,10 @@
     <Compile Include="Filters\HockeyStreamFilter.cs" />
     <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />
     <Compile Include="Filters\IHockeyStreamFilter.cs" />
+    <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
+    <Compile Include="Models\StreamLocation.cs" />
+    <Compile Include="Models\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\HockeyStreamRepository.cs" />
     <Compile Include="Repositories\InMemoryHockeyStreamRepository.cs" />

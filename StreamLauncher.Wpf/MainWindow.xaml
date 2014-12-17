@@ -11,6 +11,5 @@
 	</Window.Background>
     <Grid HorizontalAlignment="Left" Height="540" Margin="10,10,0,0" VerticalAlignment="Top" Width="890">
 		<Views:StreamsView HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="885"/>
-		<ToggleButton Content="Scores Off" HorizontalAlignment="Left" Margin="621,10,0,0" VerticalAlignment="Top"/>
 	</Grid>
 </Window>

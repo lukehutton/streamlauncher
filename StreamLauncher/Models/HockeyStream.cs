@@ -14,12 +14,4 @@
         public string Period { get; set; }
         public bool IsPlaying { get; set; }        
     }
-
-    public enum EventType
-    {
-        AHL,
-        NHL,
-        OHL,
-        WHL
-    }
 }

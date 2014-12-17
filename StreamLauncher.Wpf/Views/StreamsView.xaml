@@ -26,10 +26,19 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ComboBox HorizontalAlignment="Left" Margin="0,10,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2"/>
-        <ComboBox HorizontalAlignment="Left" Margin="159,10,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2"/>
-        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="314,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
-        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="471,10,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Height="21.96"/>
+        <ComboBox HorizontalAlignment="Left" Margin="103.46,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" SelectedIndex="0" FontSize="13.333" FontWeight="Bold">
+        	<ListBoxItem Content="NHL"/>
+        	<ListBoxItem/>
+        </ComboBox>
+        <ComboBox HorizontalAlignment="Left" Margin="367.433,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" SelectedIndex="0" FontSize="13.333" FontWeight="Bold">
+        	<ListBoxItem Content="Live"/>
+        	<ListBoxItem Content="On-Demand"/>
+        </ComboBox>
+        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="75.22,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="206" Height="21.96" FontSize="13.333" FontWeight="Bold"/>
+        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="367.433,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="215" Height="21.96" FontSize="13.333" FontWeight="Bold" SelectedIndex="0">
+        	<ListBoxItem Content="High Quality (3200Kbps HD)"/>
+        	<ListBoxItem Content="Low Quality (800Kbps SD)"/>
+        </ComboBox>
         <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875"/>
         <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
@@ -99,5 +108,16 @@
             </DataGrid.Columns>
         </DataGrid>
         <Image Grid.ColumnSpan="2" Margin="635,467,0,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
+        <Label Grid.ColumnSpan="2" Content="Location:" HorizontalAlignment="Left" Margin="0,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+        <Label Grid.ColumnSpan="2" Content="Quality:" HorizontalAlignment="Left" Margin="301.079,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+        <Label Grid.ColumnSpan="2" Content="Filter League:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
+        <Label Grid.ColumnSpan="2" Content="Filter Feed Type:" HorizontalAlignment="Left" Margin="243.999,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
+        <ComboBox HorizontalAlignment="Left" Margin="590.07,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" FontFamily="Segoe UI" FontSize="13.333" FontWeight="Bold" SelectedIndex="0" >
+        	<ListBoxItem Content="All"/>
+        	<ListBoxItem Content="In Progress..."/>
+        	<ListBoxItem Content="Not Started Yet"/>
+        </ComboBox>
+        <Label Grid.ColumnSpan="2" Content="Filter Active:" HorizontalAlignment="Left" Margin="492.433,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
+        <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="735,16.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="True"/>
     </Grid>
 </UserControl>
