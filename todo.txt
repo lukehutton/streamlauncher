@@ -1,0 +1,1 @@
+* resize main window and stretch all contents (file size bigger etc.?)
