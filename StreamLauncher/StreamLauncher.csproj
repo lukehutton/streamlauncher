@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filters\ActiveFilterSpecification.cs" />
     <Compile Include="Filters\EventTypeFilterSpecification.cs" />
     <Compile Include="Filters\HockeyStreamFilter.cs" />
     <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />

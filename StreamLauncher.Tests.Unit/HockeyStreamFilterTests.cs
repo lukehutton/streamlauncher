@@ -24,11 +24,11 @@ namespace StreamLauncher.Tests.Unit
             {
                 return new List<HockeyStream>
                 {
-                    new HockeyStream {EventType = EventType.AHL},
-                    new HockeyStream {EventType = EventType.NHL},
-                    new HockeyStream {EventType = EventType.NHL},
-                    new HockeyStream {EventType = EventType.OHL},
-                    new HockeyStream {EventType = EventType.WHL}
+                    new HockeyStream {EventType = EventType.AHL, IsPlaying = true},
+                    new HockeyStream {EventType = EventType.NHL, IsPlaying = true},
+                    new HockeyStream {EventType = EventType.NHL, IsPlaying = false},
+                    new HockeyStream {EventType = EventType.OHL, IsPlaying = false},
+                    new HockeyStream {EventType = EventType.WHL, IsPlaying = true}
                 };
             }
         }
@@ -48,6 +48,24 @@ namespace StreamLauncher.Tests.Unit
             public void ItShouldFilterByGivenEventType()
             {
                 Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(2));
+            }
+        }
+
+        [TestFixture]
+        public class WhenFilterByActive : GivenAHockeyStreamFilter
+        {
+            private IEnumerable<HockeyStream> _filteredHockeyStreams;
+
+            [SetUp]
+            public void When()
+            {
+                _filteredHockeyStreams = HockeyStreamFilter.By(HockeyStreams, new ActiveFilterSpecification(true));
+            }
+
+            [Test]
+            public void ItShouldFilterByGivenEventType()
+            {
+                Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(3));
             }
         }
     }
