@@ -52,6 +52,9 @@
     <Compile Include="Repositories\HockeyStreamRepository.cs" />
     <Compile Include="Repositories\InMemoryHockeyStreamRepository.cs" />
     <Compile Include="Repositories\IHockeyStreamRepository.cs" />
+    <Compile Include="Repositories\IStreamLocationRepository.cs" />
+    <Compile Include="Repositories\InMemoryStreamLocationRepository.cs" />
+    <Compile Include="Repositories\StreamLocationRepository.cs" />
     <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup />

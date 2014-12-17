@@ -37,12 +37,14 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 // Create design time view services and models
                 SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
+                SimpleIoc.Default.Register<IStreamLocationRepository, InMemoryStreamLocationRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
             }
             else
             {
                 // Create run time view services and models
                 SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
+                SimpleIoc.Default.Register<IStreamLocationRepository, InMemoryStreamLocationRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
             }
 

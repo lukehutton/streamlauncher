@@ -34,7 +34,8 @@
         	<ListBoxItem Content="Live"/>
         	<ListBoxItem Content="On-Demand"/>
         </ComboBox>
-        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="75.22,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="206" Height="21.96" FontSize="13.333" FontWeight="Bold"/>
+        <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="75.22,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="206" Height="21.96" FontSize="13.333" FontWeight="Bold" ItemsSource="{Binding Path=Locations}" DisplayMemberPath="Location" SelectedValue="{Binding SelectedLocation}" SelectedValuePath="Location">
+        </ComboBox>
         <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="367.433,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="215" Height="21.96" FontSize="13.333" FontWeight="Bold" SelectedIndex="0">
         	<ListBoxItem Content="High Quality (3200Kbps HD)"/>
         	<ListBoxItem Content="Low Quality (800Kbps SD)"/>

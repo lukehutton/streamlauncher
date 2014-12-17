@@ -13,18 +13,39 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
 
+        private readonly IStreamLocationRepository _streamLocationRepository;
+
         private ObservableCollection<HockeyStream> _hockeyStreams;
+        private ObservableCollection<StreamLocation> _streamLocations;
 
         private RelayCommand _getLiveStreamsCommand;
+        private string _location;
 
-        public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository, IHockeyStreamFilter hockeyStreamFilter)
+        public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository, 
+            IHockeyStreamFilter hockeyStreamFilter,
+            IStreamLocationRepository streamLocationRepository)
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
+            _streamLocationRepository = streamLocationRepository;
 
             Streams = new ObservableCollection<HockeyStream>();
+            Locations = new ObservableCollection<StreamLocation>();
 
-            GetLiveStreams();            
+            GetLiveStreams();
+            GetLocations();
+
+            SelectedLocation = "Location 2";
+        }
+
+        public string SelectedLocation
+        {
+            get { return _location; }
+            set
+            {
+                _location = value;
+                RaisePropertyChanged();
+            }
         }
 
         private async Task GetLiveStreams()
@@ -35,6 +56,16 @@ namespace StreamLauncher.Wpf.ViewModel
             foreach (var hockeyStream in hockeyStreams)
             {
                 Streams.Add(hockeyStream);
+            }            
+        }
+        private void GetLocations()
+        {
+            Locations.Clear();
+            var locations = _streamLocationRepository.GetLocations();
+
+            foreach (var location in locations)
+            {
+                Locations.Add(location);
             }            
         }
 
@@ -57,7 +88,17 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _hockeyStreams = value;
-                RaisePropertyChanged("StreamsView");
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<StreamLocation> Locations
+        {
+            get { return _streamLocations; }
+            set
+            {
+                _streamLocations = value;
+                RaisePropertyChanged();
             }
         }
     }
