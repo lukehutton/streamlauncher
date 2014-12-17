@@ -23,7 +23,7 @@ namespace StreamLauncher.Repositories
             {
                 HomeStreamId = index,
                 AwayStreamId = index,
-                EventType = EventType.Nhl,
+                EventType = EventType.NHL,
                 HomeImagePath = @"../Images/Teams/Vancouver.png",                
                 HomeTeam = "Home Team {0}".Fmt(index),
                 AwayTeam = "Away Team {0}".Fmt(index),

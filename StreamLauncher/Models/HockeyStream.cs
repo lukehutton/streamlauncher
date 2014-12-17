@@ -17,6 +17,9 @@
 
     public enum EventType
     {
-        Nhl
+        AHL,
+        NHL,
+        OHL,
+        WHL
     }
 }
