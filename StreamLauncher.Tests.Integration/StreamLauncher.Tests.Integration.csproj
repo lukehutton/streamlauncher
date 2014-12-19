@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}</ProjectGuid>
+    <ProjectGuid>{3B1E110A-0C94-40BD-BD2D-EA9CF994D64C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StreamLauncher</RootNamespace>
-    <AssemblyName>StreamLauncher</AssemblyName>
+    <RootNamespace>StreamLauncher.Tests.Integration</RootNamespace>
+    <AssemblyName>StreamLauncher.Tests.Integration</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,34 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dtos\GetLiveDto.cs" />
-    <Compile Include="Filters\ActiveFilterSpecification.cs" />
-    <Compile Include="Filters\EventTypeFilterSpecification.cs" />
-    <Compile Include="Filters\HockeyStreamFilter.cs" />
-    <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />
-    <Compile Include="Filters\IHockeyStreamFilter.cs" />
-    <Compile Include="Dtos\GetLocationsDto.cs" />
-    <Compile Include="Models\EventType.cs" />
-    <Compile Include="Models\HockeyStream.cs" />
-    <Compile Include="Models\StreamLocation.cs" />
-    <Compile Include="Models\StreamType.cs" />
+    <Compile Include="AuthenticationTokenProvider.cs" />
+    <Compile Include="HockeyStreamRepositoryTests.cs" />
+    <Compile Include="StreamLocationRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\HockeyStreamApi.cs" />
-    <Compile Include="Providers\IApiKeyProvider.cs" />
-    <Compile Include="Providers\IHockeyStreamsApi.cs" />
-    <Compile Include="Providers\IHockeyStreamsApiRequiringApiKey.cs" />
-    <Compile Include="Providers\IHockeyStreamsApiRequiringToken.cs" />
-    <Compile Include="Providers\ITokenProvider.cs" />
-    <Compile Include="Repositories\HockeyStreamRepository.cs" />
-    <Compile Include="Repositories\InMemoryHockeyStreamRepository.cs" />
-    <Compile Include="Repositories\IHockeyStreamRepository.cs" />
-    <Compile Include="Repositories\IStreamLocationRepository.cs" />
-    <Compile Include="Repositories\InMemoryStreamLocationRepository.cs" />
-    <Compile Include="Repositories\StreamLocationRepository.cs" />
-    <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StreamLauncher\StreamLauncher.csproj">
+      <Project>{85FE8BD4-EBB0-47D4-B51F-9679D2ABC139}</Project>
+      <Name>StreamLauncher</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

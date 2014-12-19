@@ -18,12 +18,13 @@ namespace StreamLauncher.Repositories
 
         public IEnumerable<StreamLocation> GetLocations()
         {
+            // todo cache results
             var request = new RestRequest {Resource = "GetLocations"};
-            var locations = _hockeyStreamsApi.Execute<List<LocationDto>>(request);                        
+            var locations = _hockeyStreamsApi.Execute<List<GetLocationsDto>>(request);                        
             return MapLocationDtoToStreamLocations(locations);
         }
 
-        private IEnumerable<StreamLocation> MapLocationDtoToStreamLocations(List<LocationDto> locations)
+        private IEnumerable<StreamLocation> MapLocationDtoToStreamLocations(List<GetLocationsDto> locations)
         {
             return locations.Select(x => new StreamLocation { Location = x.Location }).ToList();
         }

@@ -46,7 +46,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             else
             {
-                SelectedLocation = "North America - West"; // todo read from persisted settings
+                SelectedLocation = "North America - West"; // todo read from persisted settings or set default
             }
         }
 
