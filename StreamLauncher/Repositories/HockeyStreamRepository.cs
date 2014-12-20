@@ -29,6 +29,7 @@ namespace StreamLauncher.Repositories
         // todo unit test and separate aggregation into another dependency and test?
         private IEnumerable<HockeyStream> MapLiveStreamsResponseDtoToHockeyStreams(GetLiveStreamsResponseDto responseDto)
         {
+            // todo need scores api to see time left and period number
             return new List<HockeyStream>()
             {
                 new HockeyStream()
