@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using RestSharp;
+using StreamLauncher.Dtos;
 using StreamLauncher.Models;
 using StreamLauncher.Providers;
 
@@ -15,9 +17,22 @@ namespace StreamLauncher.Repositories
             _hockeyStreamsApi = hockeyStreamsApi;
         }
 
-        public Task<IEnumerable<HockeyStream>> GetLiveStreams()
+        public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
         {
-            throw new NotImplementedException();
+            var request = new RestRequest { Resource = "GetLive", Method = Method.GET };
+            request.AddParameter("date", date.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
+            var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamsResponseDto>(request);
+            var hockeyStreams = MapLiveStreamsResponseDtoToHockeyStreams(responseDto);
+            return Task.FromResult(hockeyStreams);
+        }
+
+        // todo unit test and separate aggregation into another dependency and test?
+        private IEnumerable<HockeyStream> MapLiveStreamsResponseDtoToHockeyStreams(GetLiveStreamsResponseDto responseDto)
+        {
+            return new List<HockeyStream>()
+            {
+                new HockeyStream()
+            };
         }
     }
 }

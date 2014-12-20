@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StreamLauncher.Models;
 using StreamLauncher.Util;
@@ -7,7 +8,7 @@ namespace StreamLauncher.Repositories
 {
     public class InMemoryHockeyStreamRepository : IHockeyStreamRepository
     {        
-        public Task<IEnumerable<HockeyStream>> GetLiveStreams()
+        public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
         {
             var result = new List<HockeyStream>();
             for (var index = 0; index < 15; index++)

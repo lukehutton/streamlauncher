@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -63,7 +64,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private async Task GetLiveStreams()
         {
             Streams.Clear();
-            var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams();
+            var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
             
             foreach (var hockeyStream in hockeyStreams)
             {

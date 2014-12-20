@@ -63,7 +63,7 @@ namespace StreamLauncher.Tests.Unit
             }
 
             [Test]
-            public void ItShouldFilterByGivenEventType()
+            public void ItShouldFilterByGivenActiveState()
             {
                 Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(3));
             }

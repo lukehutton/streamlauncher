@@ -73,11 +73,11 @@ namespace StreamLauncher.Tests.Integration
             [SetUp]
             public void When()
             {
-                var task = HockeyStreamRepository.GetLiveStreams();
+                var task = HockeyStreamRepository.GetLiveStreams(DateTime.Now);
                 _streams = task.Result;
             }
 
-            [Test, Ignore("TODO")]
+            [Test]
             public void ItShouldReturnAtLeastOneStream()
             {
                 Assert.That(_streams.Count(), Is.GreaterThan(0));  
