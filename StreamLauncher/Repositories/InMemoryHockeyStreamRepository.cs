@@ -22,6 +22,7 @@ namespace StreamLauncher.Repositories
         {
             return new HockeyStream
             {
+                NoFeedTypeStreamId = 0,
                 HomeStreamId = index,
                 AwayStreamId = index,
                 EventType = EventType.NHL,
@@ -31,7 +32,7 @@ namespace StreamLauncher.Repositories
                 AwayImagePath = @"../Images/Teams/Toronto Maple Leafs.png",
                 Score = "1 - 0",
                 StartTime = "7:30 PM PST",
-                Period = "1",                
+                PeriodAndTimeLeft = "13:20 1st",                
                 IsPlaying = true                
             };
         }

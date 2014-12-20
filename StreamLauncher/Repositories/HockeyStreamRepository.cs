@@ -36,8 +36,8 @@ namespace StreamLauncher.Repositories
             var scores = _scoresRepository.GetScores();
             var streamsWithScores = hockeyStreams.Select(stream =>
             {
-                stream.Period = scores
-                    .Where(score => score.HomeTeam == stream.HomeTeam)
+                stream.PeriodAndTimeLeft = scores
+                    .Where(score => score.HomeTeam == stream.HomeTeam && stream.IsPlaying)
                     .Select(p => p.PeriodAndTimeLeft)
                     .FirstOrDefault();
                 return stream;

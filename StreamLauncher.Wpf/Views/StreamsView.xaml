@@ -26,7 +26,7 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ComboBox HorizontalAlignment="Left" Margin="103.46,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" SelectedIndex="0" FontSize="13.333" FontWeight="Bold">
+        <ComboBox HorizontalAlignment="Left" Margin="103.46,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" SelectedIndex="0" FontSize="13.333" FontWeight="Bold" SelectedValue="{Binding SelectedEventType}">
         	<ListBoxItem Content="NHL"/>
         	<ListBoxItem/>
         </ComboBox>
@@ -81,7 +81,7 @@
                 <DataGridTemplateColumn Header="Period">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Period}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                            <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -111,7 +111,7 @@
         <Image Grid.ColumnSpan="2" Margin="635,467,0,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
         <Label Grid.ColumnSpan="2" Content="Location:" HorizontalAlignment="Left" Margin="0,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
         <Label Grid.ColumnSpan="2" Content="Quality:" HorizontalAlignment="Left" Margin="301.079,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
-        <Label Grid.ColumnSpan="2" Content="Filter League:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
+        <Label Grid.ColumnSpan="2" Content="Filter Event:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
         <Label Grid.ColumnSpan="2" Content="Filter Feed Type:" HorizontalAlignment="Left" Margin="243.999,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
         <ComboBox HorizontalAlignment="Left" Margin="590.07,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" FontFamily="Segoe UI" FontSize="13.333" FontWeight="Bold" SelectedIndex="0" >
         	<ListBoxItem Content="All"/>

@@ -16,7 +16,9 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using StreamLauncher.Api;
+using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
+using StreamLauncher.Mappers;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -44,10 +46,18 @@ namespace StreamLauncher.Wpf.ViewModel
             else
             {
                 // Create run time view services and models
+                SimpleIoc.Default.Register<ITokenProvider, AuthenticationTokenProvider>();
+                SimpleIoc.Default.Register<IApiKeyProvider, ApiKeyProvider>();
                 SimpleIoc.Default.Register<IHockeyStreamsApi, HockeyStreamsApi>();
-                SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
+                SimpleIoc.Default.Register<IHockeyStreamsApiRequiringApiKey, HockeyStreamsApiRequiringApiKey>();
+                SimpleIoc.Default.Register<IHockeyStreamsApiRequiringScoresApiKey, HockeyStreamsApiRequiringScoresApiKey>();
+                SimpleIoc.Default.Register<IHockeyStreamsApiRequiringToken, HockeyStreamsApiRequiringToken>();                
+                SimpleIoc.Default.Register<ILiveStreamScheduleAggregatorAndMapper, LiveStreamScheduleAggregatorAndMapper>();
                 SimpleIoc.Default.Register<IStreamLocationRepository, StreamLocationRepository>();
+                SimpleIoc.Default.Register<IScoresRepository, ScoresRepository>();
+                SimpleIoc.Default.Register<IHockeyStreamRepository, HockeyStreamRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
+                SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

@@ -12,7 +12,7 @@
         public string AwayImagePath { get; set; }
         public string Score { get; set; }
         public string StartTime { get; set; }
-        public string Period { get; set; }
+        public string PeriodAndTimeLeft { get; set; }
         public bool IsPlaying { get; set; }        
     }
 }
