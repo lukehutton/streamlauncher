@@ -1,22 +1,21 @@
 ﻿namespace StreamLauncher.Dtos
 {
-    public class GetLiveDto
+    public class GetLiveStreamsResponseDto
     {
         public string Id { get; set; }
         public string Event { get; set; }
         public string HomeTeam { get; set; }
         public string HomeScore { get; set; }
-
+        public string AwayTeam { get; set; }
+        public string AwayScore { get; set; }
+        public string StartTime { get; set; }
+        public string Period { get; set; }
+        public bool IsHd { get; set; }
+        public bool IsPlaying { get; set; }
+        public bool IsWmv { get; set; }
+        public bool IsFlash { get; set; }
+        public bool IsIStream { get; set; }
         //todo add remaining fields
-//awayTeam:<away team name>,
-//awayScore:<away team score>,
-//startTime:<event/game start time>,
-//period:<period of game>,
-//isHd:<0 = no, 1 = yes>,
-//isPlaying:<0 = not playing, 1 = currently started>,
-//isWMV:<0 = no, 1 = yes>,
-//isFlash:<0 = no, 1 = yes>,
-//isiStream:<0 = no, 1 = yes>,
 //feedType:<Home Feed, Away Feed, null>,
 //srcUrl:<source_url or null (only shows when streams are started)>,
 //hdUrl:<source_url or null (only shows when streams are started)>,

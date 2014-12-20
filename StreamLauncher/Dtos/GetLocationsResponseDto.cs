@@ -1,6 +1,6 @@
 ﻿namespace StreamLauncher.Dtos
 {
-    public class GetLocationsDto
+    public class GetLocationsResponseDto
     {
         public string Location { get; set; }
     }

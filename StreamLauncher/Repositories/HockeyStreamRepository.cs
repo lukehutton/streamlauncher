@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using StreamLauncher.Models;
 using StreamLauncher.Providers;
@@ -16,7 +17,7 @@ namespace StreamLauncher.Repositories
 
         public Task<IEnumerable<HockeyStream>> GetLiveStreams()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

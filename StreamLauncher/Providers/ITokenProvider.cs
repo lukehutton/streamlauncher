@@ -2,7 +2,6 @@
 {
     public interface ITokenProvider
     {
-        string GetAuthenticationToken();
-        void SetAuthenticationToken(string token);
+        string Token { get; set; }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Net;
 using RestSharp;
+using RestSharp.Deserializers;
+using StreamLauncher.Dtos;
 
 namespace StreamLauncher.Providers
 {
@@ -9,24 +12,34 @@ namespace StreamLauncher.Providers
 
         public T Execute<T>(RestRequest request) where T : new()
         {
-            var client = new RestClient
-            {
-                BaseUrl = new Uri(BaseUrl),                
-            };
+            var client = new RestClient { BaseUrl = new Uri(BaseUrl) };
             
             var response = client.Execute<T>(request);
-
+            
             if (response.ErrorException != null)
             {
                 const string message = "Error retrieving response.  Check inner details for more info.";
-                var hockeyStreamsException = new ApplicationException(message, response.ErrorException);
-                throw hockeyStreamsException;
+                throw new ApplicationException(message, response.ErrorException);
+            }            
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var error = new JsonDeserializer().Deserialize<ErrorResponseDto>(response);
+                throw new HockeyStreamsApiBadRequest(error.Msg);
+            }            
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ApplicationException(string.Format("Error. Api returned {0} status", response.StatusCode));
             }
-            return response.Data;
+            return response.Data; // 200 OK
         }
     }
 
-    public class HockeyStreamsApi : BaseHockeyStreamsApi, IHockeyStreamsApi
+    public class HockeyStreamsApiBadRequest : Exception
+    {
+        public HockeyStreamsApiBadRequest(string message) : base(message) {}
+    }
+
+    public class HockeyStreamsApi : BaseHockeyStreamsApi, IHockeyStreamsApi 
     {
         
     }
@@ -42,7 +55,7 @@ namespace StreamLauncher.Providers
 
         public new T Execute<T>(RestRequest request) where T : new()
         {
-            request.AddParameter("token", _tokenProvider.GetAuthenticationToken(), ParameterType.UrlSegment);
+            request.AddParameter("token", _tokenProvider.Token, ParameterType.GetOrPost);
             return base.Execute<T>(request);
         }
     }
@@ -58,7 +71,7 @@ namespace StreamLauncher.Providers
 
         public new T Execute<T>(RestRequest request) where T : new()
         {
-            request.AddParameter("key", _apiKeyProvider.GetApiKey(), ParameterType.UrlSegment);
+            request.AddParameter("key", _apiKeyProvider.GetApiKey(), ParameterType.GetOrPost);
             return base.Execute<T>(request);
         }
     }
