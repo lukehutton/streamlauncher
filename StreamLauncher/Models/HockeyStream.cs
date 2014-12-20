@@ -2,7 +2,8 @@
 {
     public class HockeyStream
     {
-        public int HomeStreamId { get; set; }
+        public int NoFeedTypeStreamId { get; set; }
+        public int HomeStreamId { get; set; }       
         public int AwayStreamId { get; set; }
         public EventType EventType { get; set; }
         public string HomeImagePath { get; set; }

@@ -5,7 +5,6 @@ using RestSharp;
 using StreamLauncher.Api;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
-using StreamLauncher.Util;
 
 namespace StreamLauncher.Repositories
 {
@@ -31,19 +30,13 @@ namespace StreamLauncher.Repositories
         {
             return scoreDtos.Scores.Select(x => new Score
             {
-                EventType = GetEventType(x.Event),
+                EventType = EventTypeParser.Parse(x.Event),
                 HomeScore = Convert.ToInt32(x.HomeScore),
                 HomeTeam = x.HomeTeam,
                 AwayScore = Convert.ToInt32(x.AwayScore),
                 AwayTeam = x.AwayTeam,
                 PeriodAndTimeLeft = x.Period
             }).ToList();
-        }
-
-        private static EventType GetEventType(string eventType)
-        {
-            if (eventType == "World Juniors") return EventType.WorldJuniors;
-            return eventType.ParseEnum<EventType>();
         }
     }
 }

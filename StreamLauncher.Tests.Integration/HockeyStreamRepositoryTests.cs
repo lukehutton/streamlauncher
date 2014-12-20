@@ -62,9 +62,12 @@ namespace StreamLauncher.Tests.Integration
             [TestFixtureSetUp]
             public new void Given()
             {                
-                var hockeyStreamsApi = new HockeyStreamsApiRequiringToken(TokenProvider);
+                var apiRequiringToken = new HockeyStreamsApiRequiringToken(TokenProvider);
                 var aggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper();
-                HockeyStreamRepository = new HockeyStreamRepository(hockeyStreamsApi, aggregatorAndMapper);
+                var apiKeyProvider = new ApiKeyProvider();
+                var apiRequiringScoresApiKey = new HockeyStreamsApiRequiringScoresApiKey(apiKeyProvider);
+                var scoresRepository = new ScoresRepository(apiRequiringScoresApiKey);
+                HockeyStreamRepository = new HockeyStreamRepository(apiRequiringToken, aggregatorAndMapper, scoresRepository);
             }
         }
 

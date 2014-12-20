@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using RestSharp;
 using StreamLauncher.Api;
@@ -13,14 +14,17 @@ namespace StreamLauncher.Repositories
     {
         private readonly IHockeyStreamsApiRequiringToken _hockeyStreamsApi;
         private readonly ILiveStreamScheduleAggregatorAndMapper _aggregatorAndMapper;
+        private readonly IScoresRepository _scoresRepository;
 
         public HockeyStreamRepository(
             IHockeyStreamsApiRequiringToken hockeyStreamsApi,
-            ILiveStreamScheduleAggregatorAndMapper aggregatorAndMapper
+            ILiveStreamScheduleAggregatorAndMapper aggregatorAndMapper,
+            IScoresRepository scoresRepository
             )
         {
             _hockeyStreamsApi = hockeyStreamsApi;
             _aggregatorAndMapper = aggregatorAndMapper;
+            _scoresRepository = scoresRepository;
         }
 
         public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
@@ -29,7 +33,16 @@ namespace StreamLauncher.Repositories
             request.AddParameter("date", date.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
             var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamsResponseDto>(request);
             var hockeyStreams = _aggregatorAndMapper.AggregateAndMap(responseDto);
-            return Task.FromResult(hockeyStreams);
+            var scores = _scoresRepository.GetScores();
+            var streamsWithScores = hockeyStreams.Select(stream =>
+            {
+                stream.Period = scores
+                    .Where(score => score.HomeTeam == stream.HomeTeam)
+                    .Select(p => p.PeriodAndTimeLeft)
+                    .FirstOrDefault();
+                return stream;
+            });
+            return Task.FromResult(streamsWithScores);
         }        
     }
 }
