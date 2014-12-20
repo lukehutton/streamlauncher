@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using NUnit.Framework;
-using StreamLauncher.Providers;
-using StreamLauncher.Services;
+using StreamLauncher.Api;
+using StreamLauncher.Authentication;
 
 namespace StreamLauncher.Tests.Integration
 {
@@ -76,5 +76,4 @@ namespace StreamLauncher.Tests.Integration
             }
         }
     }
-
 }

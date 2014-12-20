@@ -15,8 +15,8 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using StreamLauncher.Api;
 using StreamLauncher.Filters;
-using StreamLauncher.Providers;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel

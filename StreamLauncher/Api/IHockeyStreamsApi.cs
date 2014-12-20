@@ -1,6 +1,6 @@
 using RestSharp;
 
-namespace StreamLauncher.Providers
+namespace StreamLauncher.Api
 {
     public interface IHockeyStreamsApi
     {
@@ -8,6 +8,10 @@ namespace StreamLauncher.Providers
     }
 
     public interface IHockeyStreamsApiRequiringApiKey
+    {
+        T Execute<T>(RestRequest request) where T : new();
+    }
+    public interface IHockeyStreamsApiRequiringScoresApiKey
     {
         T Execute<T>(RestRequest request) where T : new();
     }

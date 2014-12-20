@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
 
-namespace StreamLauncher.Providers
+namespace StreamLauncher.Mappers
 {
     public interface ILiveStreamScheduleAggregatorAndMapper
     {

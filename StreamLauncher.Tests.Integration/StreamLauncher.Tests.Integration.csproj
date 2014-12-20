@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AuthenticationServiceTests.cs" />
     <Compile Include="HockeyStreamRepositoryTests.cs" />
+    <Compile Include="ScoresRepositoryTests.cs" />
     <Compile Include="StreamLocationRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

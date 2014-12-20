@@ -1,4 +1,4 @@
-namespace StreamLauncher.Providers
+namespace StreamLauncher.Api
 {
     public class AuthenticationTokenProvider : ITokenProvider
     {

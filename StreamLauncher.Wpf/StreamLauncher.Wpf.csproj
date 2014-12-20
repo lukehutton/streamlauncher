@@ -157,13 +157,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Teams\Toronto.png" />
+    <Resource Include="Images\Teams\Toronto Maple Leafs.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\refresh64x64.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Teams\Vancouver.png" />
+    <Resource Include="Images\Teams\Vancouver Canucks.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\hockeystreamslogo.png" />

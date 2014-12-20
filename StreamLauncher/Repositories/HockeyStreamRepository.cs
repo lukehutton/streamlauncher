@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using RestSharp;
+using StreamLauncher.Api;
 using StreamLauncher.Dtos;
+using StreamLauncher.Mappers;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 
 namespace StreamLauncher.Repositories
 {
     public class HockeyStreamRepository : IHockeyStreamRepository
     {
         private readonly IHockeyStreamsApiRequiringToken _hockeyStreamsApi;
+        private readonly ILiveStreamScheduleAggregatorAndMapper _aggregatorAndMapper;
 
-        public HockeyStreamRepository(IHockeyStreamsApiRequiringToken hockeyStreamsApi)
+        public HockeyStreamRepository(
+            IHockeyStreamsApiRequiringToken hockeyStreamsApi,
+            ILiveStreamScheduleAggregatorAndMapper aggregatorAndMapper
+            )
         {
             _hockeyStreamsApi = hockeyStreamsApi;
+            _aggregatorAndMapper = aggregatorAndMapper;
         }
 
         public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
@@ -22,18 +28,8 @@ namespace StreamLauncher.Repositories
             var request = new RestRequest { Resource = "GetLive", Method = Method.GET };
             request.AddParameter("date", date.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
             var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamsResponseDto>(request);
-            var hockeyStreams = MapLiveStreamsResponseDtoToHockeyStreams(responseDto);
+            var hockeyStreams = _aggregatorAndMapper.AggregateAndMap(responseDto);
             return Task.FromResult(hockeyStreams);
-        }
-
-        // todo unit test and separate aggregation into another dependency and test?
-        private IEnumerable<HockeyStream> MapLiveStreamsResponseDtoToHockeyStreams(GetLiveStreamsResponseDto responseDto)
-        {
-            // todo need scores api to see time left and period number
-            return new List<HockeyStream>()
-            {
-                new HockeyStream()
-            };
-        }
+        }        
     }
 }

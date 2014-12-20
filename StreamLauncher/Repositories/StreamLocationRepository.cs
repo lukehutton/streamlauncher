@@ -2,8 +2,8 @@
 using RestSharp;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 using System.Linq;
+using StreamLauncher.Api;
 
 namespace StreamLauncher.Repositories
 {

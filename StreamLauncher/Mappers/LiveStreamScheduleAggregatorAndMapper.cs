@@ -5,7 +5,7 @@ using StreamLauncher.Dtos;
 using StreamLauncher.Models;
 using StreamLauncher.Util;
 
-namespace StreamLauncher.Providers
+namespace StreamLauncher.Mappers
 {
     public class LiveStreamScheduleAggregatorAndMapper : ILiveStreamScheduleAggregatorAndMapper
     {

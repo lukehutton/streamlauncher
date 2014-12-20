@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using StreamLauncher.Api;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Tests.Integration

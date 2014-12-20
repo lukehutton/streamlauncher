@@ -2,8 +2,8 @@
 using System.Linq;
 using NUnit.Framework;
 using StreamLauncher.Dtos;
+using StreamLauncher.Mappers;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 
 namespace StreamLauncher.Tests.Unit
 {

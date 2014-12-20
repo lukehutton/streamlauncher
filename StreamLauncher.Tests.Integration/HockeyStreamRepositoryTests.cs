@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using NUnit.Framework;
+using StreamLauncher.Api;
+using StreamLauncher.Authentication;
+using StreamLauncher.Mappers;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 using StreamLauncher.Repositories;
-using StreamLauncher.Services;
 
 namespace StreamLauncher.Tests.Integration
 {
@@ -62,7 +63,8 @@ namespace StreamLauncher.Tests.Integration
             public new void Given()
             {                
                 var hockeyStreamsApi = new HockeyStreamsApiRequiringToken(TokenProvider);
-                HockeyStreamRepository = new HockeyStreamRepository(hockeyStreamsApi);
+                var aggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper();
+                HockeyStreamRepository = new HockeyStreamRepository(hockeyStreamsApi, aggregatorAndMapper);
             }
         }
 

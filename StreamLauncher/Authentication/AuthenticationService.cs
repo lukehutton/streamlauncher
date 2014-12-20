@@ -1,9 +1,9 @@
 using RestSharp;
+using StreamLauncher.Api;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
-using StreamLauncher.Providers;
 
-namespace StreamLauncher.Services
+namespace StreamLauncher.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {

@@ -4,7 +4,7 @@ using RestSharp;
 using RestSharp.Deserializers;
 using StreamLauncher.Dtos;
 
-namespace StreamLauncher.Providers
+namespace StreamLauncher.Api
 {
     public class BaseHockeyStreamsApi
     {     
@@ -72,6 +72,21 @@ namespace StreamLauncher.Providers
         public new T Execute<T>(RestRequest request) where T : new()
         {
             request.AddParameter("key", _apiKeyProvider.GetApiKey(), ParameterType.GetOrPost);
+            return base.Execute<T>(request);
+        }
+    }
+    public class HockeyStreamsApiRequiringScoresApiKey : BaseHockeyStreamsApi, IHockeyStreamsApiRequiringScoresApiKey
+    {
+        private readonly IApiKeyProvider _apiKeyProvider;
+
+        public HockeyStreamsApiRequiringScoresApiKey(IApiKeyProvider apiKeyProvider)
+        {
+            _apiKeyProvider = apiKeyProvider;
+        }
+
+        public new T Execute<T>(RestRequest request) where T : new()
+        {
+            request.AddParameter("key", _apiKeyProvider.GetScoresApiKey(), ParameterType.GetOrPost);
             return base.Execute<T>(request);
         }
     }
