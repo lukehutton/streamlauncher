@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Providers
 {
@@ -23,10 +24,21 @@ namespace StreamLauncher.Providers
                     HomeTeam = homeFeed.HomeTeam,
                     HomeStreamId = Convert.ToInt32(homeFeed.Id),
                     AwayTeam = awayFeed.AwayTeam,
-                    AwayStreamId = Convert.ToInt32(awayFeed.Id)
+                    AwayStreamId = Convert.ToInt32(awayFeed.Id),
+                    StartTime = homeFeed.StartTime,
+                    EventType = homeFeed.Event.ParseEnum<EventType>(),
+                    IsPlaying = homeFeed.IsPlaying == "1",
+                    Score = homeFeed.HomeScore + " - " + homeFeed.AwayScore,
+                    HomeImagePath = GetImagePathForTeam(homeFeed.HomeTeam),
+                    AwayImagePath = GetImagePathForTeam(homeFeed.AwayTeam)
                 };
 
-            return hockeyStreams;
+            return hockeyStreams.OrderBy(x => x.StartTime);
+        }
+
+        private static string GetImagePathForTeam(string team)
+        {
+            return string.Format(@"../Images/Teams/{0}.png", team);
         }
     }
 }
