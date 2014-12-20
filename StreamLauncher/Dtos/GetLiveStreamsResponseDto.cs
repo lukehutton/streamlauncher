@@ -15,12 +15,11 @@
         public bool IsWmv { get; set; }
         public bool IsFlash { get; set; }
         public bool IsIStream { get; set; }
-        //todo add remaining fields
-//feedType:<Home Feed, Away Feed, null>,
-//srcUrl:<source_url or null (only shows when streams are started)>,
-//hdUrl:<source_url or null (only shows when streams are started)>,
-//sdUrl:<source_url or null (only shows when streams are started)>,
-//TrueLiveSD:<source_url or null (only shows when streams are started)>,
-//TrueLiveHD:<source_url or null (only shows when streams are started)> 
+        public string FeedType { get; set; }
+        public string SrcUrl { get; set; }
+        public string HdUrl { get; set; }
+        public string SdUrl { get; set; }
+        public string TrueLiveSd { get; set; }
+        public string TrueLiveHd { get; set; }
     }
 }

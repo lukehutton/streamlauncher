@@ -15,7 +15,6 @@ namespace StreamLauncher.Tests.Integration
             [TestFixtureSetUp]
             public void Given()
             {
-
                 var apiKeyProvider = new ApiKeyProvider();
                 var hockeyStreamsApi = new HockeyStreamsApiRequiringApiKey(apiKeyProvider);
                 AuthenticationService = new AuthenticationService(hockeyStreamsApi);
