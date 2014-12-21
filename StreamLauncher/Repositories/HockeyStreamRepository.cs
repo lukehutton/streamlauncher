@@ -51,22 +51,29 @@ namespace StreamLauncher.Repositories
 
         private static void DeterminePeriod(HockeyStream stream)
         {
-            if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
-                  stream.PeriodAndTimeLeft.Contains("2nd") ||
-                  stream.PeriodAndTimeLeft.Contains("3rd") ||
-                  stream.PeriodAndTimeLeft.Contains("OT") ||
-                  stream.PeriodAndTimeLeft.Contains("SO")))
+            try
+            {
+                if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
+                      stream.PeriodAndTimeLeft.Contains("2nd") ||
+                      stream.PeriodAndTimeLeft.Contains("3rd") ||
+                      stream.PeriodAndTimeLeft.Contains("OT") ||
+                      stream.PeriodAndTimeLeft.Contains("SO")))
+                {
+                    stream.PeriodAndTimeLeft = "-";
+                }
+                if (!stream.IsPlaying)
+                {
+                    var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
+                    var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
+                    if (startTime.TimeOfDay < DateTime.Now.TimeOfDay)
+                    {
+                        stream.PeriodAndTimeLeft = "Final";
+                    }
+                }
+            }
+            catch 
             {
                 stream.PeriodAndTimeLeft = "-";
-            }
-            if (!stream.IsPlaying)
-            {
-                var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
-                var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
-                if (startTime.TimeOfDay < DateTime.Now.TimeOfDay)
-                {
-                    stream.PeriodAndTimeLeft = "Final";
-                }
             }
         }
     }
