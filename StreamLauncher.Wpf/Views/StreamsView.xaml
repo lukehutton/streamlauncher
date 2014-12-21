@@ -53,14 +53,14 @@
                 <DataGridTemplateColumn Header="Home">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="140" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />             
+                            <Label MinWidth="140" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />             
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Away">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="140" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />                        
+                            <Label MinWidth="140" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -74,21 +74,21 @@
                 <DataGridTemplateColumn Header="Start Time">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding StartTime}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                            <Label Content="{Binding StartTime}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Period">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                            <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Score">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -175,6 +175,46 @@
   <ItemGroup>
     <Resource Include="Images\Buttons\awayfeed.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Anaheim Ducks.png" />
+    <Resource Include="Images\Teams\Arizona Coyotes.png" />
+    <Resource Include="Images\Teams\Boston Bruins.png" />
+    <Resource Include="Images\Teams\Buffalo Sabres.png" />
+    <Resource Include="Images\Teams\Calgary Flames.png" />
+    <Resource Include="Images\Teams\Colorado Avalanche.png" />
+    <Resource Include="Images\Teams\Columbus Blue Jackets.png" />
+    <Resource Include="Images\Teams\Dallas Stars.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Detroit Red Wings.png" />
+    <Resource Include="Images\Teams\Edmonton Oilers.png" />
+    <Resource Include="Images\Teams\Florida Panthers.png" />
+    <Resource Include="Images\Teams\Los Angeles Kings.png" />
+    <Resource Include="Images\Teams\Minnesota Wild.png" />
+    <Resource Include="Images\Teams\Monteal Canadiens.png" />
+    <Resource Include="Images\Teams\Nashville Predators.png" />
+    <Resource Include="Images\Teams\New Jersey Devils.png" />
+    <Resource Include="Images\Teams\New York Islanders.png" />
+    <Resource Include="Images\Teams\New York Rangers.png" />
+    <Resource Include="Images\Teams\Ottawa Senators.png" />
+    <Resource Include="Images\Teams\San Jose Sharks.png" />
+    <Resource Include="Images\Teams\St Louis Blues.png" />
+    <Resource Include="Images\Teams\Tampa Bay Lightning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Washington Capitals.png" />
+    <Resource Include="Images\Teams\Winnipeg Jets.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Carolina Hurricanes.png" />
+    <Resource Include="Images\Teams\Chicago Blackhawks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Pittsburgh Penguins.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Philadelphia Flyers.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

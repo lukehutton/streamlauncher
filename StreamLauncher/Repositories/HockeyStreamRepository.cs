@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using RestSharp;
@@ -10,6 +11,7 @@ using StreamLauncher.Models;
 
 namespace StreamLauncher.Repositories
 {
+    // todo unit test
     public class HockeyStreamRepository : IHockeyStreamRepository
     {
         private readonly IHockeyStreamsApiRequiringToken _hockeyStreamsApi;
@@ -39,10 +41,33 @@ namespace StreamLauncher.Repositories
                 stream.PeriodAndTimeLeft = scores
                     .Where(score => score.HomeTeam == stream.HomeTeam && stream.IsPlaying)
                     .Select(p => p.PeriodAndTimeLeft)
-                    .FirstOrDefault();
+                    .FirstOrDefault() ?? "-";
+                DeterminePeriod(stream);
+
                 return stream;
             });
             return Task.FromResult(streamsWithScores);
-        }        
+        }
+
+        private static void DeterminePeriod(HockeyStream stream)
+        {
+            if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
+                  stream.PeriodAndTimeLeft.Contains("2nd") ||
+                  stream.PeriodAndTimeLeft.Contains("3rd") ||
+                  stream.PeriodAndTimeLeft.Contains("OT") ||
+                  stream.PeriodAndTimeLeft.Contains("SO")))
+            {
+                stream.PeriodAndTimeLeft = "-";
+            }
+            if (!stream.IsPlaying)
+            {
+                var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
+                var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
+                if (startTime.TimeOfDay < DateTime.Now.TimeOfDay)
+                {
+                    stream.PeriodAndTimeLeft = "Final";
+                }
+            }
+        }
     }
 }
