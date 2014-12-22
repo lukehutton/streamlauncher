@@ -92,7 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\Converters\ConvertTextToImage.cs" />
-    <Compile Include="Messages\OpenWindowMessage.cs" />
+    <Compile Include="Messages\OpenLoginWindowMessage.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

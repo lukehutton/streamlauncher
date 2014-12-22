@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.Authentication;
@@ -11,6 +12,7 @@ using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Wpf.Messages;
+using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -57,9 +59,20 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new RelayCommand(GetStreams);
             OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
-            
+
+            Messenger.Default.Register<OpenLoginWindowMessage>(
+    this,
+    message =>
+    {
+        var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
+        var loginWindow = new LoginWindow
+        {
+            DataContext = loginViewModel
+        };
+        var authenticated = loginWindow.ShowDialog() ?? false;
+    });   
             AuthenticateUser();
-            
+
             SelectedFilterEventType = "NHL";
             SelectedFilterActiveState = "All";
             GetStreams();
@@ -68,8 +81,9 @@ namespace StreamLauncher.Wpf.ViewModel
 
             SetCurrentUser();
             SetCurrentDate();
-            SetPreferredLocation();
+            SetPreferredLocation();     
         }
+        
 
         private void SetCurrentUser()
         {
@@ -89,7 +103,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void OpenLoginWindow()
         {
-            Messenger.Default.Send(new OpenWindowMessage {WindowType = WindowType.Modal});
+            Messenger.Default.Send(new OpenLoginWindowMessage());
         }
 
         private void FilterByEventType(string selectedEventType)
@@ -110,10 +124,16 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             if (IsInDesignModeStatic) return;
 
-            // todo read from persistance OR load form input
-            var userName = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.userName"]);
-            var password = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.password"]);
+            // todo read from persistance OR load form input            
+            string userName = null;
+            string password = null;
+            if (userName == null && password == null)
+            {
+                OpenLoginDialogCommand.Execute(null);
+            }
 
+            userName = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.userName"]);
+            password = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.password"]);
             var result = _authenticationService.Authenticate(userName, password);
             _tokenProvider.Token = result.AuthenticatedUser.Token;
             _authenticatedUser = result.AuthenticatedUser;
