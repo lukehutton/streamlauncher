@@ -120,5 +120,13 @@
         </ComboBox>
         <Label Grid.ColumnSpan="2" Content="Filter Active:" HorizontalAlignment="Left" Margin="492.433,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
         <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="735,16.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="True"/>
+        <Label Grid.ColumnSpan="2" Content="{Binding CurrentDate}" HorizontalAlignment="Left" Margin="0,-5.57,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="11" FontWeight="Bold" Foreground="White" />
+        <Label Grid.ColumnSpan="2" Content="{Binding CurrentUser}" HorizontalAlignment="Left" Margin="584,-5.57,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontSize="11" FontWeight="Bold" Foreground="White" MaxWidth="150" RenderTransformOrigin="0.6,0.462" />        
+		<Label Grid.ColumnSpan="2" Tag="[Log Out]" HorizontalAlignment="Left" Margin="740,-5.57,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontSize="11" FontWeight="Bold" Foreground="White">        
+		<TextBlock TextDecorations="Underline" 
+               Text="{Binding Path=Tag, 
+                              RelativeSource={RelativeSource Mode=FindAncestor,
+                                                             AncestorType={x:Type Label}}}" />
+		</Label>
     </Grid>
 </UserControl>

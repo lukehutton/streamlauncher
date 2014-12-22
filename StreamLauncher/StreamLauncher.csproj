@@ -72,11 +72,11 @@
     <Compile Include="Api\ITokenProvider.cs" />
     <Compile Include="Mappers\LiveStreamScheduleAggregatorAndMapper.cs" />
     <Compile Include="Repositories\HockeyStreamRepository.cs" />
-    <Compile Include="Repositories\InMemoryHockeyStreamRepository.cs" />
+    <Compile Include="Design\DesignHockeyStreamRepository.cs" />
     <Compile Include="Repositories\IHockeyStreamRepository.cs" />
     <Compile Include="Repositories\IScoresRepository.cs" />
     <Compile Include="Repositories\IStreamLocationRepository.cs" />
-    <Compile Include="Repositories\InMemoryStreamLocationRepository.cs" />
+    <Compile Include="Design\DesignStreamLocationRepository.cs" />
     <Compile Include="Repositories\ScoresRepository.cs" />
     <Compile Include="Repositories\StreamLocationRepository.cs" />
     <Compile Include="Authentication\AuthenticationService.cs" />

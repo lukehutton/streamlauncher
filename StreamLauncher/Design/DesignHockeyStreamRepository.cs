@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using StreamLauncher.Models;
+using StreamLauncher.Repositories;
 using StreamLauncher.Util;
 
-namespace StreamLauncher.Repositories
+namespace StreamLauncher.Design
 {
-    public class InMemoryHockeyStreamRepository : IHockeyStreamRepository
+    public class DesignHockeyStreamRepository : IHockeyStreamRepository
     {        
         public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
         {

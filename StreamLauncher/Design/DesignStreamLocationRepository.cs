@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using StreamLauncher.Models;
+using StreamLauncher.Repositories;
 using StreamLauncher.Util;
 
-namespace StreamLauncher.Repositories
+namespace StreamLauncher.Design
 {
-    public class InMemoryStreamLocationRepository : IStreamLocationRepository
+    public class DesignStreamLocationRepository : IStreamLocationRepository
     {
         public IEnumerable<StreamLocation> GetLocations()
         {

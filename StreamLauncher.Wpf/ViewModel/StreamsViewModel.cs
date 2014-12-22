@@ -34,6 +34,11 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _filterEventType;
         private string _filterActiveState;
 
+        private string _currentDate;
+        private string _currentUser;
+
+        private User _authenticatedUser;
+
         public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,            
@@ -52,7 +57,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new RelayCommand(GetStreams);
             OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
-
+            
             AuthenticateUser();
             
             SelectedFilterEventType = "NHL";
@@ -60,7 +65,20 @@ namespace StreamLauncher.Wpf.ViewModel
             GetStreams();
 
             GetLocations();
+
+            SetCurrentUser();
+            SetCurrentDate();
             SetPreferredLocation();
+        }
+
+        private void SetCurrentUser()
+        {
+            CurrentUser = string.Format("Hi {0}", _authenticatedUser.UserName);
+        }
+
+        private void SetCurrentDate()
+        {
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
         }
 
         private void GetStreams()
@@ -98,6 +116,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             var result = _authenticationService.Authenticate(userName, password);
             _tokenProvider.Token = result.AuthenticatedUser.Token;
+            _authenticatedUser = result.AuthenticatedUser;
         }
 
         private void SetPreferredLocation()
@@ -112,6 +131,25 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
+        public string CurrentUser
+        {
+            get { return _currentUser; }
+            set
+            {
+                _currentUser = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string CurrentDate
+        {
+            get { return _currentDate; }
+            set
+            {
+                _currentDate = value;
+                RaisePropertyChanged();
+            }
+        }
         public string SelectedLocation
         {
             get { return _location; }

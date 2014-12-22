@@ -17,6 +17,7 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using StreamLauncher.Api;
 using StreamLauncher.Authentication;
+using StreamLauncher.Design;
 using StreamLauncher.Filters;
 using StreamLauncher.Mappers;
 using StreamLauncher.Repositories;
@@ -39,9 +40,11 @@ namespace StreamLauncher.Wpf.ViewModel
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 // Create design time view services and models                
-                SimpleIoc.Default.Register<IHockeyStreamRepository, InMemoryHockeyStreamRepository>();
-                SimpleIoc.Default.Register<IStreamLocationRepository, InMemoryStreamLocationRepository>();
+                SimpleIoc.Default.Register<IHockeyStreamRepository, DesignHockeyStreamRepository>();
+                SimpleIoc.Default.Register<IStreamLocationRepository, DesignStreamLocationRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
+                SimpleIoc.Default.Register<ITokenProvider, AuthenticationTokenProvider>(); //todo make design
+                SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>(); //todo make design
             }
             else
             {
