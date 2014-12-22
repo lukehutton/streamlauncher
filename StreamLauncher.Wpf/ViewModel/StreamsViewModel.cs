@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Wpf.Messages;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -25,9 +26,13 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
 
-        private RelayCommand _getLiveStreamsCommand;
+        public RelayCommand GetStreamsCommand { get; private set; }
+        public RelayCommand OpenLoginDialogCommand { get; private set; }
+
         private string _location;
-        private string _eventType;
+
+        private string _filterEventType;
+        private string _filterActiveState;
 
         public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
@@ -45,20 +50,41 @@ namespace StreamLauncher.Wpf.ViewModel
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
 
+            GetStreamsCommand = new RelayCommand(GetStreams);
+            OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
+
             AuthenticateUser();
+            
+            SelectedFilterEventType = "NHL";
+            SelectedFilterActiveState = "All";
+            GetStreams();
 
-            GetLiveStreams();
-            SelectedEventType = "NHL";
-            FilterByEventType(SelectedEventType);
             GetLocations();
-
             SetPreferredLocation();
+        }
+
+        private void GetStreams()
+        {
+            //Task.Run(async () => await GetStreamsFiltered());
+            GetStreamsFiltered();
+        }
+
+        private void OpenLoginWindow()
+        {
+            Messenger.Default.Send(new OpenWindowMessage {WindowType = WindowType.Modal});
         }
 
         private void FilterByEventType(string selectedEventType)
         {
             var selectedEvent = EventTypeParser.Parse(selectedEventType);
             var filteredStreams = _hockeyStreamFilter.By(_hockeyStreams, new EventTypeFilterSpecification(selectedEvent));
+            Streams = new ObservableCollection<HockeyStream>(filteredStreams);
+        }
+        private void FilterByActiveState(string selectedActiveState)
+        {
+            var isPlaying = selectedActiveState == "In progress...";
+            if (!isPlaying) return;
+            var filteredStreams = _hockeyStreamFilter.By(_hockeyStreams, new ActiveFilterSpecification(true));
             Streams = new ObservableCollection<HockeyStream>(filteredStreams);
         }
 
@@ -95,26 +121,50 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged();
             }
         }
-        public string SelectedEventType
+
+        public string SelectedFilterEventType
         {
-            get { return _eventType; }
+            get { return _filterEventType; }
             set
             {
-                _eventType = value;
+                _filterEventType = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string SelectedFilterActiveState
+        {
+            get { return _filterActiveState; }
+            set
+            {
+                _filterActiveState = value;
                 RaisePropertyChanged();
             }
         }
 
-        private async Task GetLiveStreams()
+        private async Task GetStreamsFiltered()
         {
             Streams.Clear();
+
+//            Messenger.Default.Send(new StatusMessage("Getting streams...", 0));
+
             var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
-            
+
+//            if (hockeyStreams.Count == 0)
+//            {
+//                DialogService.ShowMessage("We couldn't find any streams.");
+//            }
+
             foreach (var hockeyStream in hockeyStreams)
             {
                 Streams.Add(hockeyStream);
-            }            
+            }
+
+            FilterByEventType(SelectedFilterEventType);
+            FilterByActiveState(SelectedFilterActiveState);
+
+//            Messenger.Default.Send(new StatusMessage("Done", 3000));
         }
+
         private void GetLocations()
         {
             Locations.Clear();
@@ -124,19 +174,6 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 Locations.Add(location);
             }            
-        }
-
-        public RelayCommand GetLiveStreamsCommand
-        {
-            get
-            {
-                return _getLiveStreamsCommand
-                    ?? (_getLiveStreamsCommand = new RelayCommand(
-                        async () =>
-                        {
-                            await GetLiveStreams();
-                        }));
-            }
         }
 
         public ObservableCollection<HockeyStream> Streams
