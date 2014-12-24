@@ -8,6 +8,7 @@ namespace StreamLauncher.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IHockeyStreamsApiRequiringApiKey _hockeyStreamsApi;
+        private const string RegularMembership = "REGULAR";
 
         public AuthenticationService(IHockeyStreamsApiRequiringApiKey hockeyStreamsApi)
         {
@@ -22,10 +23,15 @@ namespace StreamLauncher.Authentication
                 request.AddParameter("username", userName, ParameterType.GetOrPost);
                 request.AddParameter("password", password, ParameterType.GetOrPost);
                 var loginResponseDto = _hockeyStreamsApi.Execute<LoginResponseDto>(request);
+                if (loginResponseDto.Membership == RegularMembership)
+                {
+                    throw new HockeyStreamsApiBadLogin("You must have PREMIUM membership to use this app.");
+                }
+
                 var authenticatedUser = MapLoginResponseDtoToUser(loginResponseDto);
                 return new AuthenticationResult {IsAuthenticated = true, AuthenticatedUser = authenticatedUser};
             }
-            catch (HockeyStreamsApiBadRequest badRequest)
+            catch (HockeyStreamsApiBadLogin badRequest)
             {
                 return new AuthenticationResult {IsAuthenticated = false, ErrorMessage = badRequest.Message};
             }                        
@@ -36,8 +42,7 @@ namespace StreamLauncher.Authentication
             return new User
             {
                 UserName = loginResponseDto.UserName,
-                FavoriteTeam = loginResponseDto.FavTeam,
-                Membership = loginResponseDto.Membership,
+                FavoriteTeam = loginResponseDto.FavTeam,                
                 Token = loginResponseDto.Token
             };
         }

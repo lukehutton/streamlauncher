@@ -48,12 +48,6 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
 
-            if (result.AuthenticatedUser.Membership == "REGULAR")
-            {
-                ErrorMessage = "You must have PREMIUM membership to use this app.";
-                return;                
-            }
-
             if (RememberMe)
             {
                 _userSettings.UserName = UserName;

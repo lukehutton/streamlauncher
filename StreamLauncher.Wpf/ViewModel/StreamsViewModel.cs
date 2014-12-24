@@ -7,9 +7,11 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
+using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Security;
 using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Wpf.Views;
 
@@ -21,7 +23,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
 
         private readonly IStreamLocationRepository _streamLocationRepository;        
-        private readonly ITokenProvider _tokenProvider;        
+        private readonly ITokenProvider _tokenProvider;
+        private readonly IUserSettings _userSettings;
+        private readonly IAuthenticationService _authenticationService;
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
@@ -42,13 +46,17 @@ namespace StreamLauncher.Wpf.ViewModel
         public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,            
-            ITokenProvider tokenProvider            
+            ITokenProvider tokenProvider,
+            IUserSettings userSettings,
+            IAuthenticationService authenticationService
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
             _streamLocationRepository = streamLocationRepository;            
-            _tokenProvider = tokenProvider;            
+            _tokenProvider = tokenProvider;
+            _userSettings = userSettings;
+            _authenticationService = authenticationService;
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
@@ -83,10 +91,6 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 //todo shutdown app?
                 MessageBox.Show("todo shutdown");
-            }
-            else
-            {
-                MessageBox.Show("woohoo authenticated!");
             }
         }
 
@@ -130,13 +134,26 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             if (IsInDesignModeStatic) return;
 
-            // todo read from persistance OR load form input            
-            string userName = null;
-            string password = null;
-            if (userName == null && password == null)
+            if (!_userSettings.RememberMe)
             {
                 OpenLoginDialogCommand.Execute(null);
+                return;
             }
+            string password;
+            using (var secureString = _userSettings.EncryptedPassword.DecryptString())
+            {
+                password = secureString.ToInsecureString();
+            }
+            var result = _authenticationService.Authenticate(_userSettings.UserName, password);
+            if (!result.IsAuthenticated)
+            {
+                // todo send error message, username and password
+                OpenLoginDialogCommand.Execute(null);
+            }
+            Messenger.Default.Send(new AuthenticatedMessage
+            {
+                AuthenticationResult = result
+            });
         }
 
         private void SetPreferredLocation()

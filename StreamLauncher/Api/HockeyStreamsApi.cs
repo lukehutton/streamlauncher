@@ -18,13 +18,13 @@ namespace StreamLauncher.Api
             
             if (response.ErrorException != null)
             {
-                const string message = "Error retrieving response.  Check inner details for more info.";
+                const string message = "Error retrieving response. Check inner details for more info.";
                 throw new ApplicationException(message, response.ErrorException);
             }            
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var error = new JsonDeserializer().Deserialize<ErrorResponseDto>(response);
-                throw new HockeyStreamsApiBadRequest(error.Msg);
+                throw new HockeyStreamsApiBadLogin(error.Msg);
             }            
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -34,9 +34,9 @@ namespace StreamLauncher.Api
         }
     }
 
-    public class HockeyStreamsApiBadRequest : Exception
+    public class HockeyStreamsApiBadLogin : Exception
     {
-        public HockeyStreamsApiBadRequest(string message) : base(message) {}
+        public HockeyStreamsApiBadLogin(string message) : base(message) {}
     }
 
     public class HockeyStreamsApi : BaseHockeyStreamsApi, IHockeyStreamsApi 
