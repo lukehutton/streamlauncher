@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -8,7 +7,6 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
-using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
@@ -57,29 +55,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new RelayCommand(GetStreams);
             OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
-
-            Messenger.Default.Register<OpenLoginWindowMessage>(
-                this,
-                message =>
-                {
-                    var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
-                    var loginWindow = new LoginWindow
-                    {
-                        DataContext = loginViewModel
-                    };
-                    var authenticated = loginWindow.ShowDialog() ?? false;
-                    if (!authenticated)
-                    {
-                        //todo shutdown app?
-                        MessageBox.Show("todo shutdown");
-                    }
-                    else
-                    {
-                        MessageBox.Show("woohoo authenticated!");
-                    }
-                });
             
-            Messenger.Default.Register<AuthenticatedMessage>(this, Authenticated);
+            Messenger.Default.Register<AuthenticatedMessage>(this, ReceiveAuthenticationMessage);
 
             AuthenticateUser();
 
@@ -94,7 +71,26 @@ namespace StreamLauncher.Wpf.ViewModel
             SetPreferredLocation();     
         }
 
-        private void Authenticated(AuthenticatedMessage authenticatedMessage)
+        private void OpenLoginWindow()
+        {
+            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
+            var loginWindow = new LoginWindow
+            {
+                DataContext = loginViewModel
+            };
+            var authenticated = loginWindow.ShowDialog() ?? false;
+            if (!authenticated)
+            {
+                //todo shutdown app?
+                MessageBox.Show("todo shutdown");
+            }
+            else
+            {
+                MessageBox.Show("woohoo authenticated!");
+            }
+        }
+
+        private void ReceiveAuthenticationMessage(AuthenticatedMessage authenticatedMessage)
         {
             _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
             _tokenProvider.Token = _authenticatedUser.Token;
@@ -114,11 +110,6 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             //Task.Run(async () => await GetStreamsFiltered());
             GetStreamsFiltered();
-        }
-
-        private void OpenLoginWindow()
-        {
-            Messenger.Default.Send(new OpenLoginWindowMessage());
         }
 
         private void FilterByEventType(string selectedEventType)

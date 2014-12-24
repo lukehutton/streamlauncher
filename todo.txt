@@ -10,3 +10,4 @@
 * launch to vlc
 * hide/show scores
 * hightlight fave team with color on grid 
+* enter on login form presses Login button
