@@ -61,6 +61,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SimpleIoc.Default.Register<IHockeyStreamRepository, HockeyStreamRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
                 SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
+                SimpleIoc.Default.Register<IUserSettings, UserSettings>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

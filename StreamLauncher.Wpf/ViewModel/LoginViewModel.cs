@@ -3,6 +3,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Authentication;
+using StreamLauncher.Repositories;
+using StreamLauncher.Security;
 using StreamLauncher.Wpf.Messages;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -10,6 +12,7 @@ namespace StreamLauncher.Wpf.ViewModel
     public class LoginViewModel : ViewModelBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IUserSettings _userSettings;
 
         private string _userName;        
         private string _errorMessage;
@@ -19,9 +22,10 @@ namespace StreamLauncher.Wpf.ViewModel
         public RelayCommand<object> LoginCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
-        public LoginViewModel(IAuthenticationService authenticationService)
+        public LoginViewModel(IAuthenticationService authenticationService, IUserSettings userSettings)
         {
             _authenticationService = authenticationService;
+            _userSettings = userSettings;
 
             LoginCommand = new RelayCommand<object>(Login);
             CancelCommand = new RelayCommand(Cancel);            
@@ -52,7 +56,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
             if (RememberMe)
             {
-                //todo if remember me set save credentials                
+                _userSettings.UserName = UserName;
+                using (var secureString = password.ToSecureString())
+                {
+                    _userSettings.EncryptedPassword = secureString.EncryptString();
+                }                
+                _userSettings.RememberMe = true;
             }
 
             Messenger.Default.Send(new AuthenticatedMessage

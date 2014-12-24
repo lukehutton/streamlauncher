@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,20 +72,33 @@
     <Compile Include="Mappers\ILiveStreamScheduleAggregatorAndMapper.cs" />
     <Compile Include="Api\ITokenProvider.cs" />
     <Compile Include="Mappers\LiveStreamScheduleAggregatorAndMapper.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\HockeyStreamRepository.cs" />
     <Compile Include="Design\DesignHockeyStreamRepository.cs" />
     <Compile Include="Repositories\IHockeyStreamRepository.cs" />
     <Compile Include="Repositories\IScoresRepository.cs" />
+    <Compile Include="Repositories\IUserSettings.cs" />
     <Compile Include="Repositories\IStreamLocationRepository.cs" />
     <Compile Include="Design\DesignStreamLocationRepository.cs" />
     <Compile Include="Repositories\ScoresRepository.cs" />
+    <Compile Include="Repositories\UserSettings.cs" />
     <Compile Include="Repositories\StreamLocationRepository.cs" />
     <Compile Include="Authentication\AuthenticationService.cs" />
     <Compile Include="Authentication\IAuthenticationService.cs" />
+    <Compile Include="Security\SecureIt.cs" />
     <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
