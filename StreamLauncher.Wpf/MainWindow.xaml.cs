@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using Microsoft.Practices.ServiceLocation;
+using StreamLauncher.Wpf.ViewModel;
 
 namespace StreamLauncher.Wpf
 {
@@ -9,7 +11,9 @@ namespace StreamLauncher.Wpf
     {
         public MainWindow()
         {
-            InitializeComponent();         
+            InitializeComponent();
+            var main = ServiceLocator.Current.GetInstance<MainViewModel>();
+            main.AuthenticateUser();
         }        
     }
 }

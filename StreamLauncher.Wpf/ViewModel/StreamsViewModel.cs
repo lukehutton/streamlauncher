@@ -16,7 +16,6 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
-
         private readonly IStreamLocationRepository _streamLocationRepository;        
         private readonly ITokenProvider _tokenProvider;
 
@@ -28,12 +27,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _location;
 
         private string _filterEventType;
-        private string _filterActiveState;
-
-        private string _currentDate;
-        private string _currentUser;
-
-        private User _authenticatedUser;
+        private string _filterActiveState;        
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -51,34 +45,20 @@ namespace StreamLauncher.Wpf.ViewModel
             Locations = new ObservableCollection<StreamLocation>();
 
             GetStreamsCommand = new RelayCommand(GetStreams);            
-            
+                        
             Messenger.Default.Register<AuthenticatedMessage>(this, AuthenticationSuccessful);
         }
 
         private void AuthenticationSuccessful(AuthenticatedMessage authenticatedMessage)
-        {
-            _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
-            _tokenProvider.Token = _authenticatedUser.Token;
+        {            
+            _tokenProvider.Token = authenticatedMessage.AuthenticationResult.AuthenticatedUser.Token;
 
             SelectedFilterEventType = "NHL";
             SelectedFilterActiveState = "All";
             GetStreams();
 
             GetLocations();
-
-            SetCurrentUser();
-            SetCurrentDate();
-            SetPreferredLocation();     
-        }
-
-        private void SetCurrentUser()
-        {
-            CurrentUser = string.Format("Hi {0}", _authenticatedUser.UserName);
-        }
-
-        private void SetCurrentDate()
-        {
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+            SetPreferredLocation();            
         }
 
         private void GetStreams()
@@ -101,7 +81,6 @@ namespace StreamLauncher.Wpf.ViewModel
             Streams = new ObservableCollection<HockeyStream>(filteredStreams);
         }
 
-
         private void SetPreferredLocation()
         {
             if (IsInDesignModeStatic)
@@ -114,25 +93,6 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
-        public string CurrentUser
-        {
-            get { return _currentUser; }
-            set
-            {
-                _currentUser = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string CurrentDate
-        {
-            get { return _currentDate; }
-            set
-            {
-                _currentDate = value;
-                RaisePropertyChanged();
-            }
-        }
         public string SelectedLocation
         {
             get { return _location; }
@@ -152,6 +112,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged();
             }
         }
+
         public string SelectedFilterActiveState
         {
             get { return _filterActiveState; }
@@ -166,6 +127,7 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             Streams.Clear();
 
+            // update status control on top off all controls - see http://msdn.microsoft.com/en-us/magazine/jj694937.aspx
 //            Messenger.Default.Send(new StatusMessage("Getting streams...", 0));
 
             var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);

@@ -11,3 +11,4 @@
 * hide/show scores
 * hightlight fave team with color on grid 
 * enter on login form presses Login button
+* add api keys and user to app settings (make to sure add to .gitignore)

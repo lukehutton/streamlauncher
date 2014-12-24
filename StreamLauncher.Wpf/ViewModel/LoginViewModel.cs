@@ -30,13 +30,13 @@ namespace StreamLauncher.Wpf.ViewModel
             LoginCommand = new RelayCommand<object>(Login);
             CancelCommand = new RelayCommand(Cancel);
 
-            Messenger.Default.Register<LoginMessage>(this, ReceiveLoginMessage);
+            Messenger.Default.Register<AutoLoginFailedMessage>(this, ReceiveLoginFailedMessage);            
         }
 
-        private void ReceiveLoginMessage(LoginMessage loginMessage)
+        private void ReceiveLoginFailedMessage(AutoLoginFailedMessage autoLoginFailedMessage)
         {
-            UserName = loginMessage.UserName;
-            ErrorMessage = loginMessage.ErrorMessage;
+            UserName = autoLoginFailedMessage.UserName;
+            ErrorMessage = autoLoginFailedMessage.ErrorMessage;
         }
 
         private void Cancel()
@@ -66,7 +66,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 _userSettings.RememberMe = true;
             }
 
-            Messenger.Default.Send(new AuthenticatedMessage
+            Messenger.Default.Send(new LoginSuccessfulMessage
             {
                 AuthenticationResult = result                
             });
