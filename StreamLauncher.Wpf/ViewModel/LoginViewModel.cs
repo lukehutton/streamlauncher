@@ -43,7 +43,13 @@ namespace StreamLauncher.Wpf.ViewModel
                 ErrorMessage = result.ErrorMessage;
                 return;
             }
-            
+
+            if (result.AuthenticatedUser.Membership == "REGULAR")
+            {
+                ErrorMessage = "You must have PREMIUM membership to use this app.";
+                return;                
+            }
+
             if (RememberMe)
             {
                 //todo if remember me set save credentials                

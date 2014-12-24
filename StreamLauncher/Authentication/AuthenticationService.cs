@@ -37,6 +37,7 @@ namespace StreamLauncher.Authentication
             {
                 UserName = loginResponseDto.UserName,
                 FavoriteTeam = loginResponseDto.FavTeam,
+                Membership = loginResponseDto.Membership,
                 Token = loginResponseDto.Token
             };
         }
