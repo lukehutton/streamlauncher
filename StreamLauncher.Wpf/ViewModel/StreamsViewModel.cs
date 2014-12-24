@@ -52,10 +52,10 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new RelayCommand(GetStreams);            
             
-            Messenger.Default.Register<AuthenticatedMessage>(this, ReceiveAuthenticationMessage);
+            Messenger.Default.Register<AuthenticatedMessage>(this, AuthenticationSuccessful);
         }
 
-        private void ReceiveAuthenticationMessage(AuthenticatedMessage authenticatedMessage)
+        private void AuthenticationSuccessful(AuthenticatedMessage authenticatedMessage)
         {
             _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
             _tokenProvider.Token = _authenticatedUser.Token;
