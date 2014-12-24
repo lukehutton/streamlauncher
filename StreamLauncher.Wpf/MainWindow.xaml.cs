@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using StreamLauncher.Repositories;
+﻿using System.Windows;
 
 namespace StreamLauncher.Wpf
 {
@@ -11,14 +9,7 @@ namespace StreamLauncher.Wpf
     {
         public MainWindow()
         {
-            InitializeComponent();
-            Closed += OnClosed;
-        }
-
-        private void OnClosed(object sender, EventArgs e)
-        {
-            var userSettings = new UserSettings();
-            userSettings.Save();
-        }
+            InitializeComponent();         
+        }        
     }
 }

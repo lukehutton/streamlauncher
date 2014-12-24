@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -11,38 +12,31 @@ using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the main View can data bind to.
-    /// <para>
-    /// Use the <strong>mvvminpc</strong> snippet to add bindable properties to this ViewModel.
-    /// </para>
-    /// <para>
-    /// You can also use Blend to data bind with the tool's support.
-    /// </para>
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class MainViewModel : ViewModelBase
     {
         private readonly IUserSettings _userSettings;
         private readonly IAuthenticationService _authenticationService;
 
         public RelayCommand OpenLoginDialogCommand { get; private set; }
+        public RelayCommand<CancelEventArgs> Closing { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of the MainViewModel class.
-        /// </summary>
         public MainViewModel(IUserSettings userSettings, IAuthenticationService authenticationService)
         {
             _userSettings = userSettings;
             _authenticationService = authenticationService;
 
             OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
+            Closing = new RelayCommand<CancelEventArgs>(CloseApp);
 
             AuthenticateUser();
         }
 
+        private void CloseApp(CancelEventArgs obj)
+        {
+            _userSettings.Save();
+            Application.Current.Shutdown();
+        }
+        
         private void OpenLoginWindow()
         {
             var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
@@ -52,9 +46,8 @@ namespace StreamLauncher.Wpf.ViewModel
             };
             var authenticated = loginWindow.ShowDialog() ?? false;
             if (!authenticated)
-            {
-                //todo shutdown app?
-                MessageBox.Show("todo shutdown");
+            {                
+                Application.Current.Shutdown();
             }
         }
 
@@ -75,7 +68,13 @@ namespace StreamLauncher.Wpf.ViewModel
             var result = _authenticationService.Authenticate(_userSettings.UserName, password);
             if (!result.IsAuthenticated)
             {
-                // todo send error message, username and password
+                Messenger.Default.Send(new LoginMessage
+                {
+                    UserName = _userSettings.UserName,
+                    Password = password,
+                    ErrorMessage = result.ErrorMessage,
+                    RememberMe = true
+                });
                 OpenLoginDialogCommand.Execute(null);
             }
             Messenger.Default.Send(new AuthenticatedMessage
@@ -83,6 +82,5 @@ namespace StreamLauncher.Wpf.ViewModel
                 AuthenticationResult = result
             });
         }
-
     }
 }

@@ -5,7 +5,6 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
-using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
@@ -36,7 +35,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private User _authenticatedUser;
 
-        public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
+        public StreamsViewModel(
+            IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,            
             ITokenProvider tokenProvider
@@ -53,6 +53,12 @@ namespace StreamLauncher.Wpf.ViewModel
             GetStreamsCommand = new RelayCommand(GetStreams);            
             
             Messenger.Default.Register<AuthenticatedMessage>(this, ReceiveAuthenticationMessage);
+        }
+
+        private void ReceiveAuthenticationMessage(AuthenticatedMessage authenticatedMessage)
+        {
+            _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
+            _tokenProvider.Token = _authenticatedUser.Token;
 
             SelectedFilterEventType = "NHL";
             SelectedFilterActiveState = "All";
@@ -63,12 +69,6 @@ namespace StreamLauncher.Wpf.ViewModel
             SetCurrentUser();
             SetCurrentDate();
             SetPreferredLocation();     
-        }
-
-        private void ReceiveAuthenticationMessage(AuthenticatedMessage authenticatedMessage)
-        {
-            _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
-            _tokenProvider.Token = _authenticatedUser.Token;
         }
 
         private void SetCurrentUser()

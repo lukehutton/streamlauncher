@@ -28,7 +28,15 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings = userSettings;
 
             LoginCommand = new RelayCommand<object>(Login);
-            CancelCommand = new RelayCommand(Cancel);            
+            CancelCommand = new RelayCommand(Cancel);
+
+            Messenger.Default.Register<LoginMessage>(this, ReceiveLoginMessage);
+        }
+
+        private void ReceiveLoginMessage(LoginMessage loginMessage)
+        {
+            UserName = loginMessage.UserName;
+            ErrorMessage = loginMessage.ErrorMessage;
         }
 
         private void Cancel()

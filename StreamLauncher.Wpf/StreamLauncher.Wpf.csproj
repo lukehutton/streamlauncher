@@ -94,6 +94,7 @@
     <Compile Include="Infrastructure\Converters\ConvertTextToImage.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
     <Compile Include="Messages\AuthenticatedMessage.cs" />
+    <Compile Include="Messages\LoginMessage.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

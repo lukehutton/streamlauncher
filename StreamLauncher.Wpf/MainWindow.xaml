@@ -4,14 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Views="clr-namespace:StreamLauncher.Wpf.Views" mc:Ignorable="d" x:Class="StreamLauncher.Wpf.MainWindow"
         Title="Hockey Streams Launcher" Height="565" Width="918" Icon="Images\hs16x16.png" ResizeMode="NoResize" UseLayoutRounding="True"
         WindowStartupLocation="CenterScreen"
-    >       
-	<Window.Background>
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
+        xmlns:command="http://www.galasoft.ch/mvvmlight">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <command:EventToCommand Command="{Binding Closing}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FF161635" Offset="0"/>
 			<GradientStop Color="White" Offset="1"/>
 		</LinearGradientBrush>
 	</Window.Background>
     <Grid HorizontalAlignment="Left" Height="530" Margin="10,10,0,0" VerticalAlignment="Top" Width="890">
-		<Views:StreamsView HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="885"/>
-	</Grid>
+        <Views:StreamsView HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="885"/>
+    </Grid>
 </Window>
