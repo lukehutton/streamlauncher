@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Threading.Tasks;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
@@ -22,8 +23,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
 
         private readonly IStreamLocationRepository _streamLocationRepository;        
-        private readonly ITokenProvider _tokenProvider;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly ITokenProvider _tokenProvider;        
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
@@ -44,15 +44,13 @@ namespace StreamLauncher.Wpf.ViewModel
         public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,            
-            ITokenProvider tokenProvider,
-            IAuthenticationService authenticationService
+            ITokenProvider tokenProvider            
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
             _streamLocationRepository = streamLocationRepository;            
-            _tokenProvider = tokenProvider;
-            _authenticationService = authenticationService;
+            _tokenProvider = tokenProvider;            
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
@@ -61,16 +59,28 @@ namespace StreamLauncher.Wpf.ViewModel
             OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
 
             Messenger.Default.Register<OpenLoginWindowMessage>(
-    this,
-    message =>
-    {
-        var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
-        var loginWindow = new LoginWindow
-        {
-            DataContext = loginViewModel
-        };
-        var authenticated = loginWindow.ShowDialog() ?? false;
-    });   
+                this,
+                message =>
+                {
+                    var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
+                    var loginWindow = new LoginWindow
+                    {
+                        DataContext = loginViewModel
+                    };
+                    var authenticated = loginWindow.ShowDialog() ?? false;
+                    if (!authenticated)
+                    {
+                        //todo shutdown app?
+                        MessageBox.Show("todo shutdown");
+                    }
+                    else
+                    {
+                        MessageBox.Show("woohoo authenticated!");
+                    }
+                });
+            
+            Messenger.Default.Register<AuthenticatedMessage>(this, Authenticated);
+
             AuthenticateUser();
 
             SelectedFilterEventType = "NHL";
@@ -83,7 +93,12 @@ namespace StreamLauncher.Wpf.ViewModel
             SetCurrentDate();
             SetPreferredLocation();     
         }
-        
+
+        private void Authenticated(AuthenticatedMessage authenticatedMessage)
+        {
+            _authenticatedUser = authenticatedMessage.AuthenticationResult.AuthenticatedUser;
+            _tokenProvider.Token = _authenticatedUser.Token;
+        }
 
         private void SetCurrentUser()
         {
@@ -131,12 +146,6 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 OpenLoginDialogCommand.Execute(null);
             }
-
-            userName = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.userName"]);
-            password = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.password"]);
-            var result = _authenticationService.Authenticate(userName, password);
-            _tokenProvider.Token = result.AuthenticatedUser.Token;
-            _authenticatedUser = result.AuthenticatedUser;
         }
 
         private void SetPreferredLocation()

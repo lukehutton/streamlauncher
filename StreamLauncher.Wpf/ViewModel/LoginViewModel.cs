@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Authentication;
+using StreamLauncher.Wpf.Messages;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -9,36 +11,50 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IAuthenticationService _authenticationService;
 
-        private string _userName;
-        private string _password;
+        private string _userName;        
         private string _errorMessage;
+        private bool? _dialogResult;
+        private bool _rememberMe;
 
-        public RelayCommand LoginCommand { get; private set; }
+        public RelayCommand<object> LoginCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
         public LoginViewModel(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
 
-            LoginCommand = new RelayCommand(Login);
+            LoginCommand = new RelayCommand<object>(Login);
             CancelCommand = new RelayCommand(Cancel);            
         }
 
         private void Cancel()
-        {            
+        {                        
+            DialogResult = false;
         }
 
-        private void Login()
-        {                     
-            var result = _authenticationService.Authenticate(UserName, Password);
+        private void Login(object parameter)
+        {
+            var passwordBox = parameter as PasswordBox;
+            var password = passwordBox.Password;
+
+            var result = _authenticationService.Authenticate(UserName, password);
             if (!result.IsAuthenticated)
             {
                 ErrorMessage = result.ErrorMessage;
                 return;
             }
-           
-//            _tokenProvider.Token = result.AuthenticatedUser.Token;
-//            _authenticatedUser = result.AuthenticatedUser;
+            
+            if (RememberMe)
+            {
+                //todo if remember me set save credentials                
+            }
+
+            Messenger.Default.Send(new AuthenticatedMessage
+            {
+                AuthenticationResult = result                
+            });
+
+            DialogResult = true;
         }
 
         public string ErrorMessage
@@ -50,13 +66,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
             set
             {
-                if (_errorMessage == value)
-                {
-                    return;
-                }
-
                 _errorMessage = value;
-                RaisePropertyChanged(() => UserName);
+                RaisePropertyChanged(() => ErrorMessage);
             }
         }        
         
@@ -69,32 +80,36 @@ namespace StreamLauncher.Wpf.ViewModel
 
             set
             {
-                if (_userName == value)
-                {
-                    return;
-                }
-
                 _userName = value;
                 RaisePropertyChanged(() => UserName);
             }
         }
 
-        public string Password
+        public bool RememberMe
         {
             get
             {
-                return _password;
+                return _rememberMe;
             }
 
             set
             {
-                if (_password == value)
-                {
-                    return;
-                }
+                _rememberMe = value;
+                RaisePropertyChanged(() => RememberMe);
+            }
+        }
 
-                _password = value;
-                RaisePropertyChanged(() => Password);
+        public bool? DialogResult
+        {
+            get
+            {
+                return _dialogResult;
+            }
+
+            set
+            {
+                _dialogResult = value;
+                RaisePropertyChanged(() => DialogResult);
             }
         }
     }

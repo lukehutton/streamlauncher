@@ -82,6 +82,13 @@ namespace StreamLauncher.Wpf.ViewModel
                 return ServiceLocator.Current.GetInstance<StreamsViewModel>();
             }
         }
+        public LoginViewModel Login
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<LoginViewModel>();
+            }
+        }
         
         public static void Cleanup()
         {

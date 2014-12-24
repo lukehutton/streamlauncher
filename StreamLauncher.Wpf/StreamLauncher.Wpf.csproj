@@ -92,6 +92,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\Converters\ConvertTextToImage.cs" />
+    <Compile Include="Infrastructure\DialogCloser.cs" />
+    <Compile Include="Messages\AuthenticatedMessage.cs" />
     <Compile Include="Messages\OpenLoginWindowMessage.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />
@@ -200,7 +202,6 @@
     <Resource Include="Images\Teams\Florida Panthers.png" />
     <Resource Include="Images\Teams\Los Angeles Kings.png" />
     <Resource Include="Images\Teams\Minnesota Wild.png" />
-    <Resource Include="Images\Teams\Monteal Canadiens.png" />
     <Resource Include="Images\Teams\Nashville Predators.png" />
     <Resource Include="Images\Teams\New Jersey Devils.png" />
     <Resource Include="Images\Teams\New York Islanders.png" />
@@ -226,6 +227,9 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="Images\Splash\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Teams\Montreal Canadiens.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
