@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.Authentication;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
-using StreamLauncher.Security;
 using StreamLauncher.Wpf.Messages;
-using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -24,14 +20,11 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private readonly IStreamLocationRepository _streamLocationRepository;        
         private readonly ITokenProvider _tokenProvider;
-        private readonly IUserSettings _userSettings;
-        private readonly IAuthenticationService _authenticationService;
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
 
-        public RelayCommand GetStreamsCommand { get; private set; }
-        public RelayCommand OpenLoginDialogCommand { get; private set; }
+        public RelayCommand GetStreamsCommand { get; private set; }        
 
         private string _location;
 
@@ -46,27 +39,20 @@ namespace StreamLauncher.Wpf.ViewModel
         public StreamsViewModel(IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,            
-            ITokenProvider tokenProvider,
-            IUserSettings userSettings,
-            IAuthenticationService authenticationService
+            ITokenProvider tokenProvider
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
             _streamLocationRepository = streamLocationRepository;            
             _tokenProvider = tokenProvider;
-            _userSettings = userSettings;
-            _authenticationService = authenticationService;
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
 
-            GetStreamsCommand = new RelayCommand(GetStreams);
-            OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
+            GetStreamsCommand = new RelayCommand(GetStreams);            
             
             Messenger.Default.Register<AuthenticatedMessage>(this, ReceiveAuthenticationMessage);
-
-            AuthenticateUser();
 
             SelectedFilterEventType = "NHL";
             SelectedFilterActiveState = "All";
@@ -77,21 +63,6 @@ namespace StreamLauncher.Wpf.ViewModel
             SetCurrentUser();
             SetCurrentDate();
             SetPreferredLocation();     
-        }
-
-        private void OpenLoginWindow()
-        {
-            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
-            var loginWindow = new LoginWindow
-            {
-                DataContext = loginViewModel
-            };
-            var authenticated = loginWindow.ShowDialog() ?? false;
-            if (!authenticated)
-            {
-                //todo shutdown app?
-                MessageBox.Show("todo shutdown");
-            }
         }
 
         private void ReceiveAuthenticationMessage(AuthenticatedMessage authenticatedMessage)
@@ -130,31 +101,6 @@ namespace StreamLauncher.Wpf.ViewModel
             Streams = new ObservableCollection<HockeyStream>(filteredStreams);
         }
 
-        private void AuthenticateUser()
-        {
-            if (IsInDesignModeStatic) return;
-
-            if (!_userSettings.RememberMe)
-            {
-                OpenLoginDialogCommand.Execute(null);
-                return;
-            }
-            string password;
-            using (var secureString = _userSettings.EncryptedPassword.DecryptString())
-            {
-                password = secureString.ToInsecureString();
-            }
-            var result = _authenticationService.Authenticate(_userSettings.UserName, password);
-            if (!result.IsAuthenticated)
-            {
-                // todo send error message, username and password
-                OpenLoginDialogCommand.Execute(null);
-            }
-            Messenger.Default.Send(new AuthenticatedMessage
-            {
-                AuthenticationResult = result
-            });
-        }
 
         private void SetPreferredLocation()
         {
