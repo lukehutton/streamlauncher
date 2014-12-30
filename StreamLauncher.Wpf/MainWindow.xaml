@@ -26,6 +26,11 @@
                Text="{Binding Path=Tag, 
                               RelativeSource={RelativeSource Mode=FindAncestor,
                                                              AncestorType={x:Type Label}}}" />
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding LogoutCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </Label>
         <Views:StreamsView HorizontalAlignment="Left" Height="520" VerticalAlignment="Top" Width="885"/>
     </Grid>

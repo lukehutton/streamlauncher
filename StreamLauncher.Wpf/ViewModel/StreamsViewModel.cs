@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using StreamLauncher.Api;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
@@ -16,8 +15,7 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
-        private readonly IStreamLocationRepository _streamLocationRepository;        
-        private readonly ITokenProvider _tokenProvider;
+        private readonly IStreamLocationRepository _streamLocationRepository;                
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
@@ -27,41 +25,40 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _location;
 
         private string _filterEventType;
-        private string _filterActiveState;        
+        private string _filterActiveState;
+        private string _favouriteTeam;
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
-            IStreamLocationRepository streamLocationRepository,            
-            ITokenProvider tokenProvider
+            IStreamLocationRepository streamLocationRepository                        
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
-            _streamLocationRepository = streamLocationRepository;            
-            _tokenProvider = tokenProvider;
+            _streamLocationRepository = streamLocationRepository;                        
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
 
-            GetStreamsCommand = new RelayCommand(GetStreams);            
+            GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, AuthenticationSuccessful);
         }
 
         private void AuthenticationSuccessful(AuthenticatedMessage authenticatedMessage)
-        {            
-            _tokenProvider.Token = authenticatedMessage.AuthenticationResult.AuthenticatedUser.Token;
+        {                        
+            _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
 
             SelectedFilterEventType = "NHL";
             SelectedFilterActiveState = "All";
-            GetStreams();
+            HandleGetStreamsCommand();
 
             GetLocations();
             SetPreferredLocation();            
         }
 
-        private void GetStreams()
+        private void HandleGetStreamsCommand()
         {
             //Task.Run(async () => await GetStreamsFiltered());
             GetStreamsFiltered();

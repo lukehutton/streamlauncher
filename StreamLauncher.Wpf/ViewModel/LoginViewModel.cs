@@ -27,8 +27,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _authenticationService = authenticationService;
             _userSettings = userSettings;
 
-            LoginCommand = new RelayCommand<object>(Login);
-            CancelCommand = new RelayCommand(Cancel);
+            LoginCommand = new RelayCommand<object>(HandleLoginCommand);
+            CancelCommand = new RelayCommand(HandleCancelCommand);
 
             Messenger.Default.Register<AutoLoginFailedMessage>(this, ReceiveLoginFailedMessage);            
         }
@@ -39,12 +39,12 @@ namespace StreamLauncher.Wpf.ViewModel
             ErrorMessage = autoLoginFailedMessage.ErrorMessage;
         }
 
-        private void Cancel()
+        private void HandleCancelCommand()
         {                        
             DialogResult = false;
         }
 
-        private void Login(object parameter)
+        private void HandleLoginCommand(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;

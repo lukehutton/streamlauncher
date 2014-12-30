@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using StreamLauncher.Api;
 using StreamLauncher.Authentication;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
@@ -17,54 +18,79 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IUserSettings _userSettings;
         private readonly IAuthenticationService _authenticationService;
-        private string _userName;
+        private readonly ITokenProvider _tokenProvider;
 
+        private string _userName;
         private string _currentUser;
         private string _currentDate;
 
-        public RelayCommand OpenLoginDialogCommand { get; private set; }
+        public RelayCommand LoginCommand { get; private set; }
+        public RelayCommand LogoutCommand { get; private set; }
+
         public RelayCommand<CancelEventArgs> Closing { get; private set; }
-        
-        public MainViewModel(IUserSettings userSettings, IAuthenticationService authenticationService)
+
+        public MainViewModel(IUserSettings userSettings, IAuthenticationService authenticationService, ITokenProvider tokenProvider)
         {
             _userSettings = userSettings;
             _authenticationService = authenticationService;
+            _tokenProvider = tokenProvider;
 
-            OpenLoginDialogCommand = new RelayCommand(OpenLoginWindow);
-            Closing = new RelayCommand<CancelEventArgs>(CloseApp);
+            LoginCommand = new RelayCommand(HandleLoginCommand);
+            LogoutCommand = new RelayCommand(HandleLogoutCommand);
+            Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
             Messenger.Default.Register<LoginSuccessfulMessage>(this, LoginSuccessful);            
         }
 
         private void LoginSuccessful(LoginSuccessfulMessage loginSuccessful)
         {
+            _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
+
+            CurrentUser = string.Format("Hi {0}", _userName);
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+
             Messenger.Default.Send(new AuthenticatedMessage
             {
                 AuthenticationResult = loginSuccessful.AuthenticationResult
             });
-            SetCurrentUser();
-            SetCurrentDate();
         }        
 
-        private void CloseApp(CancelEventArgs obj)
+        private void HandleClosingCommand(CancelEventArgs obj)
         {
             _userSettings.Save();
             Application.Current.Shutdown();
         }
         
-        private void OpenLoginWindow()
+        private void HandleLoginCommand()
         {
-            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>();
+            OpenLoginDialog();
+        }
+
+        private static void OpenLoginDialog()
+        {
+            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());
             var loginWindow = new LoginWindow
             {
-                DataContext = loginViewModel
+                DataContext = loginViewModel                
             };
             var authenticated = loginWindow.ShowDialog() ?? false;
             if (!authenticated)
-            {                
+            {
                 Application.Current.Shutdown();
             }            
+        }
+
+        private void HandleLogoutCommand()
+        {
+            _tokenProvider.Token = string.Empty;
+
+            _userSettings.UserName = string.Empty;
+            _userSettings.EncryptedPassword = string.Empty;
+            _userSettings.RememberMe = false;
+            _userSettings.Save();            
+
+            OpenLoginDialog();
         }
 
         public void AuthenticateUser()
@@ -73,7 +99,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             if (!_userSettings.RememberMe)
             {
-                OpenLoginWindow();
+                HandleLoginCommand();
                 return;
             }
             string password;
@@ -89,20 +115,10 @@ namespace StreamLauncher.Wpf.ViewModel
                     UserName = _userSettings.UserName,                    
                     ErrorMessage = result.ErrorMessage                    
                 });
-                OpenLoginWindow();
+                HandleLoginCommand();
                 return;
             }
             LoginSuccessful(new LoginSuccessfulMessage { AuthenticationResult = result });
-        }
-
-        private void SetCurrentUser()
-        {
-            CurrentUser = string.Format("Hi {0}", _userName);
-        }
-
-        private void SetCurrentDate()
-        {
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
         }
 
         public string CurrentUser

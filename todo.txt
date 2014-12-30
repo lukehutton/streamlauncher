@@ -10,5 +10,5 @@
 * launch to vlc
 * hide/show scores
 * hightlight fave team with color on grid 
-* enter on login form presses Login button
+* wait async message on login (takes ~3 seconds)
 * add api keys and user to app settings (make to sure add to .gitignore)

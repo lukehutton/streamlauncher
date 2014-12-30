@@ -18,8 +18,8 @@
 			<ColumnDefinition Width="20*"/>
 			<ColumnDefinition Width="201*"/>
 		</Grid.ColumnDefinitions>
-        <Button Style="{DynamicResource SimpleButton}" Content="Login" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
-		<Button Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
+        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Login" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
+		<Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
 		<TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,54.002,0,0" TextWrapping="Wrap" Text="{Binding UserName}" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
 		<Label Content="User Name:" Grid.Column="1" HorizontalAlignment="Left" Margin="29.999,51,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
         <PasswordBox Name="txtPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,91,0,0" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
