@@ -67,8 +67,6 @@ namespace StreamLauncher.Wpf.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<StreamsViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
-
-
         }
 
         public MainViewModel Main

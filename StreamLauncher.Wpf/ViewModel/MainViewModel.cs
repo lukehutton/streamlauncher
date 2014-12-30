@@ -39,10 +39,10 @@ namespace StreamLauncher.Wpf.ViewModel
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
-            Messenger.Default.Register<LoginSuccessfulMessage>(this, LoginSuccessful);            
+            Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);            
         }
 
-        private void LoginSuccessful(LoginSuccessfulMessage loginSuccessful)
+        private void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)
         {
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
@@ -69,7 +69,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private static void OpenLoginDialog()
         {
-            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());
+            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());            
             var loginWindow = new LoginWindow
             {
                 DataContext = loginViewModel                
@@ -83,6 +83,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleLogoutCommand()
         {
+            Messenger.Default.Send(new NotificationMessage(this, "HideMainWindow"));
+
             _tokenProvider.Token = string.Empty;
 
             _userSettings.UserName = string.Empty;
@@ -91,6 +93,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.Save();            
 
             OpenLoginDialog();
+
+            Messenger.Default.Send(new NotificationMessage(this, "ShowMainWindow"));
         }
 
         public void AuthenticateUser()
@@ -118,7 +122,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 HandleLoginCommand();
                 return;
             }
-            LoginSuccessful(new LoginSuccessfulMessage { AuthenticationResult = result });
+            HandleLoginSuccessfulMessage(new LoginSuccessfulMessage { AuthenticationResult = result });
         }
 
         public string CurrentUser

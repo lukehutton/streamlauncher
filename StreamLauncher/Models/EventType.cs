@@ -1,4 +1,4 @@
-﻿using StreamLauncher.Util;
+﻿using System;
 
 namespace StreamLauncher.Models
 {
@@ -7,8 +7,10 @@ namespace StreamLauncher.Models
         AHL,
         NHL,
         OHL,
+        QMJHL,
         WHL,
-        WorldJuniors
+        WorldJuniors,
+        Uknown
     }
 
     public static class EventTypeParser
@@ -16,7 +18,8 @@ namespace StreamLauncher.Models
         public static EventType Parse(string eventType)
         {
             if (eventType == "World Juniors") return EventType.WorldJuniors;
-            return eventType.ParseEnum<EventType>();
+            EventType tryEventType;
+            return Enum.TryParse(eventType, out tryEventType) ? tryEventType : EventType.Uknown;
         }
     }
 }
