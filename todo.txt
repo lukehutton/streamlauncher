@@ -1,7 +1,5 @@
 * resize main window and stretch all contents (file size bigger etc.?)
-* user settings - save preference of location, sd or hd, vlc install location
-* event type filter
-* active filter
+* user settings - save preference of location, sd or hd, vlc install location, save filters default choice (nhl)
 * on-demand/live filter
 * add unit tests on viewmodels
 * close app on bad login after 3 bad attempts
@@ -13,5 +11,5 @@
 * wait async message on login (takes ~3 seconds) - update status control on top off all controls
 * add api keys and user to app settings (make to sure add to .gitignore)
 * general exception catch, display error occurred message and log it
-* refresh streams command
 * show event type in grid when ALL event type selected, or always show
+* status for refresh command

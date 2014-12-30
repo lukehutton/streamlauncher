@@ -34,7 +34,7 @@
         	<ListBoxItem Content="High Quality (3200Kbps HD)"/>
         	<ListBoxItem Content="Low Quality (800Kbps SD)"/>
         </ComboBox>
-        <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875"/>
+        <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding GetStreamsCommand}" />
         <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
