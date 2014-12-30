@@ -6,16 +6,22 @@ namespace StreamLauncher.Filters
 {
     public class ActiveFilterSpecification : HockeyStreamFilterSpecification
     {
-        private readonly bool _isPlaying;
+        private readonly string _activeState;
 
-        public ActiveFilterSpecification(bool isPlaying)
+        public ActiveFilterSpecification(string activeState)
         {
-            _isPlaying = isPlaying;
+            _activeState = activeState;
         }
 
         protected override IEnumerable<HockeyStream> ApplyFilter(IList<HockeyStream> hockeyStreams)
         {
-            return hockeyStreams.Where(hockeyStream => _isPlaying == hockeyStream.IsPlaying);
+            switch (_activeState)
+            {
+                case "In Progress" : return hockeyStreams.Where(hockeyStream => hockeyStream.IsPlaying);
+                case "Coming Soon": return hockeyStreams.Where(hockeyStream => hockeyStream.PeriodAndTimeLeft == "-");
+                case "Completed": return hockeyStreams.Where(hockeyStream => hockeyStream.PeriodAndTimeLeft == "Final");
+            }
+            return hockeyStreams;            
         }
     }
 }

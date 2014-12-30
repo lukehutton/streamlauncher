@@ -52,15 +52,15 @@ namespace StreamLauncher.Wpf.ViewModel
         }
 
         private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
-        {                        
+        {
+            SelectedFilterEventType = "ALL";
+            SelectedFilterActiveState = "ALL";
+
             _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
             _isAuthenticated = true;
 
             GetLocations();
             SetPreferredLocation();            
-
-            _filterEventType = "ALL";
-            _filterActiveState = "ALL";
 
             HandleGetStreamsCommand();
         }
@@ -73,18 +73,18 @@ namespace StreamLauncher.Wpf.ViewModel
             FilterStreams(_allHockeyStreams);
         }
 
-        private void FilterStreams(List<HockeyStream> streams)
+        private void FilterStreams(IEnumerable<HockeyStream> streams)
         {
-            var filteredStreams = FilterByEventType(streams, SelectedFilterEventType);            
+            var filteredStreams = FilterByEventType(streams, SelectedFilterEventType);
+            filteredStreams = FilterByActiveState(filteredStreams, SelectedFilterActiveState);            
             Streams = new ObservableCollection<HockeyStream>(filteredStreams);
         }
 
-        private IEnumerable<HockeyStream> FilterByEventType(IList<HockeyStream> streams, string selectedEventType)
+        private IEnumerable<HockeyStream> FilterByEventType(IEnumerable<HockeyStream> streams, string selectedEventType)
         {
             if (selectedEventType == "ALL") return streams;
             var selectedEvent = EventTypeParser.Parse(selectedEventType);
-            var filteredStreams = _hockeyStreamFilter.By(streams, new EventTypeFilterSpecification(selectedEvent));
-            return filteredStreams;
+            return _hockeyStreamFilter.By(streams.ToList(), new EventTypeFilterSpecification(selectedEvent));
         }
 
         public List<string> EventTypes
@@ -104,9 +104,24 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
-        private IEnumerable<HockeyStream> FilterByActiveState(IList<HockeyStream> streams, string selectedActiveState)
+        private IEnumerable<HockeyStream> FilterByActiveState(IEnumerable<HockeyStream> streams, string selectedActiveState)
         {
-            throw new NotImplementedException();
+            if (selectedActiveState == "ALL") return streams;
+            return _hockeyStreamFilter.By(streams.ToList(), new ActiveFilterSpecification(selectedActiveState));
+        }
+
+        public List<string> ActiveStates
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "ALL",
+                    "In Progress",
+                    "Coming Soon",
+                    "Completed"
+                };
+            }
         }
 
         private void SetPreferredLocation()

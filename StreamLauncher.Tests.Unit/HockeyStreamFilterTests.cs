@@ -24,11 +24,11 @@ namespace StreamLauncher.Tests.Unit
             {
                 return new List<HockeyStream>
                 {
-                    new HockeyStream {EventType = EventType.AHL, IsPlaying = true},
-                    new HockeyStream {EventType = EventType.NHL, IsPlaying = true},
-                    new HockeyStream {EventType = EventType.NHL, IsPlaying = false},
-                    new HockeyStream {EventType = EventType.OHL, IsPlaying = false},
-                    new HockeyStream {EventType = EventType.WHL, IsPlaying = true}
+                    new HockeyStream {EventType = EventType.AHL, IsPlaying = true, PeriodAndTimeLeft = "1st"},
+                    new HockeyStream {EventType = EventType.NHL, IsPlaying = true, PeriodAndTimeLeft = "2nd"},
+                    new HockeyStream {EventType = EventType.NHL, IsPlaying = false, PeriodAndTimeLeft = "Final"},
+                    new HockeyStream {EventType = EventType.OHL, IsPlaying = false, PeriodAndTimeLeft = "-"},
+                    new HockeyStream {EventType = EventType.WHL, IsPlaying = true, PeriodAndTimeLeft = "SO"}
                 };
             }
         }
@@ -52,18 +52,54 @@ namespace StreamLauncher.Tests.Unit
         }
 
         [TestFixture]
-        public class WhenFilterByActive : GivenAHockeyStreamFilter
+        public class WhenFilterByComingSoon : GivenAHockeyStreamFilter
         {
             private IEnumerable<HockeyStream> _filteredHockeyStreams;
 
             [SetUp]
             public void When()
             {
-                _filteredHockeyStreams = HockeyStreamFilter.By(HockeyStreams, new ActiveFilterSpecification(true));
+                _filteredHockeyStreams = HockeyStreamFilter.By(HockeyStreams, new ActiveFilterSpecification("Coming Soon"));
             }
 
             [Test]
-            public void ItShouldFilterByGivenActiveState()
+            public void ItShouldFilter()
+            {
+                Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(1));
+            }
+        }
+
+        [TestFixture]
+        public class WhenFilterByCompleted : GivenAHockeyStreamFilter
+        {
+            private IEnumerable<HockeyStream> _filteredHockeyStreams;
+
+            [SetUp]
+            public void When()
+            {
+                _filteredHockeyStreams = HockeyStreamFilter.By(HockeyStreams, new ActiveFilterSpecification("Completed"));
+            }
+
+            [Test]
+            public void ItShouldFilter()
+            {
+                Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(1));
+            }
+        }
+
+        [TestFixture]
+        public class WhenFilterByInProgress : GivenAHockeyStreamFilter
+        {
+            private IEnumerable<HockeyStream> _filteredHockeyStreams;
+
+            [SetUp]
+            public void When()
+            {
+                _filteredHockeyStreams = HockeyStreamFilter.By(HockeyStreams, new ActiveFilterSpecification("In Progress"));
+            }
+
+            [Test]
+            public void ItShouldFilter()
             {
                 Assert.That(_filteredHockeyStreams.Count(), Is.EqualTo(3));
             }
