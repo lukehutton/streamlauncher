@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -28,6 +30,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _filterActiveState;
         private string _favouriteTeam;
 
+        private List<HockeyStream> _allHockeyStreams;
+        private bool _isAuthenticated;
+
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
@@ -43,39 +48,65 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);            
                         
-            Messenger.Default.Register<AuthenticatedMessage>(this, AuthenticationSuccessful);
+            Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
         }
 
-        private void AuthenticationSuccessful(AuthenticatedMessage authenticatedMessage)
+        private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
         {                        
             _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
-
-            SelectedFilterEventType = "NHL";
-            SelectedFilterActiveState = "All";
-            HandleGetStreamsCommand();
+            _isAuthenticated = true;
 
             GetLocations();
             SetPreferredLocation();            
+
+            _filterEventType = "ALL";
+            _filterActiveState = "ALL";
+
+            HandleGetStreamsCommand();
         }
 
         private void HandleGetStreamsCommand()
         {
             //Task.Run(async () => await GetStreamsFiltered());
-            GetStreamsFiltered();
+            GetStreams();
+
+            FilterStreams(_allHockeyStreams);
         }
 
-        private void FilterByEventType(string selectedEventType)
+        private void FilterStreams(List<HockeyStream> streams)
         {
-            var selectedEvent = EventTypeParser.Parse(selectedEventType);
-            var filteredStreams = _hockeyStreamFilter.By(_hockeyStreams, new EventTypeFilterSpecification(selectedEvent));
+            var filteredStreams = FilterByEventType(streams, SelectedFilterEventType);            
             Streams = new ObservableCollection<HockeyStream>(filteredStreams);
         }
-        private void FilterByActiveState(string selectedActiveState)
+
+        private IEnumerable<HockeyStream> FilterByEventType(IList<HockeyStream> streams, string selectedEventType)
         {
-            var isPlaying = selectedActiveState == "In progress...";
-            if (!isPlaying) return;
-            var filteredStreams = _hockeyStreamFilter.By(_hockeyStreams, new ActiveFilterSpecification(true));
-            Streams = new ObservableCollection<HockeyStream>(filteredStreams);
+            if (selectedEventType == "ALL") return streams;
+            var selectedEvent = EventTypeParser.Parse(selectedEventType);
+            var filteredStreams = _hockeyStreamFilter.By(streams, new EventTypeFilterSpecification(selectedEvent));
+            return filteredStreams;
+        }
+
+        public List<string> EventTypes
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "ALL",
+                    "AHL",
+                    "NHL",
+                    "OHL",
+                    "QMJHL",
+                    "WHL",
+                    "World Juniors"
+                };
+            }
+        }
+
+        private IEnumerable<HockeyStream> FilterByActiveState(IList<HockeyStream> streams, string selectedActiveState)
+        {
+            throw new NotImplementedException();
         }
 
         private void SetPreferredLocation()
@@ -104,9 +135,13 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             get { return _filterEventType; }
             set
-            {
-                _filterEventType = value;
+            {                
+                _filterEventType = value;                
                 RaisePropertyChanged();
+                if (_isAuthenticated)
+                {
+                    FilterStreams(_allHockeyStreams);
+                }
             }
         }
 
@@ -117,10 +152,14 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 _filterActiveState = value;
                 RaisePropertyChanged();
+                if (_isAuthenticated)
+                {
+                    FilterStreams(_allHockeyStreams);
+                }                
             }
         }
 
-        private async Task GetStreamsFiltered()
+        private async Task GetStreams()
         {
             Streams.Clear();
 
@@ -139,8 +178,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 Streams.Add(hockeyStream);
             }
 
-            FilterByEventType(SelectedFilterEventType);
-            FilterByActiveState(SelectedFilterActiveState);
+            _allHockeyStreams = Streams.ToList();
 
 //            Messenger.Default.Send(new StatusMessage("Done", 3000));
         }
