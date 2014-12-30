@@ -1,14 +1,12 @@
 * resize main window and stretch all contents (file size bigger etc.?)
-* settingsrepo - save preference of location, sd or hd, vlc install location, favourite teams, timezone, save username/pass, use sqlcompact
-* not available image for teams with no image
+* user settings - save preference of location, sd or hd, vlc install location
 * finish filters
 * add unit tests on viewmodels
-* close app on bad login
-* load credentials and autologin when remember me
-* load login form when logout and remove saved credentials
+* close app on bad login after 3 bad attempts
 * show feed images only when feed available, home, away, single feed
 * launch to vlc
 * hide/show scores
 * hightlight fave team with color on grid 
 * wait async message on login (takes ~3 seconds)
 * add api keys and user to app settings (make to sure add to .gitignore)
+* general exception catch, display error occurred message and log it
