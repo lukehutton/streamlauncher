@@ -10,7 +10,7 @@
     <UserControl.Resources>
         <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
         <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
-        <converters:ConvertImagePathForFeedToImage x:Key="ConvertImagePathForFeedToImage" />
+        <converters:FeedToEnabled x:Key="FeedToEnabled" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -39,17 +39,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" Header="Home" Width="127">
+                <DataGridTemplateColumn CanUserResize="False" Header="Home" Width="146">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="127" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />             
+                            <Label Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />             
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" Header="Away" Width="127">
+                <DataGridTemplateColumn CanUserResize="False" Header="Away" Width="146">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="127" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />                        
+                            <Label Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -84,18 +84,14 @@
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}">
-                                <Image Stretch="Fill" Source="{Binding PlayHomeFeedImagePath, Converter={StaticResource ConvertImagePathForFeedToImage}}" />
-                            </Button>
+                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayHomeFeedText}" IsEnabled="{Binding PlayHomeFeedText, Converter={StaticResource FeedToEnabled}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}">
-                                <Image Stretch="Fill" Source="{Binding PlayAwayFeedImagePath, Converter={StaticResource ConvertImagePathForFeedToImage}}" />
-                            </Button>
+                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayAwayFeedText}" IsEnabled="{Binding PlayAwayFeedText, Converter={StaticResource FeedToEnabled}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

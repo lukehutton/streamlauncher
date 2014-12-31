@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace StreamLauncher.Util
 {
@@ -19,6 +20,19 @@ namespace StreamLauncher.Util
             if (value.Length > length)
                 return value.Substring(0, length) + "..";
             return value;
+        }
+        public static string Repeat(this string value, int times)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                StringBuilder builder = new StringBuilder(value.Length * times);
+
+                for (int i = 0; i < times; i++) builder.Append(value);
+
+                return builder.ToString();
+            }
+
+            return string.Empty;
         }
     }
 }

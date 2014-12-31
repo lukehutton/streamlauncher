@@ -14,7 +14,7 @@
         public string StartTime { get; set; }
         public string PeriodAndTimeLeft { get; set; }
         public bool IsPlaying { get; set; }
-        public string PlayHomeFeedImagePath { get; set; }
-        public string PlayAwayFeedImagePath { get; set; }        
+        public string PlayHomeFeedText { get; set; }
+        public string PlayAwayFeedText { get; set; }        
     }
 }
