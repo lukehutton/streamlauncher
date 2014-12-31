@@ -8,14 +8,9 @@
              DataContext="{Binding Path=Streams, Source={StaticResource Locator}}"
              d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">
     <UserControl.Resources>
-        <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />        
-        <converters:ConvertTextToImage x:Key="ConvertTextToImage" />
-        <DataTemplate x:Key="HomeFeedButton">
-            <Image Source="../Images/Buttons/homefeed.png" />
-        </DataTemplate>
-        <DataTemplate x:Key="AwayFeedButton">
-            <Image Source="../Images/Buttons/awayfeed.png" />
-        </DataTemplate>
+        <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
+        <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
+        <converters:ConvertImagePathForFeedToImage x:Key="ConvertImagePathForFeedToImage" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -37,66 +32,70 @@
         <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding GetStreamsCommand}" />
         <DataGrid Name="StreamsDataGrid"  Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Path=Streams}" AutoGenerateColumns="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Stretch="None" Source="{Binding HomeImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                            <Image Stretch="Fill" Source="{Binding HomeImagePath, Converter={StaticResource ConvertImagePathForTeamToImage}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Home">
+                <DataGridTemplateColumn CanUserResize="False" Header="Home" Width="127">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="140" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />             
+                            <Label MinWidth="127" Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />             
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Away">
+                <DataGridTemplateColumn CanUserResize="False" Header="Away" Width="127">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Label MinWidth="140" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />                        
+                            <Label MinWidth="127" Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />                        
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding AwayImagePath, Converter={StaticResource ConvertTextToImage}}" />
+                            <Image Source="{Binding AwayImagePath, Converter={StaticResource ConvertImagePathForTeamToImage}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Start Time">
+                <DataGridTemplateColumn CanUserResize="False" Header="Start Time">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label Content="{Binding StartTime}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Period">
+                <DataGridTemplateColumn CanUserResize="False" Header="Period">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Score">
+                <DataGridTemplateColumn CanUserResize="False" Header="Score">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button ContentTemplate="{StaticResource HomeFeedButton}" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" />
+                            <Button HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}">
+                                <Image Stretch="Fill" Source="{Binding PlayHomeFeedImagePath, Converter={StaticResource ConvertImagePathForFeedToImage}}" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn>
+                <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button ContentTemplate="{StaticResource AwayFeedButton}" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" />
+                            <Button HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}">
+                                <Image Stretch="Fill" Source="{Binding PlayAwayFeedImagePath, Converter={StaticResource ConvertImagePathForFeedToImage}}" />
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

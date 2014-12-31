@@ -13,3 +13,7 @@
 * general exception catch, display error occurred message and log it
 * show event type in grid when ALL event type selected, or always show
 * status for refresh command
+* make designer show streams again, fake out data
+* fix sort on time start 1pm before 10am etc.
+* Fix play feed font size
+* Fix no image on button

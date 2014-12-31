@@ -11,7 +11,14 @@ namespace StreamLauncher.Util
 
         public static T ParseEnum<T>(this string value)
         {
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (T) Enum.Parse(typeof (T), value, true);
+        }
+
+        public static string MaxStrLen(this string value, int length)
+        {
+            if (value.Length > length)
+                return value.Substring(0, length) + "..";
+            return value;
         }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />
     <Compile Include="Filters\IHockeyStreamFilter.cs" />
     <Compile Include="Dtos\GetLocationsResponseDto.cs" />
+    <Compile Include="Models\FeedType.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
     <Compile Include="Models\Score.cs" />

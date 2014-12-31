@@ -91,7 +91,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Infrastructure\Converters\ConvertTextToImage.cs" />
+    <Compile Include="Infrastructure\Converters\ConvertImagePathForFeedToImage.cs" />
+    <Compile Include="Infrastructure\Converters\ConvertImagePathForTeamToImage.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
     <Compile Include="Messages\AuthenticatedMessage.cs" />
@@ -173,10 +174,10 @@
     <Resource Include="Images\hockeystreamslogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Buttons\homefeed.png" />
+    <Resource Include="Images\Buttons\Home.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Buttons\awayfeed.png" />
+    <Resource Include="Images\Buttons\Away.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Teams\Anaheim Ducks.png" />
@@ -225,6 +226,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Teams\Not Available.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Buttons\None.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
