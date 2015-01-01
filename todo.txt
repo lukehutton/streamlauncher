@@ -1,9 +1,8 @@
 * resize main window and stretch all contents (file size bigger etc.?)
 * user settings - save preference of location, sd or hd, vlc install location, save filters default choice (nhl)
-* on-demand/live filter
 * add unit tests on viewmodels
 * close app on bad login after 3 bad attempts
-* show feed images only when feed available, home, away, single feed
+* get feed when press button with location and quality dropdown values
 * launch to vlc
 * async get streams - update status control on top off all controls
 * hide/show scores
@@ -15,5 +14,3 @@
 * status for refresh command
 * make designer show streams again, fake out data
 * fix sort on time start 1pm before 10am etc.
-* Fix play feed font size
-* Fix no image on button

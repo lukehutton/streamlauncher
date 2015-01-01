@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -23,6 +24,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<StreamLocation> _streamLocations;
 
         public RelayCommand GetStreamsCommand { get; private set; }        
+        public RelayCommand PlayHomeFeedCommand { get; private set; }        
 
         private string _location;
 
@@ -46,9 +48,17 @@ namespace StreamLauncher.Wpf.ViewModel
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
 
-            GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);            
+            GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);
+            PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
+        }
+
+        public HockeyStream SelectedStream { get; set; }
+
+        private void HandlePlayHomeFeedCommand()
+        {
+            MessageBox.Show(string.Format("Feed id is {0} for team {1}", SelectedStream.HomeStreamId, SelectedStream.HomeTeam));
         }
 
         private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
