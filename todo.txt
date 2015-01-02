@@ -14,3 +14,4 @@
 * status for refresh command
 * make designer show streams again, fake out data
 * fix sort on time start 1pm before 10am etc.
+* show need feeds when grid empty

@@ -1,6 +1,7 @@
 using RestSharp;
 using StreamLauncher.Api;
 using StreamLauncher.Dtos;
+using StreamLauncher.Exceptions;
 using StreamLauncher.Models;
 
 namespace StreamLauncher.Authentication
@@ -25,16 +26,20 @@ namespace StreamLauncher.Authentication
                 var loginResponseDto = _hockeyStreamsApi.Execute<LoginResponseDto>(request);
                 if (loginResponseDto.Membership == RegularMembership)
                 {
-                    throw new HockeyStreamsApiBadLogin("You must have PREMIUM membership to use this app.");
+                    return new AuthenticationResult
+                    {
+                        IsAuthenticated = false,
+                        ErrorMessage = "You must have PREMIUM membership to use this app."
+                    };                    
                 }
 
                 var authenticatedUser = MapLoginResponseDtoToUser(loginResponseDto);
                 return new AuthenticationResult {IsAuthenticated = true, AuthenticatedUser = authenticatedUser};
             }
-            catch (HockeyStreamsApiBadLogin badRequest)
+            catch (HockeyStreamsApiBadRequest badRequest)
             {
                 return new AuthenticationResult {IsAuthenticated = false, ErrorMessage = badRequest.Message};
-            }                        
+            }
         }
 
         private User MapLoginResponseDtoToUser(LoginResponseDto loginResponseDto)

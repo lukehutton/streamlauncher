@@ -27,13 +27,14 @@ namespace StreamLauncher.Wpf.ViewModel
         public RelayCommand PlayHomeFeedCommand { get; private set; }        
 
         private string _location;
+        private string _quality;
 
         private string _filterEventType;
         private string _filterActiveState;
         private string _favouriteTeam;
 
         private List<HockeyStream> _allHockeyStreams;
-        private bool _isAuthenticated;
+        private bool _isAuthenticated;        
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -58,7 +59,10 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandlePlayHomeFeedCommand()
         {
-            MessageBox.Show(string.Format("Feed id is {0} for team {1}", SelectedStream.HomeStreamId, SelectedStream.HomeTeam));
+            // todo handle stream not found exception and membership type not premium
+            var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
+            var stream = _hockeyStreamRepository.GetLiveStream(SelectedStream.HomeStreamId, SelectedLocation, quality);            
+            MessageBox.Show(string.Format("Feed source is {0} for team {1}", stream.Source, SelectedStream.HomeTeam));
         }
 
         private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
@@ -70,7 +74,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _isAuthenticated = true;
 
             GetLocations();
-            SetPreferredLocation();            
+            SetPreferredLocation();
+            SetPreferredQuality();
 
             HandleGetStreamsCommand();
         }
@@ -113,6 +118,17 @@ namespace StreamLauncher.Wpf.ViewModel
                 };
             }
         }
+        public List<string> Qualities
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "High Quality (3200Kbps HD)",
+                    "Low Quality (800Kbps SD)"
+                };
+            }
+        }
 
         private IEnumerable<HockeyStream> FilterByActiveState(IEnumerable<HockeyStream> streams, string selectedActiveState)
         {
@@ -145,6 +161,10 @@ namespace StreamLauncher.Wpf.ViewModel
                 SelectedLocation = "North America - West"; // todo read from persisted settings or set default
             }
         }
+        private void SetPreferredQuality()
+        {
+           SelectedQuality = "High Quality (3200Kbps HD)"; // todo read from persisted settings or set default
+        }
 
         public string SelectedLocation
         {
@@ -152,6 +172,16 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _location = value;
+                RaisePropertyChanged();
+            }
+        }       
+        
+        public string SelectedQuality
+        {
+            get { return _quality; }
+            set
+            {
+                _quality = value;
                 RaisePropertyChanged();
             }
         }

@@ -46,7 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\StreamNotFoundException.cs" />
+    <Compile Include="Exceptions\HockeyStreamsApiBadRequest.cs" />
     <Compile Include="Dtos\ErrorResponseDto.cs" />
+    <Compile Include="Dtos\GetLiveStreamResponseDto.cs" />
     <Compile Include="Dtos\GetLiveStreamsResponseDto.cs" />
     <Compile Include="Dtos\LoginRequestDto.cs" />
     <Compile Include="Dtos\LoginResponseDto.cs" />
@@ -59,6 +62,7 @@
     <Compile Include="Dtos\GetLocationsResponseDto.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
+    <Compile Include="Models\LiveStream.cs" />
     <Compile Include="Models\Score.cs" />
     <Compile Include="Models\StreamLocation.cs" />
     <Compile Include="Models\StreamType.cs" />

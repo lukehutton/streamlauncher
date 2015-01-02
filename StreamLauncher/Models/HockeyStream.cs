@@ -1,4 +1,6 @@
-﻿namespace StreamLauncher.Models
+﻿using System;
+
+namespace StreamLauncher.Models
 {
     public class HockeyStream
     {
@@ -15,6 +17,7 @@
         public string PeriodAndTimeLeft { get; set; }
         public bool IsPlaying { get; set; }
         public string PlayHomeFeedText { get; set; }
-        public string PlayAwayFeedText { get; set; }        
+        public string PlayAwayFeedText { get; set; }
+        public TimeSpan StartTimeSpan { get; set; }
     }
 }

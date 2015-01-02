@@ -3,6 +3,7 @@ using System.Net;
 using RestSharp;
 using RestSharp.Deserializers;
 using StreamLauncher.Dtos;
+using StreamLauncher.Exceptions;
 
 namespace StreamLauncher.Api
 {
@@ -24,7 +25,7 @@ namespace StreamLauncher.Api
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
                 var error = new JsonDeserializer().Deserialize<ErrorResponseDto>(response);
-                throw new HockeyStreamsApiBadLogin(error.Msg);
+                throw new HockeyStreamsApiBadRequest(error.Msg);
             }            
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -32,11 +33,6 @@ namespace StreamLauncher.Api
             }
             return response.Data; // 200 OK
         }
-    }
-
-    public class HockeyStreamsApiBadLogin : Exception
-    {
-        public HockeyStreamsApiBadLogin(string message) : base(message) {}
     }
 
     public class HockeyStreamsApi : BaseHockeyStreamsApi, IHockeyStreamsApi 

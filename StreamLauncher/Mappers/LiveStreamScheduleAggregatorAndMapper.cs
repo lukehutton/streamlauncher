@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
@@ -23,13 +24,16 @@ namespace StreamLauncher.Mappers
                 var homeFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Home Feed");
                 var awayFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Away Feed");
                 var noFeedType = schedule.Find(x => x.HomeTeam == team && x.FeedType == null);
-                var hockeyStream = MapHockeyStream(homeFeed, awayFeed, noFeedType);
-                if (hockeyStream != null)
+                var stream = MapHockeyStream(homeFeed, awayFeed, noFeedType);
+                if (stream != null)
                 {
-                    hockeyStreams.Add(hockeyStream);
+                    var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
+                    var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
+                    stream.StartTimeSpan = startTime.TimeOfDay;
+                    hockeyStreams.Add(stream);
                 }
             }
-            return hockeyStreams.OrderBy(x => x.StartTime);
+            return hockeyStreams.OrderBy(x => x.StartTimeSpan);
         }
 
         private static string GetImagePathForTeam(string team)

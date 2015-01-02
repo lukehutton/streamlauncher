@@ -19,6 +19,11 @@ namespace StreamLauncher.Design
             return Task.FromResult<IEnumerable<HockeyStream>>(result);
         }
 
+        public LiveStream GetLiveStream(int streamId, string location, Quality quality)
+        {
+            throw new NotImplementedException();
+        }
+
         private HockeyStream GetHockeyStream(int index)
         {
             return new HockeyStream

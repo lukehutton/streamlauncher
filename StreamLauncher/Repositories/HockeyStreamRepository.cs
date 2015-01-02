@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using RestSharp;
 using StreamLauncher.Api;
 using StreamLauncher.Dtos;
+using StreamLauncher.Exceptions;
 using StreamLauncher.Mappers;
 using StreamLauncher.Models;
 
@@ -48,6 +48,40 @@ namespace StreamLauncher.Repositories
             });
             return Task.FromResult(streamsWithScores);
         }
+        
+        public LiveStream GetLiveStream(int streamId, string location, Quality quality)
+        {
+            var request = new RestRequest { Resource = "GetLiveStream", Method = Method.GET };
+            request.AddParameter("id", streamId, ParameterType.GetOrPost);
+            request.AddParameter("location", location, ParameterType.GetOrPost);            
+            var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamResponseDto>(request);
+            var liveStream = new LiveStream();
+            switch (quality)
+            {
+                case Quality.SD:
+                    if (responseDto.TrueLiveSD.Count == 0)
+                    {
+                        StreamNotFoundException(streamId, location, quality);
+                    }
+                    liveStream.Source = responseDto.TrueLiveSD.First().Src;
+                    break;
+                case Quality.HD:
+                    if (responseDto.TrueLiveHD.Count == 0)
+                    {
+                        StreamNotFoundException(streamId, location, quality);
+                    }
+                    liveStream.Source = responseDto.TrueLiveHD.First().Src;
+                    break;
+            }
+            return liveStream;
+        }
+
+        private static void StreamNotFoundException(int streamId, string location, Quality quality)
+        {
+            throw new StreamNotFoundException(
+                string.Format("StreamId: {0}, Location: {1}, Quality: {2} Not Found", streamId, location,
+                    quality));
+        }
 
         private static void DeterminePeriod(HockeyStream stream)
         {
@@ -63,9 +97,7 @@ namespace StreamLauncher.Repositories
                 }
                 if (!stream.IsPlaying)
                 {
-                    var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
-                    var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
-                    if (startTime.TimeOfDay < DateTime.Now.TimeOfDay)
+                    if (stream.StartTimeSpan < DateTime.Now.TimeOfDay)
                     {
                         stream.PeriodAndTimeLeft = "Final";
                     }
@@ -76,5 +108,11 @@ namespace StreamLauncher.Repositories
                 stream.PeriodAndTimeLeft = "-";
             }
         }
+    }
+
+    public enum Quality
+    {
+        SD,
+        HD
     }
 }
