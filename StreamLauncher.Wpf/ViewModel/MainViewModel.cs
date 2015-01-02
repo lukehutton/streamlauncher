@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -100,6 +101,15 @@ namespace StreamLauncher.Wpf.ViewModel
         public void AuthenticateUser()
         {
             if (IsInDesignModeStatic) return;
+
+#if DEBUG
+            _userSettings.RememberMe = true;
+            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
+            using (var secureString = ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
+            {
+                _userSettings.EncryptedPassword = secureString.EncryptString();
+            }                            
+#endif 
 
             if (!_userSettings.RememberMe)
             {

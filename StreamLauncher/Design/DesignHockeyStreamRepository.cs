@@ -27,8 +27,7 @@ namespace StreamLauncher.Design
         private HockeyStream GetHockeyStream(int index)
         {
             return new HockeyStream
-            {
-                NoFeedTypeStreamId = 0,
+            {                
                 HomeStreamId = index,
                 AwayStreamId = index,
                 EventType = EventType.NHL,

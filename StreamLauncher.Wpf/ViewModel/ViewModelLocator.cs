@@ -20,6 +20,7 @@ using StreamLauncher.Authentication;
 using StreamLauncher.Design;
 using StreamLauncher.Filters;
 using StreamLauncher.Mappers;
+using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -62,6 +63,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
                 SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
                 SimpleIoc.Default.Register<IUserSettings, UserSettings>();
+                SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

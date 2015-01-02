@@ -46,7 +46,7 @@ namespace StreamLauncher.Mappers
             var hockeyStream = new HockeyStream();
             if (noFeedType != null)
             {
-                hockeyStream.NoFeedTypeStreamId = Convert.ToInt32(noFeedType.Id);
+                hockeyStream.HomeStreamId = Convert.ToInt32(noFeedType.Id);
                 hockeyStream.HomeTeam = noFeedType.HomeTeam.MaxStrLen(MaxTeamStringLength);
                 hockeyStream.AwayTeam = noFeedType.AwayTeam.MaxStrLen(MaxTeamStringLength);
                 hockeyStream.StartTime = noFeedType.StartTime;

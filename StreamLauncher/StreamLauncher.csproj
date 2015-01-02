@@ -60,6 +60,8 @@
     <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />
     <Compile Include="Filters\IHockeyStreamFilter.cs" />
     <Compile Include="Dtos\GetLocationsResponseDto.cs" />
+    <Compile Include="MediaPlayers\ILiveStreamer.cs" />
+    <Compile Include="MediaPlayers\LiveStreamer.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
     <Compile Include="Models\LiveStream.cs" />

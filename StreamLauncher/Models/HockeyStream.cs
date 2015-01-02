@@ -3,8 +3,7 @@
 namespace StreamLauncher.Models
 {
     public class HockeyStream
-    {
-        public int NoFeedTypeStreamId { get; set; }
+    {        
         public int HomeStreamId { get; set; }       
         public int AwayStreamId { get; set; }
         public EventType EventType { get; set; }

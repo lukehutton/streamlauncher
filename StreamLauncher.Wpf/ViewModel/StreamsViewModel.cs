@@ -7,9 +7,12 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
+using StreamLauncher.MediaPlayers;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Util;
 using StreamLauncher.Wpf.Messages;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -18,13 +21,15 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
-        private readonly IStreamLocationRepository _streamLocationRepository;                
+        private readonly IStreamLocationRepository _streamLocationRepository;
+        private readonly ILiveStreamer _liveStreamer;
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
 
         public RelayCommand GetStreamsCommand { get; private set; }        
         public RelayCommand PlayHomeFeedCommand { get; private set; }        
+        public RelayCommand PlayAwayFeedCommand { get; private set; }        
 
         private string _location;
         private string _quality;
@@ -39,18 +44,21 @@ namespace StreamLauncher.Wpf.ViewModel
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
-            IStreamLocationRepository streamLocationRepository                        
+            IStreamLocationRepository streamLocationRepository,
+            ILiveStreamer liveStreamer         
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
-            _streamLocationRepository = streamLocationRepository;                        
+            _streamLocationRepository = streamLocationRepository;
+            _liveStreamer = liveStreamer;
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
 
             GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);
             PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
+            PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
         }
@@ -59,10 +67,30 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandlePlayHomeFeedCommand()
         {
-            // todo handle stream not found exception and membership type not premium
+            PlayFeed(SelectedStream.HomeStreamId);
+        }
+        private void HandlePlayAwayFeedCommand()
+        {
+            PlayFeed(SelectedStream.AwayStreamId);
+        }
+
+        private void PlayFeed(int streamId)
+        {
             var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
-            var stream = _hockeyStreamRepository.GetLiveStream(SelectedStream.HomeStreamId, SelectedLocation, quality);            
-            MessageBox.Show(string.Format("Feed source is {0} for team {1}", stream.Source, SelectedStream.HomeTeam));
+
+            try
+            {
+                var stream = _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
+                _liveStreamer.Play(stream.Source);
+            }
+            catch (StreamNotFoundException)
+            {
+                MessageBox.Show(string.Format("Feed for {0} at {1} not found", SelectedStream.AwayTeam, SelectedStream.HomeTeam));
+            }
+            catch (HockeyStreamsApiBadRequest)
+            {
+                MessageBox.Show("You must have PREMIUM membership to use this app.");
+            }
         }
 
         private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
@@ -70,7 +98,8 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedFilterEventType = "ALL";
             SelectedFilterActiveState = "ALL";
 
-            _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
+            //_favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
+            _favouriteTeam = "Colorado Avalanche";
             _isAuthenticated = true;
 
             GetLocations();
@@ -266,6 +295,15 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 _streamLocations = value;
                 RaisePropertyChanged();
+            }
+        }
+
+        public bool IsFavouriteTeam
+        {
+            get
+            {
+                return SelectedStream.HomeTeam.MaxStrLen(15) == _favouriteTeam.MaxStrLen(15) ||
+                       SelectedStream.AwayTeam.MaxStrLen(15) == _favouriteTeam.MaxStrLen(15);
             }
         }
     }
