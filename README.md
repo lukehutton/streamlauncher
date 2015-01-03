@@ -1,6 +1,6 @@
 Launches hockey streams to vlc media player
-
-![](https://github.com/lukehutton/streamlauncher/blob/master/docs/screen1.png)
+   
+![](https://github.com/lukehutton/streamlauncher/blob/master/docs/screen1.PNG)
 
 Roadmap
 * SD/HD streaming
