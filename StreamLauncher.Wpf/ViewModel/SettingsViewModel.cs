@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
@@ -52,7 +51,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.MediaPlayerArguments = MediaPlayerArguments;
             _userSettings.Save();
 
-            _liveStreamer.SaveConfig(MediaPlayerPath, MediaPlayerArguments);
+            _liveStreamer.SaveConfig();
         }
 
         public string LiveStreamerPath

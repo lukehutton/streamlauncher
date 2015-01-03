@@ -22,6 +22,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly IAuthenticationService _authenticationService;
         private readonly ITokenProvider _tokenProvider;
+        private readonly ILiveStreamer _liveStreamer;
 
         private string _userName;
         private string _currentUser;
@@ -32,11 +33,15 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public RelayCommand<CancelEventArgs> Closing { get; private set; }
 
-        public MainViewModel(IUserSettings userSettings, IAuthenticationService authenticationService, ITokenProvider tokenProvider)
+        public MainViewModel(IUserSettings userSettings,
+            IAuthenticationService authenticationService,
+            ITokenProvider tokenProvider,
+            ILiveStreamer liveStreamer)
         {
             _userSettings = userSettings;
             _authenticationService = authenticationService;
             _tokenProvider = tokenProvider;
+            _liveStreamer = liveStreamer;
 
             LoginCommand = new RelayCommand(HandleLoginCommand);
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
@@ -77,7 +82,8 @@ namespace StreamLauncher.Wpf.ViewModel
                     ? Vlc.Default64BitLocation
                     : Vlc.Default32BitLocation;                    
                 _userSettings.Save();
-            }
+                _liveStreamer.SaveConfig();
+            }            
         }
 
         private void HandleClosingCommand(CancelEventArgs obj)

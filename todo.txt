@@ -17,8 +17,5 @@
 * throw exception to set livestreamer on startup if not found?
 * config media player location and editable -- i.e. set to vlc, mpc-hc, mplayer2 update livestreamer config to set the media player
 * powered by livestreamer
-* media player args i.e. --file-caching=5000 for vlc
 * media player drop down with image and default location
-* try and get info logging from console
-* what to do when streams end
-* redirect console output in live streamer
+* disable stream button for live streams before games starts and after ends? need support for on-demand

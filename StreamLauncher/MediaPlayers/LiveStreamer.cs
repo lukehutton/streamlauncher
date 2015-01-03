@@ -30,39 +30,34 @@ namespace StreamLauncher.MediaPlayers
             {
                 throw new MediaPlayerNotFound();
             }
+            _output.Clear();
 
             var arguments = string.Format("/c \"\"{0}\" \"{1}\" \"{2}\"\"", _userSettings.LiveStreamerPath, streamSource,
                 quality == Quality.HD ? "best" : "worst");
             var process = new ProcessUtil("cmd.exe", arguments);
-            process.Start();
-            _output.Clear();
+            process.Start();            
             process.OutputDataReceived += OutputDataReceived;
             process.ErrorDataReceived += ErrorDataReceived;
             process.Wait();
-            var exitCode = process.ExitCode;
-            if (exitCode != 0)
-            {
-                throw new LiveStreamerError();
-            }
-            if (_output.ToString().Contains("error"))
+            if (process.ExitCode != 0 || _output.ToString().Contains("error"))
             {
                 throw new LiveStreamerError();
             }
         }
 
-        public void SaveConfig(string mediaPlayerPath, string mediaPlayerArguments)
+        public void SaveConfig()
         {
             var livestreamerConfig = Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), "livestreamer", "livestreamerrc");
             File.WriteAllText(livestreamerConfig,
-                string.Format("player=\"{0}\" {1}", mediaPlayerPath, mediaPlayerArguments));
+                string.Format("player=\"{0}\" {1}", _userSettings.MediaPlayerPath, _userSettings.MediaPlayerArguments));
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                _output.Append(e.Data);
+                _output.AppendLine(e.Data);
             }
         }
 
@@ -70,7 +65,7 @@ namespace StreamLauncher.MediaPlayers
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
-                _output.Append(e.Data);
+                _output.AppendLine(e.Data);
             }
         }
     }
