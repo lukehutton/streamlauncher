@@ -3,7 +3,6 @@
 * add unit tests on viewmodels
 * close app on bad login after 3 bad attempts
 * get feed when press button with location and quality dropdown values
-* launch to vlc
 * async get streams - update status control on top off all controls
 * hide/show scores
 * hightlight fave team with color on grid 
@@ -13,5 +12,9 @@
 * show event type in grid when ALL event type selected, or always show
 * status for refresh command
 * make designer show streams again, fake out data
-* fix sort on time start 1pm before 10am etc.
 * show need feeds when grid empty
+* config livestreamer location and editable
+* throw exception to set livestreamer on startup if not found?
+* config media player location and editable -- i.e. set to vlc, mpc-hc, mplayer2 update livestreamer config to set the media player
+* powered by livestreamer
+* show current media player logo

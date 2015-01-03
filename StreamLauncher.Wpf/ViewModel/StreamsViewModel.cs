@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
@@ -14,6 +15,7 @@ using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Util;
 using StreamLauncher.Wpf.Messages;
+using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -28,6 +30,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<StreamLocation> _streamLocations;
 
         public RelayCommand GetStreamsCommand { get; private set; }        
+        public RelayCommand SettingsCommand { get; private set; }        
         public RelayCommand PlayHomeFeedCommand { get; private set; }        
         public RelayCommand PlayAwayFeedCommand { get; private set; }        
 
@@ -62,10 +65,21 @@ namespace StreamLauncher.Wpf.ViewModel
             Locations = new ObservableCollection<StreamLocation>();
 
             GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);
+            SettingsCommand = new RelayCommand(HandleSettingsCommand);
             PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
             PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
+        }
+
+        private void HandleSettingsCommand()
+        {
+            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            var settingsWindow = new SettingsWindow
+            {
+                DataContext = settingsViewModel
+            };
+            settingsWindow.ShowDialog();
         }
 
         public HockeyStream SelectedStream { get; set; }

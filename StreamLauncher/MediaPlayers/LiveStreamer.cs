@@ -12,7 +12,7 @@ namespace StreamLauncher.MediaPlayers
                 {
                     FileName = "cmd.exe",
                     CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Hidden,                    
                     Arguments = string.Format(@"/c c:\progra~2\livestreamer\livestreamer.exe " + "\"{0}\" \"best\"", source),                    
                     UseShellExecute = false
                 }

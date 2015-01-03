@@ -1,0 +1,23 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="StreamLauncher.Wpf.Views.SettingsWindow"
+        Title="Settings" Height="250" Width="450" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
+        DataContext="{Binding Path=Settings, Source={StaticResource Locator}}"                        
+    >
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF161635" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="20*"/>
+			<ColumnDefinition Width="201*"/>
+		</Grid.ColumnDefinitions>
+        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
+		<Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
+        <Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,144.01,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red"/>
+    </Grid>
+</Window>
