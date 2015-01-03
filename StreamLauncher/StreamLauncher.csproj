@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\MediaPlayerNotFound.cs" />
+    <Compile Include="Exceptions\LiveStreamerExecutableNotFound.cs" />
     <Compile Include="Exceptions\StreamNotFoundException.cs" />
     <Compile Include="Exceptions\HockeyStreamsApiBadRequest.cs" />
     <Compile Include="Dtos\ErrorResponseDto.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Dtos\GetLocationsResponseDto.cs" />
     <Compile Include="MediaPlayers\ILiveStreamer.cs" />
     <Compile Include="MediaPlayers\LiveStreamer.cs" />
+    <Compile Include="MediaPlayers\Vlc.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
     <Compile Include="Models\LiveStream.cs" />

@@ -1,11 +1,33 @@
 ﻿using System.Diagnostics;
+using System.IO;
+using StreamLauncher.Exceptions;
+using StreamLauncher.Repositories;
 
 namespace StreamLauncher.MediaPlayers
 {
     public class LiveStreamer : ILiveStreamer
     {
-        public void Play(string source)
+        private readonly IUserSettings _userSettings;
+
+        public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
+        public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
+
+        public LiveStreamer(IUserSettings userSettings)
         {
+            _userSettings = userSettings;
+        }
+
+        public void Play(string streamSource)
+        {
+            if (!File.Exists(_userSettings.LiveStreamerPath))
+            {
+                throw new LiveStreamerExecutableNotFound();
+            }
+            if (!File.Exists(_userSettings.MediaPlayerPath))
+            {
+                throw new MediaPlayerNotFound();
+            }
+
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -13,7 +35,7 @@ namespace StreamLauncher.MediaPlayers
                     FileName = "cmd.exe",
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,                    
-                    Arguments = string.Format(@"/c c:\progra~2\livestreamer\livestreamer.exe " + "\"{0}\" \"best\"", source),                    
+                    Arguments = string.Format("/c \"{0}\" \"{1}\" \"best\"", _userSettings.LiveStreamerPath, streamSource),                    
                     UseShellExecute = false
                 }
             };

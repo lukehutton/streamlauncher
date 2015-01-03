@@ -20,6 +20,18 @@
             set { Properties.Settings.Default.RememberMe = value; }
         }
 
+        public string LiveStreamerPath
+        {
+            get { return Properties.Settings.Default.LiveStreamerPath; }
+            set { Properties.Settings.Default.LiveStreamerPath = value; }
+        }
+
+        public string MediaPlayerPath
+        {
+            get { return Properties.Settings.Default.MediaPlayerPath; }
+            set { Properties.Settings.Default.MediaPlayerPath = value; }
+        }
+
         public void Save()
         {
             Properties.Settings.Default.Save();

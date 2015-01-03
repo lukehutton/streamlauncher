@@ -58,5 +58,29 @@ namespace StreamLauncher.Properties {
                 this["RememberMe"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LiveStreamerPath {
+            get {
+                return ((string)(this["LiveStreamerPath"]));
+            }
+            set {
+                this["LiveStreamerPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MediaPlayerPath {
+            get {
+                return ((string)(this["MediaPlayerPath"]));
+            }
+            set {
+                this["MediaPlayerPath"] = value;
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
         private readonly IStreamLocationRepository _streamLocationRepository;
         private readonly ILiveStreamer _liveStreamer;
+        private readonly IUserSettings _userSettings;
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
@@ -53,13 +54,15 @@ namespace StreamLauncher.Wpf.ViewModel
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,
-            ILiveStreamer liveStreamer         
+            ILiveStreamer liveStreamer,
+            IUserSettings userSettings
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
             _streamLocationRepository = streamLocationRepository;
             _liveStreamer = liveStreamer;
+            _userSettings = userSettings;
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
@@ -74,7 +77,15 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleSettingsCommand()
         {
+            ShowSettingsDialog();
+        }
+
+        private void ShowSettingsDialog(string errorMessage = "")
+        {
             var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            settingsViewModel.ErrorMessage = errorMessage;
+            settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
+            settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
             var settingsWindow = new SettingsWindow
             {
                 DataContext = settingsViewModel
@@ -104,11 +115,20 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (StreamNotFoundException)
             {
-                MessageBox.Show(string.Format("Feed for {0} at {1} not found", SelectedStream.AwayTeam, SelectedStream.HomeTeam));
+                MessageBox.Show(string.Format("Feed for {0} at {1} not found", SelectedStream.AwayTeam,
+                    SelectedStream.HomeTeam));
             }
             catch (HockeyStreamsApiBadRequest)
             {
                 MessageBox.Show("You must have PREMIUM membership to use this app.");
+            }
+            catch (LiveStreamerExecutableNotFound)
+            {
+                ShowSettingsDialog("Livestreamer Path does not exist.");
+            }
+            catch (MediaPlayerNotFound)
+            {
+                ShowSettingsDialog("Media Player Path does not exist.");
             }
         }
 

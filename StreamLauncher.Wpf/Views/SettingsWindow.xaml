@@ -11,13 +11,17 @@
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="20*"/>
-			<ColumnDefinition Width="201*"/>
-		</Grid.ColumnDefinitions>
-        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
-		<Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
-        <Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,144.01,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red"/>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="201*"/>
+        </Grid.ColumnDefinitions>
+        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="1" HorizontalAlignment="Left" Margin="213,173,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
+        <Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="307,173,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
+        <Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="107,129,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red" Height="20" Width="275" />
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="107,48,0,0" TextWrapping="Wrap" Text="{Binding LiveStreamerPath}" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+        <Label Content="Livestreamer Path:" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="107,85,0,0" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+        <Label Content="Media Player Path:" HorizontalAlignment="Left" Margin="9,85,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

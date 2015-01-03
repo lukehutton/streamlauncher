@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.IO;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -8,6 +9,7 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.Authentication;
+using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Wpf.Messages;
@@ -48,14 +50,35 @@ namespace StreamLauncher.Wpf.ViewModel
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
 
-            CurrentUser = string.Format("Hi {0}", _userName);
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+            BootstrapApp();
 
             Messenger.Default.Send(new AuthenticatedMessage
             {
                 AuthenticationResult = loginSuccessful.AuthenticationResult
             });
-        }        
+        }
+
+        private void BootstrapApp()
+        {
+            CurrentUser = string.Format("Hi {0}", _userName);
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+
+            if (string.IsNullOrEmpty(_userSettings.LiveStreamerPath))
+            {
+                _userSettings.LiveStreamerPath = Environment.Is64BitOperatingSystem
+                    ? LiveStreamer.Default64BitLocation
+                    : LiveStreamer.Default32BitLocation;
+                _userSettings.Save();
+            }
+
+            if (string.IsNullOrEmpty(_userSettings.MediaPlayerPath))
+            {
+                _userSettings.MediaPlayerPath = Environment.Is64BitOperatingSystem
+                    ? Vlc.Default64BitLocation
+                    : Vlc.Default32BitLocation;                    
+                _userSettings.Save();
+            }
+        }
 
         private void HandleClosingCommand(CancelEventArgs obj)
         {

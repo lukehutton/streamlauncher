@@ -5,6 +5,8 @@
         string UserName { get; set; }
         string EncryptedPassword { get; set; }
         bool RememberMe { get; set; }
+        string LiveStreamerPath { get; set; }
+        string MediaPlayerPath { get; set; }
         void Save();
     }
 }
