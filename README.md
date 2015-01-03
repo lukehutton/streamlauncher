@@ -27,4 +27,4 @@ You are more than welcome to take the code provided and compile a version of it 
 
 Issues
 -------
-If you are experiencing any issues such as crashes, please report them [here](https://github.com/Pwnoz0r/Live-Streamer-Plus/issues/new).
+If you are experiencing any issues such as crashes, please report them [here](https://github.com/lukehutton/streamlauncher/issues/new).
