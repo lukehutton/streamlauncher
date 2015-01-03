@@ -31,6 +31,11 @@
             get { return Properties.Settings.Default.MediaPlayerPath; }
             set { Properties.Settings.Default.MediaPlayerPath = value; }
         }
+        public string MediaPlayerArguments
+        {
+            get { return Properties.Settings.Default.MediaPlayerArguments; }
+            set { Properties.Settings.Default.MediaPlayerArguments = value; }
+        }
 
         public void Save()
         {

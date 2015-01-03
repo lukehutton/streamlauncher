@@ -82,5 +82,17 @@ namespace StreamLauncher.Properties {
                 this["MediaPlayerPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MediaPlayerArguments {
+            get {
+                return ((string)(this["MediaPlayerArguments"]));
+            }
+            set {
+                this["MediaPlayerArguments"] = value;
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@
         bool RememberMe { get; set; }
         string LiveStreamerPath { get; set; }
         string MediaPlayerPath { get; set; }
+        string MediaPlayerArguments { get; set; }
         void Save();
     }
 }

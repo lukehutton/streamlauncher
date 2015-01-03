@@ -17,4 +17,7 @@
 * throw exception to set livestreamer on startup if not found?
 * config media player location and editable -- i.e. set to vlc, mpc-hc, mplayer2 update livestreamer config to set the media player
 * powered by livestreamer
-* show current media player logo
+* media player args i.e. --file-caching=5000 for vlc
+* media player drop down with image and default location
+* try and get info logging from console
+* what to do when streams end

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.Repositories;
@@ -12,6 +13,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _errorMessage;
         private string _liveStreamerPath;
         private string _mediaPlayerPath;
+        private string _mediaPlayerArguments;
 
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
@@ -44,7 +46,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
             _userSettings.LiveStreamerPath = LiveStreamerPath;
             _userSettings.MediaPlayerPath = MediaPlayerPath;
+            _userSettings.MediaPlayerArguments = MediaPlayerArguments;
             _userSettings.Save();
+
+            var livestreamerConfig = Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), "livestreamer", "livestreamerrc");
+            File.WriteAllText(livestreamerConfig, string.Format("player=\"{0}\" {1}", MediaPlayerPath, MediaPlayerArguments));
         }
 
         public string LiveStreamerPath
@@ -60,6 +67,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged(() => LiveStreamerPath);
             }
         }  
+
         public string MediaPlayerPath
         {
             get
@@ -73,6 +81,21 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged(() => MediaPlayerPath);
             }
         }  
+
+        public string MediaPlayerArguments
+        {
+            get
+            {
+                return _mediaPlayerArguments;
+            }
+
+            set
+            {
+                _mediaPlayerArguments = value;
+                RaisePropertyChanged(() => MediaPlayerArguments);
+            }
+        }  
+
         public string ErrorMessage
         {
             get

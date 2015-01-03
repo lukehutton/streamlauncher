@@ -17,7 +17,7 @@ namespace StreamLauncher.MediaPlayers
             _userSettings = userSettings;
         }
 
-        public void Play(string streamSource)
+        public void Play(string streamSource, Quality quality)
         {
             if (!File.Exists(_userSettings.LiveStreamerPath))
             {
@@ -28,14 +28,16 @@ namespace StreamLauncher.MediaPlayers
                 throw new MediaPlayerNotFound();
             }
 
+            var arguments = string.Format("/c \"\"{0}\" \"{1}\" \"{2}\"\"", _userSettings.LiveStreamerPath, streamSource,
+                quality == Quality.HD ? "best" : "worst");
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
                     CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,                    
-                    Arguments = string.Format("/c \"{0}\" \"{1}\" \"best\"", _userSettings.LiveStreamerPath, streamSource),                    
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Arguments = arguments,                    
                     UseShellExecute = false
                 }
             };

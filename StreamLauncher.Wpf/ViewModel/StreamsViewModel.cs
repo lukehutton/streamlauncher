@@ -111,7 +111,7 @@ namespace StreamLauncher.Wpf.ViewModel
             try
             {
                 var stream = _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
-                _liveStreamer.Play(stream.Source);
+                _liveStreamer.Play(stream.Source, quality);
             }
             catch (StreamNotFoundException)
             {
