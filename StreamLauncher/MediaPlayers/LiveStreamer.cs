@@ -6,13 +6,15 @@ namespace StreamLauncher.MediaPlayers
     {
         public void Play(string source)
         {
-            Process process = new Process
+            var process = new Process
             {
-                StartInfo =
-                {                    
+                StartInfo = new ProcessStartInfo
+                {
                     FileName = "cmd.exe",
-                    Arguments = string.Format("/c livestreamer \"{0}\" \"best\"", source.Replace("'", string.Empty)),
-                    WindowStyle = ProcessWindowStyle.Hidden
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    Arguments = string.Format(@"/c c:\progra~2\livestreamer\livestreamer.exe " + "\"{0}\" \"best\"", source),                    
+                    UseShellExecute = false
                 }
             };
             process.Start();
