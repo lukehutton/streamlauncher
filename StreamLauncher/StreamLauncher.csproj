@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\LiveStreamerError.cs" />
     <Compile Include="Exceptions\MediaPlayerNotFound.cs" />
     <Compile Include="Exceptions\LiveStreamerExecutableNotFound.cs" />
     <Compile Include="Exceptions\StreamNotFoundException.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Authentication\AuthenticationService.cs" />
     <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Security\SecureIt.cs" />
+    <Compile Include="Util\ProcessUtil.cs" />
     <Compile Include="Util\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

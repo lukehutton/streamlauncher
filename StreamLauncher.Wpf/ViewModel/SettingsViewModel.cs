@@ -2,6 +2,7 @@
 using System.IO;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -9,7 +10,8 @@ namespace StreamLauncher.Wpf.ViewModel
     public class SettingsViewModel : ViewModelBase
     {
         private readonly IUserSettings _userSettings;
-        
+        private readonly ILiveStreamer _liveStreamer;
+
         private string _errorMessage;
         private string _liveStreamerPath;
         private string _mediaPlayerPath;
@@ -18,9 +20,10 @@ namespace StreamLauncher.Wpf.ViewModel
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
-        public SettingsViewModel(IUserSettings userSettings)
+        public SettingsViewModel(IUserSettings userSettings, ILiveStreamer liveStreamer)
         {
             _userSettings = userSettings;
+            _liveStreamer = liveStreamer;
 
             SaveCommand = new RelayCommand(HandleSaveCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);
@@ -49,9 +52,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.MediaPlayerArguments = MediaPlayerArguments;
             _userSettings.Save();
 
-            var livestreamerConfig = Path.Combine(Environment.GetFolderPath(
-                Environment.SpecialFolder.ApplicationData), "livestreamer", "livestreamerrc");
-            File.WriteAllText(livestreamerConfig, string.Format("player=\"{0}\" {1}", MediaPlayerPath, MediaPlayerArguments));
+            _liveStreamer.SaveConfig(MediaPlayerPath, MediaPlayerArguments);
         }
 
         public string LiveStreamerPath

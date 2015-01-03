@@ -21,3 +21,4 @@
 * media player drop down with image and default location
 * try and get info logging from console
 * what to do when streams end
+* redirect console output in live streamer
