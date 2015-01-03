@@ -38,6 +38,11 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _filterActiveState;
         private string _favouriteTeam;
 
+        public string FavouriteTeam
+        {
+            get { return _favouriteTeam.MaxStrLen(20); }
+        }
+
         private List<HockeyStream> _allHockeyStreams;
         private bool _isAuthenticated;        
 
@@ -295,15 +300,6 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 _streamLocations = value;
                 RaisePropertyChanged();
-            }
-        }
-
-        public bool IsFavouriteTeam
-        {
-            get
-            {
-                return SelectedStream.HomeTeam.MaxStrLen(15) == _favouriteTeam.MaxStrLen(15) ||
-                       SelectedStream.AwayTeam.MaxStrLen(15) == _favouriteTeam.MaxStrLen(15);
             }
         }
     }

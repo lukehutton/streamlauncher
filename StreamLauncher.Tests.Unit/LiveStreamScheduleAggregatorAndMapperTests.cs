@@ -150,32 +150,28 @@ namespace StreamLauncher.Tests.Unit
 
             [Test]
             public void ItShouldReturnFeedsThatHaveHomeAndAwayFeeds()
-            {
-                Assert.That(_hockeyStreams.ElementAt(0).NoFeedTypeStreamId, Is.EqualTo(0));
+            {                
                 Assert.That(_hockeyStreams.ElementAt(0).HomeStreamId, Is.EqualTo(34172));
                 Assert.That(_hockeyStreams.ElementAt(0).AwayStreamId, Is.EqualTo(34173));
             }
 
             [Test]
             public void ItShouldReturnFeedsThatHaveNoFeedTypes()
-            {
-                Assert.That(_hockeyStreams.ElementAt(3).NoFeedTypeStreamId, Is.EqualTo(34180));
-                Assert.That(_hockeyStreams.ElementAt(3).HomeStreamId, Is.EqualTo(0));
+            {                
+                Assert.That(_hockeyStreams.ElementAt(3).HomeStreamId, Is.EqualTo(34180));
                 Assert.That(_hockeyStreams.ElementAt(3).AwayStreamId, Is.EqualTo(0));
             }
 
             [Test]
             public void ItShouldReturnFeedsThatHaveOnlyAwayFeeds()
-            {
-                Assert.That(_hockeyStreams.ElementAt(2).NoFeedTypeStreamId, Is.EqualTo(0));
+            {             
                 Assert.That(_hockeyStreams.ElementAt(2).HomeStreamId, Is.EqualTo(0));
                 Assert.That(_hockeyStreams.ElementAt(2).AwayStreamId, Is.EqualTo(34179));
             }
 
             [Test]
             public void ItShouldReturnFeedsThatHaveOnlyHomeFeeds()
-            {
-                Assert.That(_hockeyStreams.ElementAt(2).NoFeedTypeStreamId, Is.EqualTo(0));
+            {                
                 Assert.That(_hockeyStreams.ElementAt(4).HomeStreamId, Is.EqualTo(34181));
                 Assert.That(_hockeyStreams.ElementAt(4).AwayStreamId, Is.EqualTo(0));
             }

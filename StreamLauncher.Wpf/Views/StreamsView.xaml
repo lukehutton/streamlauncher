@@ -31,7 +31,10 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFavouriteTeam}" Value="true">
+                        <DataTrigger Binding="{Binding HomeTeam}" Value="Colorado Avalanche">
+                            <Setter Property="Background" Value="MediumPurple"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding AwayTeam}" Value="Colorado Avalance">
                             <Setter Property="Background" Value="MediumPurple"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
