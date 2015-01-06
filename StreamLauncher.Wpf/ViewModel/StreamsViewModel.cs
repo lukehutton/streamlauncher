@@ -92,6 +92,7 @@ namespace StreamLauncher.Wpf.ViewModel
             settingsViewModel.ErrorMessage = errorMessage;
             settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
             settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
+            settingsViewModel.MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             var settingsWindow = new SettingsWindow
             {
                 DataContext = settingsViewModel

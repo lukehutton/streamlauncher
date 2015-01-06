@@ -66,7 +66,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private void BootstrapApp()
         {
             CurrentUser = string.Format("Hi {0}", _userName);
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");            
 
             if (_userSettings.IsFirstRun)
             {
@@ -84,9 +84,22 @@ namespace StreamLauncher.Wpf.ViewModel
                 _userSettings.IsFirstRun = false;
                 _userSettings.Save();
                 _liveStreamer.SaveConfig();
-                
-                //todo show setting dialog via message
+
+                ShowSettingsDialog();
             }
+        }
+
+        private void ShowSettingsDialog()
+        {
+            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());            
+            settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
+            settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
+            settingsViewModel.MediaPlayerArguments = _userSettings.MediaPlayerArguments;
+            var settingsWindow = new SettingsWindow
+            {
+                DataContext = settingsViewModel
+            };
+            settingsWindow.ShowDialog();
         }
 
         private void HandleClosingCommand(CancelEventArgs obj)

@@ -12,6 +12,4 @@
 * status for refresh command
 * make designer show streams again, fake out data
 * show no feeds available when grid empty
-* config livestreamer location and editable
-* throw exception to set livestreamer on startup if not found?
-* show settings dialog on first run
+* for error messages and status messages, use dialogservice, http://msdn.microsoft.com/en-us/magazine/jj694937.aspx
