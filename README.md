@@ -26,7 +26,7 @@ Prerequisites
 -------------
  - [.NET Framework 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) [Required] 
  - [Microsoft Visual C++ 2008 Redistributable Package](http://www.microsoft.com/en-us/download/details.aspx?id=29) [Required]
- - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/) [Required] *Tested with version v1.11.1
+ - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/) [Required] 
  - One of the following media players:
    - [VLC Media Player](http://www.videolan.org/vlc/index.html) 
    - [MPC-HC](http://mpc-hc.org/)
@@ -42,9 +42,9 @@ If you are experiencing any issues such as crashes, please report them [here](ht
 
 How to install
 -------
-1. Download prequisites above
-2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)
-3. Set the correct paths in the Settings dialog for Livestreamer and media player installations
-4. Set proper file caching for the media player under Media Player Args
+1. Download prequisites above. Use the installer for Livestreamer bundled with RTMPDump (not .zip installation). Tested with version v1.11.1.
+2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
+3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
+4. Set proper file caching for the media player under Media Player Args:
    (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
    i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096

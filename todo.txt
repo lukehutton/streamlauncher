@@ -14,3 +14,4 @@
 * show no feeds available when grid empty
 * config livestreamer location and editable
 * throw exception to set livestreamer on startup if not found?
+* show settings dialog on first run
