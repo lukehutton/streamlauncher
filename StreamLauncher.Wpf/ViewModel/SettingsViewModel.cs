@@ -11,6 +11,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
 
+        private bool? _dialogResult;
         private string _errorMessage;
         private string _liveStreamerPath;
         private string _mediaPlayerPath;
@@ -30,7 +31,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleCancelCommand()
         {
-            throw new System.NotImplementedException();
+            DialogResult = false;
         }
 
         private void HandleSaveCommand()
@@ -52,6 +53,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.Save();
 
             _liveStreamer.SaveConfig();
+
+            DialogResult = true;
         }
 
         public string LiveStreamerPath
@@ -108,6 +111,20 @@ namespace StreamLauncher.Wpf.ViewModel
                 _errorMessage = value;
                 RaisePropertyChanged(() => ErrorMessage);
             }
-        }  
+        }
+
+        public bool? DialogResult
+        {
+            get
+            {
+                return _dialogResult;
+            }
+
+            set
+            {
+                _dialogResult = value;
+                RaisePropertyChanged(() => DialogResult);
+            }
+        }
     }
 }

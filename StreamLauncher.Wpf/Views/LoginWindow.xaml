@@ -5,7 +5,7 @@
         Title="Login" Height="250" Width="450" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
         DataContext="{Binding Path=Login, Source={StaticResource Locator}}"        
         xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
-        infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"    
+        infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
     >
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

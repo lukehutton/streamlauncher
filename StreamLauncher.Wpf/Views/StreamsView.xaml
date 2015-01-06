@@ -11,7 +11,7 @@
         <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
         <Image x:Key="SettingsIcon" Source="../Images/Icons/settings64x64.png" />
         <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
-        <converters:FeedToEnabled x:Key="FeedToEnabled" />
+        <converters:IsFeedEnabled x:Key="IsFeedEnabled" />
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -95,14 +95,28 @@
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayHomeFeedText}" IsEnabled="{Binding PlayHomeFeedText, Converter={StaticResource FeedToEnabled}}" Command="{Binding Path=DataContext.PlayHomeFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayHomeFeedText}" Command="{Binding Path=DataContext.PlayHomeFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource IsFeedEnabled}">
+                                        <Binding Path="IsPlaying" />
+                                        <Binding Path="PlayHomeFeedText" />                                        
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayAwayFeedText}" IsEnabled="{Binding PlayAwayFeedText, Converter={StaticResource FeedToEnabled}}" Command="{Binding Path=DataContext.PlayAwayFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                            <Button Width="85" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayAwayFeedText}" Command="{Binding Path=DataContext.PlayAwayFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource IsFeedEnabled}">
+                                        <Binding Path="IsPlaying" />
+                                        <Binding Path="PlayAwayFeedText" />
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

@@ -115,7 +115,8 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (StreamNotFoundException)
             {
-                MessageBox.Show(string.Format("Feed for {0} at {1} not found", SelectedStream.AwayTeam,
+                MessageBox.Show(string.Format("Feed for {0} at {1} not found",
+                    SelectedStream.AwayTeam,
                     SelectedStream.HomeTeam));
             }
             catch (HockeyStreamsApiBadRequest)
@@ -129,6 +130,12 @@ namespace StreamLauncher.Wpf.ViewModel
             catch (MediaPlayerNotFound)
             {
                 ShowSettingsDialog("Media Player Path does not exist.");
+            }
+            catch (LiveStreamerError)
+            {
+                MessageBox.Show(string.Format("Feed for {0} at {1} could not be played.",
+                    SelectedStream.AwayTeam,
+                    SelectedStream.HomeTeam));
             }
         }
 

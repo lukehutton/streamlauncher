@@ -1,9 +1,12 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="StreamLauncher.Wpf.Views.SettingsWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
+        x:Class="StreamLauncher.Wpf.Views.SettingsWindow"
         Title="Settings" Height="299" Width="450" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
-        DataContext="{Binding Path=Settings, Source={StaticResource Locator}}"                        
+        DataContext="{Binding Path=Settings, Source={StaticResource Locator}}"      
+        infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
     >
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

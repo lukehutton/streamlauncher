@@ -14,8 +14,8 @@ namespace StreamLauncher.Repositories
     // todo unit test
     public class HockeyStreamRepository : IHockeyStreamRepository
     {
-        private readonly IHockeyStreamsApiRequiringToken _hockeyStreamsApi;
         private readonly ILiveStreamScheduleAggregatorAndMapper _aggregatorAndMapper;
+        private readonly IHockeyStreamsApiRequiringToken _hockeyStreamsApi;
         private readonly IScoresRepository _scoresRepository;
 
         public HockeyStreamRepository(
@@ -31,7 +31,7 @@ namespace StreamLauncher.Repositories
 
         public Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date)
         {
-            var request = new RestRequest { Resource = "GetLive", Method = Method.GET };
+            var request = new RestRequest {Resource = "GetLive", Method = Method.GET};
             request.AddParameter("date", date.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
             var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamsResponseDto>(request);
             var hockeyStreams = _aggregatorAndMapper.AggregateAndMap(responseDto);
@@ -42,18 +42,17 @@ namespace StreamLauncher.Repositories
                     .Where(score => score.HomeTeam == stream.HomeTeam && stream.IsPlaying)
                     .Select(p => p.PeriodAndTimeLeft)
                     .FirstOrDefault() ?? "-";
-                DeterminePeriod(stream);
-
+                DeterminePeriod(stream);         
                 return stream;
             });
             return Task.FromResult(streamsWithScores);
         }
-        
+
         public LiveStream GetLiveStream(int streamId, string location, Quality quality)
         {
-            var request = new RestRequest { Resource = "GetLiveStream", Method = Method.GET };
+            var request = new RestRequest {Resource = "GetLiveStream", Method = Method.GET};
             request.AddParameter("id", streamId, ParameterType.GetOrPost);
-            request.AddParameter("location", location, ParameterType.GetOrPost);            
+            request.AddParameter("location", location, ParameterType.GetOrPost);
             var responseDto = _hockeyStreamsApi.Execute<GetLiveStreamResponseDto>(request);
             var liveStream = new LiveStream();
             switch (quality)
@@ -85,27 +84,20 @@ namespace StreamLauncher.Repositories
 
         private static void DeterminePeriod(HockeyStream stream)
         {
-            try
-            {
-                if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
-                      stream.PeriodAndTimeLeft.Contains("2nd") ||
-                      stream.PeriodAndTimeLeft.Contains("3rd") ||
-                      stream.PeriodAndTimeLeft.Contains("OT") ||
-                      stream.PeriodAndTimeLeft.Contains("SO")))
-                {
-                    stream.PeriodAndTimeLeft = "-";
-                }
-                if (!stream.IsPlaying)
-                {
-                    if (stream.StartTimeSpan < DateTime.Now.TimeOfDay)
-                    {
-                        stream.PeriodAndTimeLeft = "Final";
-                    }
-                }
-            }
-            catch 
+            if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
+                  stream.PeriodAndTimeLeft.Contains("2nd") ||
+                  stream.PeriodAndTimeLeft.Contains("3rd") ||
+                  stream.PeriodAndTimeLeft.Contains("OT") ||
+                  stream.PeriodAndTimeLeft.Contains("SO")))
             {
                 stream.PeriodAndTimeLeft = "-";
+            }
+            if (!stream.IsPlaying)
+            {
+                if (stream.StartTimeSpan < DateTime.Now.TimeOfDay)
+                {
+                    stream.PeriodAndTimeLeft = "Final";
+                }
             }
         }
     }
