@@ -12,6 +12,7 @@ namespace StreamLauncher.MediaPlayers
     {
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
+
         private readonly StringBuilder _output = new StringBuilder();
         private readonly IUserSettings _userSettings;
 
@@ -49,8 +50,12 @@ namespace StreamLauncher.MediaPlayers
         {
             var livestreamerConfig = Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), "livestreamer", "livestreamerrc");
-            File.WriteAllText(livestreamerConfig,
-                string.Format("player=\"{0}\" {1}", _userSettings.MediaPlayerPath, _userSettings.MediaPlayerArguments));
+            var config = string.Format("player=\"{0}\" {1} {2}", _userSettings.MediaPlayerPath,
+                _userSettings.MediaPlayerArguments, Environment.NewLine);
+            // see https://github.com/chrippa/livestreamer/issues/228
+            //todo x32 path 
+            config += string.Format("rtmpdump=\"{0}\"", @"C:\Program Files (x86)\Livestreamer\rtmpdump\rtmpdump.exe");
+            File.WriteAllText(livestreamerConfig, config);
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
