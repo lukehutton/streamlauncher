@@ -18,5 +18,6 @@ namespace StreamLauncher.Models
         public string PlayHomeFeedText { get; set; }
         public string PlayAwayFeedText { get; set; }
         public TimeSpan StartTimeSpan { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

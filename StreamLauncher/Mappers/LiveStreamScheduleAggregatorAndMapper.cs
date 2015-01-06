@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using StreamLauncher.Constants;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
 using StreamLauncher.Util;
@@ -9,9 +10,7 @@ using StreamLauncher.Util;
 namespace StreamLauncher.Mappers
 {
     public class LiveStreamScheduleAggregatorAndMapper : ILiveStreamScheduleAggregatorAndMapper
-    {
-        private const int MaxTeamStringLength = 20;
-
+    {        
         public IEnumerable<HockeyStream> AggregateAndMap(GetLiveStreamsResponseDto getLiveStreamsResponseDto)
         {
             var schedule = getLiveStreamsResponseDto.Schedule;
@@ -47,8 +46,8 @@ namespace StreamLauncher.Mappers
             if (noFeedType != null)
             {
                 hockeyStream.HomeStreamId = Convert.ToInt32(noFeedType.Id);
-                hockeyStream.HomeTeam = noFeedType.HomeTeam.MaxStrLen(MaxTeamStringLength);
-                hockeyStream.AwayTeam = noFeedType.AwayTeam.MaxStrLen(MaxTeamStringLength);
+                hockeyStream.HomeTeam = noFeedType.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
+                hockeyStream.AwayTeam = noFeedType.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
                 hockeyStream.StartTime = noFeedType.StartTime;
                 hockeyStream.EventType = EventTypeParser.Parse(noFeedType.Event);
                 hockeyStream.IsPlaying = noFeedType.IsPlaying == "1";
@@ -62,8 +61,8 @@ namespace StreamLauncher.Mappers
             if (homeFeed != null)
             {
                 hockeyStream.HomeStreamId = Convert.ToInt32(homeFeed.Id);
-                hockeyStream.HomeTeam = homeFeed.HomeTeam.MaxStrLen(MaxTeamStringLength);
-                hockeyStream.AwayTeam = homeFeed.AwayTeam.MaxStrLen(MaxTeamStringLength);
+                hockeyStream.HomeTeam = homeFeed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
+                hockeyStream.AwayTeam = homeFeed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
                 hockeyStream.StartTime = homeFeed.StartTime;
                 hockeyStream.EventType = EventTypeParser.Parse(homeFeed.Event);
                 hockeyStream.IsPlaying = homeFeed.IsPlaying == "1";
@@ -76,8 +75,8 @@ namespace StreamLauncher.Mappers
             if (awayFeed != null)
             {
                 hockeyStream.AwayStreamId = Convert.ToInt32(awayFeed.Id);
-                hockeyStream.HomeTeam = awayFeed.HomeTeam.MaxStrLen(MaxTeamStringLength);
-                hockeyStream.AwayTeam = awayFeed.AwayTeam.MaxStrLen(MaxTeamStringLength);
+                hockeyStream.HomeTeam = awayFeed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
+                hockeyStream.AwayTeam = awayFeed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
                 hockeyStream.StartTime = awayFeed.StartTime;
                 hockeyStream.EventType = EventTypeParser.Parse(awayFeed.Event);
                 hockeyStream.IsPlaying = awayFeed.IsPlaying == "1";

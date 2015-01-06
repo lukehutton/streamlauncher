@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using StreamLauncher.Constants;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
 using StreamLauncher.MediaPlayers;
@@ -44,7 +45,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public string FavouriteTeam
         {
-            get { return _favouriteTeam.MaxStrLen(20); }
+            get { return _favouriteTeam.MaxStrLen(AppConstants.MaxTeamStringLength); }
+            set
+            {
+                _favouriteTeam = value;
+                RaisePropertyChanged();
+            }
         }
 
         private List<HockeyStream> _allHockeyStreams;
@@ -115,7 +121,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (StreamNotFoundException)
             {
-                MessageBox.Show(string.Format("Feed for {0} at {1} not found",
+                MessageBox.Show(string.Format("Live feed for {0} at {1} not found",
                     SelectedStream.AwayTeam,
                     SelectedStream.HomeTeam));
             }
@@ -133,7 +139,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (LiveStreamerError)
             {
-                MessageBox.Show(string.Format("Feed for {0} at {1} could not be played.",
+                MessageBox.Show(string.Format("No live feed for {0} at {1} available.",
                     SelectedStream.AwayTeam,
                     SelectedStream.HomeTeam));
             }
@@ -144,8 +150,7 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedFilterEventType = "ALL";
             SelectedFilterActiveState = "ALL";
 
-            //_favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;
-            _favouriteTeam = "Colorado Avalanche";
+            _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;            
             _isAuthenticated = true;
 
             GetLocations();
@@ -305,6 +310,17 @@ namespace StreamLauncher.Wpf.ViewModel
 
             foreach (var hockeyStream in hockeyStreams)
             {
+                if (hockeyStream.HomeTeam == FavouriteTeam)
+                {
+                    hockeyStream.IsFavorite = true;
+                    hockeyStream.HomeTeam = "*" + hockeyStream.HomeTeam;
+                }
+                else if (hockeyStream.AwayTeam == FavouriteTeam)
+                {
+                    hockeyStream.IsFavorite = true;
+                    hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
+                }
+
                 Streams.Add(hockeyStream);
             }
 

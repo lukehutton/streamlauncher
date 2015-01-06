@@ -5,7 +5,6 @@
 * get feed when press button with location and quality dropdown values
 * async get streams - update status control on top off all controls
 * hide/show scores
-* hightlight fave team with color on grid 
 * wait async message on login (takes ~3 seconds) - update status control on top off all controls
 * add api keys and user to app settings (make to sure add to .gitignore)
 * general exception catch, display error occurred message and log it
@@ -19,3 +18,4 @@
 * powered by livestreamer
 * media player drop down with image and default location
 * disable stream button for live streams before games starts and after ends? need support for on-demand
+* Could not open stream: Unable to find rtmpdump.exe command error, path issue?
