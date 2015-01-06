@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\AppConstants.cs" />
     <Compile Include="Exceptions\LiveStreamerError.cs" />
     <Compile Include="Exceptions\MediaPlayerNotFound.cs" />
     <Compile Include="Exceptions\LiveStreamerExecutableNotFound.cs" />

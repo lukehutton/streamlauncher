@@ -15,6 +15,11 @@ namespace StreamLauncher.Util
             return (T) Enum.Parse(typeof (T), value, true);
         }
 
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
         public static string MaxStrLen(this string value, int length)
         {
             if (value.Length > length)

@@ -6,6 +6,7 @@ using StreamLauncher.Authentication;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Wpf.Messages;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -48,6 +49,12 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;
+
+            if (UserName.IsNullOrEmpty() || password.IsNullOrEmpty())
+            {
+                ErrorMessage = "User Name or Password must not be empty.";
+                return;
+            }
 
             var result = _authenticationService.Authenticate(UserName, password);
             if (!result.IsAuthenticated)

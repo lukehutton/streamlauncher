@@ -93,7 +93,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\Converters\ConvertImagePathForFeedToImage.cs" />
-    <Compile Include="Infrastructure\Converters\FeedToEnabled.cs" />
+    <Compile Include="Infrastructure\Converters\IsFeedEnabled.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
     <Compile Include="Messages\AuthenticatedMessage.cs" />

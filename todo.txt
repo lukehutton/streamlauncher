@@ -14,8 +14,3 @@
 * show need feeds when grid empty
 * config livestreamer location and editable
 * throw exception to set livestreamer on startup if not found?
-* config media player location and editable -- i.e. set to vlc, mpc-hc, mplayer2 update livestreamer config to set the media player
-* powered by livestreamer
-* media player drop down with image and default location
-* disable stream button for live streams before games starts and after ends? need support for on-demand
-* Could not open stream: Unable to find rtmpdump.exe command error, path issue?

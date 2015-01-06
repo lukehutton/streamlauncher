@@ -13,6 +13,8 @@ namespace StreamLauncher.MediaPlayers
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
 
+        public static string RtmpDumpRelativePath = @"\rtmpdump\rtmpdump.exe";
+        
         private readonly StringBuilder _output = new StringBuilder();
         private readonly IUserSettings _userSettings;
 
@@ -31,15 +33,18 @@ namespace StreamLauncher.MediaPlayers
             {
                 throw new MediaPlayerNotFound();
             }
+            
             _output.Clear();
 
-            var arguments = string.Format("/c \"\"{0}\" \"{1}\" \"{2}\"\"", _userSettings.LiveStreamerPath, streamSource,
-                quality == Quality.HD ? "best" : "worst");
+            var qualityString = quality == Quality.HD ? "best" : "worst";
+            var arguments = string.Format("/c \"\"{0}\" \"{1}\" \"{2}\"\"", _userSettings.LiveStreamerPath, streamSource, qualityString);
             var process = new ProcessUtil("cmd.exe", arguments);
+            
             process.Start();            
             process.OutputDataReceived += OutputDataReceived;
             process.ErrorDataReceived += ErrorDataReceived;
             process.Wait();
+
             if (process.ExitCode != 0 || _output.ToString().Contains("error"))
             {
                 throw new LiveStreamerError();
@@ -48,14 +53,18 @@ namespace StreamLauncher.MediaPlayers
 
         public void SaveConfig()
         {
-            var livestreamerConfig = Path.Combine(Environment.GetFolderPath(
-                Environment.SpecialFolder.ApplicationData), "livestreamer", "livestreamerrc");
-            var config = string.Format("player=\"{0}\" {1} {2}", _userSettings.MediaPlayerPath,
-                _userSettings.MediaPlayerArguments, Environment.NewLine);
-            // see https://github.com/chrippa/livestreamer/issues/228
-            //todo x32 path 
-            config += string.Format("rtmpdump=\"{0}\"", @"C:\Program Files (x86)\Livestreamer\rtmpdump\rtmpdump.exe");
-            File.WriteAllText(livestreamerConfig, config);
+            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var livestreamerConfig = Path.Combine(appDataPath, "livestreamer", "livestreamerrc");
+
+            var rtmpPath = Path.Combine(_userSettings.LiveStreamerPath, RtmpDumpRelativePath);
+
+            var configBuilder = new StringBuilder();
+            configBuilder.AppendFormat("player=\"{0}\" {1}", _userSettings.MediaPlayerPath, _userSettings.MediaPlayerArguments);
+            configBuilder.AppendLine();
+            configBuilder.AppendFormat("rtmpdump={0}", rtmpPath);
+            configBuilder.AppendLine();
+            
+            File.WriteAllText(livestreamerConfig, configBuilder.ToString());
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)

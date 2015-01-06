@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -36,6 +37,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleSaveCommand()
         {
+            if (LiveStreamerPath.IsNullOrEmpty() || MediaPlayerPath.IsNullOrEmpty())
+            {
+                ErrorMessage = "Livestreamer Path or Media Player Path must not be empty.";
+                return;
+            }
+
             if (!File.Exists(LiveStreamerPath))
             {
                 ErrorMessage = "Livestreamer Path does not exist.";

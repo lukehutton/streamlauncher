@@ -1,20 +1,31 @@
 Hockey Streams Launcher
 =====================
-Hockey Streams Launcher is an open source application that enables you to stream hockeystreams.com to various media players such as VLC, MPC-HC, or MPlayer2
+Hockey Streams Launcher is an open source application that enables you to view RTMP streams from hockeystreams.com in various media players such as VLC, MPC-HC, or MPlayer2 through [Livestreamer](http://livestreamer.tanuki.se/en/latest/) and [RTMPDump](http://rtmpdump.mplayerhq.hu/)
    
 ![](https://github.com/lukehutton/streamlauncher/blob/master/docs/screen1.PNG)
 
 Features
 ----------
 * SD/HD streaming
-* Filtering by favourite teams, leagues, in progress
-* Highlight in progress, coming soon
+* Choose location of streams
+* Auto-login
+* Filtering by leagues, in progress, coming soon
+* Highlight favorite team
 * Show game information (time left, scoring)
-* on/off scoring
+* On/off scoring
+* Choose form multiple media players
+* Uses [RTMPDump](http://rtmpdump.mplayerhq.hu/) 
+
+Roadmap
+----------
+* On-Demand
+* Play live from beginning
+* Date picker
 
 Prerequisites
 -------------
  - [.NET Framework 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) [Required] 
+ - [Microsoft Visual C++ 2008 Redistributable Package](http://www.microsoft.com/en-us/download/details.aspx?id=29) [Required]
  - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/) [Required]
  - One of the following media players:
    - [VLC Media Player](http://www.videolan.org/vlc/index.html) 
@@ -28,3 +39,12 @@ You are more than welcome to take the code provided and compile a version of it 
 Issues
 -------
 If you are experiencing any issues such as crashes, please report them [here](https://github.com/lukehutton/streamlauncher/issues/new).
+
+How to install
+-------
+1. Download prequisites above
+2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)
+3. Set the correct paths in the Settings dialog
+4. Set proper file caching for the media player under Media Player Args
+   (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
+   i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
