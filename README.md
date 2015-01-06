@@ -13,7 +13,7 @@ Features
 * Highlight favorite team
 * Show game information (time left, scoring)
 * On/off scoring
-* Choose form multiple media players
+* Choose from multiple media players via [Livestreamer](http://livestreamer.tanuki.se/en/latest/)
 * Uses [RTMPDump](http://rtmpdump.mplayerhq.hu/) 
 
 Roadmap
@@ -44,7 +44,7 @@ How to install
 -------
 1. Download prequisites above
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)
-3. Set the correct paths in the Settings dialog
+3. Set the correct paths in the Settings dialog for Livestreamer and media player installations
 4. Set proper file caching for the media player under Media Player Args
    (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
    i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
