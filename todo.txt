@@ -11,6 +11,6 @@
 * show event type in grid when ALL event type selected, or always show
 * status for refresh command
 * make designer show streams again, fake out data
-* show need feeds when grid empty
+* show no feeds available when grid empty
 * config livestreamer location and editable
 * throw exception to set livestreamer on startup if not found?

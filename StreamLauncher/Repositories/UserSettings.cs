@@ -37,6 +37,12 @@
             set { Properties.Settings.Default.MediaPlayerArguments = value; }
         }
 
+        public bool IsFirstRun
+        {
+            get { return Properties.Settings.Default.IsFirstRun; }
+            set { Properties.Settings.Default.IsFirstRun = value; }
+        }
+
         public void Save()
         {
             Properties.Settings.Default.Save();

@@ -68,22 +68,25 @@ namespace StreamLauncher.Wpf.ViewModel
             CurrentUser = string.Format("Hi {0}", _userName);
             CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
 
-            if (string.IsNullOrEmpty(_userSettings.LiveStreamerPath))
+            if (_userSettings.IsFirstRun)
             {
                 _userSettings.LiveStreamerPath = Environment.Is64BitOperatingSystem
                     ? LiveStreamer.Default64BitLocation
                     : LiveStreamer.Default32BitLocation;
-                _userSettings.Save();
-            }
+                _userSettings.Save();                
 
-            if (string.IsNullOrEmpty(_userSettings.MediaPlayerPath))
-            {
                 _userSettings.MediaPlayerPath = Environment.Is64BitOperatingSystem
                     ? Vlc.Default64BitLocation
-                    : Vlc.Default32BitLocation;                    
+                    : Vlc.Default32BitLocation;
+
+                _userSettings.MediaPlayerArguments = Vlc.DefaultArgs;
+
+                _userSettings.IsFirstRun = false;
                 _userSettings.Save();
                 _liveStreamer.SaveConfig();
-            }            
+                
+                //todo show setting dialog via message
+            }
         }
 
         private void HandleClosingCommand(CancelEventArgs obj)

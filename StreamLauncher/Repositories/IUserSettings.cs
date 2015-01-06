@@ -8,6 +8,7 @@
         string LiveStreamerPath { get; set; }
         string MediaPlayerPath { get; set; }
         string MediaPlayerArguments { get; set; }
+        bool IsFirstRun { get; set; }
         void Save();
     }
 }
