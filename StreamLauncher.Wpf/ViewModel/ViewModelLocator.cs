@@ -22,25 +22,18 @@ using StreamLauncher.Filters;
 using StreamLauncher.Mappers;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
+using StreamLauncher.Validators;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// </summary>
     public class ViewModelLocator
     {
-        /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
-        /// </summary>
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                // Create design time view services and models                
                 SimpleIoc.Default.Register<IHockeyStreamRepository, DesignHockeyStreamRepository>();
                 SimpleIoc.Default.Register<IStreamLocationRepository, DesignStreamLocationRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
@@ -48,8 +41,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>(); //todo make design
             }
             else
-            {
-                // Create run time view services and models
+            {             
                 SimpleIoc.Default.Register<ITokenProvider, AuthenticationTokenProvider>();
                 SimpleIoc.Default.Register<IApiKeyProvider, ApiKeyProvider>();
                 SimpleIoc.Default.Register<IHockeyStreamsApi, HockeyStreamsApi>();
@@ -63,6 +55,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
                 SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
                 SimpleIoc.Default.Register<IUserSettings, UserSettings>();
+                SimpleIoc.Default.Register<IUserSettingsValidator, UserSettingsValidator>();
                 SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
             }
 

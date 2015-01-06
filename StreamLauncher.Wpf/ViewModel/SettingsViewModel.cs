@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
-using StreamLauncher.Util;
+using StreamLauncher.Validators;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -11,6 +11,7 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
+        private readonly IUserSettingsValidator _userSettingsValidator;
 
         private bool? _dialogResult;
         private string _errorMessage;
@@ -21,10 +22,11 @@ namespace StreamLauncher.Wpf.ViewModel
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
-        public SettingsViewModel(IUserSettings userSettings, ILiveStreamer liveStreamer)
+        public SettingsViewModel(IUserSettings userSettings, ILiveStreamer liveStreamer, IUserSettingsValidator userSettingsValidator)
         {
             _userSettings = userSettings;
             _liveStreamer = liveStreamer;
+            _userSettingsValidator = userSettingsValidator;
 
             SaveCommand = new RelayCommand(HandleSaveCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);
@@ -37,28 +39,17 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleSaveCommand()
         {
-            if (LiveStreamerPath.IsNullOrEmpty() || MediaPlayerPath.IsNullOrEmpty())
-            {
-                ErrorMessage = "Livestreamer Path or Media Player Path must not be empty.";
-                return;
-            }
-
-            if (!File.Exists(LiveStreamerPath))
-            {
-                ErrorMessage = "Livestreamer Path does not exist.";
-                return;
-            }
-            if (!File.Exists(MediaPlayerPath))
-            {
-                ErrorMessage = "Media Player Path does not exist.";
-                return;
-            }
-
             _userSettings.LiveStreamerPath = LiveStreamerPath;
             _userSettings.MediaPlayerPath = MediaPlayerPath;
             _userSettings.MediaPlayerArguments = MediaPlayerArguments;
-            _userSettings.Save();
 
+            var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
+            if (brokenRules.Any()) 
+            { 
+                ErrorMessage = brokenRules.First();                
+                return;
+            }
+            _userSettings.Save();
             _liveStreamer.SaveConfig();
 
             DialogResult = true;

@@ -13,3 +13,4 @@
 * make designer show streams again, fake out data
 * show no feeds available when grid empty
 * for error messages and status messages, use dialogservice, http://msdn.microsoft.com/en-us/magazine/jj694937.aspx
+* keep login/settings dialog consistent

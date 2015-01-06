@@ -29,15 +29,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings = userSettings;
 
             LoginCommand = new RelayCommand<object>(HandleLoginCommand);
-            CancelCommand = new RelayCommand(HandleCancelCommand);
-
-            Messenger.Default.Register<AutoLoginFailedMessage>(this, HandleAutoLoginFailedMessage);            
-        }
-
-        private void HandleAutoLoginFailedMessage(AutoLoginFailedMessage autoLoginFailedMessage)
-        {
-            UserName = autoLoginFailedMessage.UserName;
-            ErrorMessage = autoLoginFailedMessage.ErrorMessage;
+            CancelCommand = new RelayCommand(HandleCancelCommand);            
         }
 
         private void HandleCancelCommand()

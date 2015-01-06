@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration;
-using System.IO;
+using System.Linq;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -12,6 +12,7 @@ using StreamLauncher.Authentication;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
+using StreamLauncher.Validators;
 using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Wpf.Views;
 
@@ -20,6 +21,7 @@ namespace StreamLauncher.Wpf.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly IUserSettings _userSettings;
+        private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
         private readonly ITokenProvider _tokenProvider;
         private readonly ILiveStreamer _liveStreamer;
@@ -27,23 +29,23 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _userName;
         private string _currentUser;
         private string _currentDate;
-
-        public RelayCommand LoginCommand { get; private set; }
+        
         public RelayCommand LogoutCommand { get; private set; }
 
         public RelayCommand<CancelEventArgs> Closing { get; private set; }
 
         public MainViewModel(IUserSettings userSettings,
+            IUserSettingsValidator userSettingsValidator,
             IAuthenticationService authenticationService,
             ITokenProvider tokenProvider,
             ILiveStreamer liveStreamer)
         {
             _userSettings = userSettings;
+            _userSettingsValidator = userSettingsValidator;
             _authenticationService = authenticationService;
             _tokenProvider = tokenProvider;
             _liveStreamer = liveStreamer;
-
-            LoginCommand = new RelayCommand(HandleLoginCommand);
+            
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
@@ -66,39 +68,42 @@ namespace StreamLauncher.Wpf.ViewModel
         private void BootstrapApp()
         {
             CurrentUser = string.Format("Hi {0}", _userName);
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");            
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
 
-            if (_userSettings.IsFirstRun)
+            if (!_userSettings.IsFirstRun) return;
+
+            _userSettings.LiveStreamerPath = Environment.Is64BitOperatingSystem
+                ? LiveStreamer.Default64BitLocation
+                : LiveStreamer.Default32BitLocation;
+
+            _userSettings.MediaPlayerPath = Environment.Is64BitOperatingSystem
+                ? Vlc.Default64BitLocation
+                : Vlc.Default32BitLocation;
+
+            _userSettings.MediaPlayerArguments = Vlc.DefaultArgs;
+
+            var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
+            if (brokenRules.Any())
             {
-                _userSettings.LiveStreamerPath = Environment.Is64BitOperatingSystem
-                    ? LiveStreamer.Default64BitLocation
-                    : LiveStreamer.Default32BitLocation;
-                _userSettings.Save();                
-
-                _userSettings.MediaPlayerPath = Environment.Is64BitOperatingSystem
-                    ? Vlc.Default64BitLocation
-                    : Vlc.Default32BitLocation;
-
-                _userSettings.MediaPlayerArguments = Vlc.DefaultArgs;
-
-                _userSettings.IsFirstRun = false;
-                _userSettings.Save();
-                _liveStreamer.SaveConfig();
-
-                ShowSettingsDialog();
+                ShowSettingsDialog(brokenRules.First());
+                return;
             }
+            _userSettings.IsFirstRun = false;
+            _userSettings.Save();
+            _liveStreamer.SaveConfig();
         }
 
-        private void ShowSettingsDialog()
+        private void ShowSettingsDialog(string errorMessage)
         {
-            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());            
+            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            settingsViewModel.ErrorMessage = errorMessage;
             settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
             settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
             settingsViewModel.MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             var settingsWindow = new SettingsWindow
             {
                 DataContext = settingsViewModel
-            };
+            };            
             settingsWindow.ShowDialog();
         }
 
@@ -108,14 +113,11 @@ namespace StreamLauncher.Wpf.ViewModel
             Application.Current.Shutdown();
         }
         
-        private void HandleLoginCommand()
+        private static void OpenLoginDialog(string userName = "", string errorMessage = "")
         {
-            OpenLoginDialog();
-        }
-
-        private static void OpenLoginDialog()
-        {
-            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());            
+            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());
+            loginViewModel.UserName = userName;
+            loginViewModel.ErrorMessage = errorMessage;
             var loginWindow = new LoginWindow
             {
                 DataContext = loginViewModel                
@@ -158,7 +160,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             if (!_userSettings.RememberMe)
             {
-                HandleLoginCommand();
+                OpenLoginDialog();                
                 return;
             }
             string password;
@@ -169,14 +171,10 @@ namespace StreamLauncher.Wpf.ViewModel
             var result = _authenticationService.Authenticate(_userSettings.UserName, password);
             if (!result.IsAuthenticated)
             {
-                Messenger.Default.Send(new AutoLoginFailedMessage
-                {
-                    UserName = _userSettings.UserName,                    
-                    ErrorMessage = result.ErrorMessage                    
-                });
-                HandleLoginCommand();
+                OpenLoginDialog(_userSettings.UserName, result.ErrorMessage);                
                 return;
             }
+
             HandleLoginSuccessfulMessage(new LoginSuccessfulMessage { AuthenticationResult = result });
         }
 

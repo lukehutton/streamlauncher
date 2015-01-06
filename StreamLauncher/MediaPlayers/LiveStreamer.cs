@@ -13,7 +13,7 @@ namespace StreamLauncher.MediaPlayers
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
 
-        public static string RtmpDumpRelativePath = @"\rtmpdump\rtmpdump.exe";
+        public static string RtmpDumpRelativePath = @"rtmpdump\rtmpdump.exe";
         
         private readonly StringBuilder _output = new StringBuilder();
         private readonly IUserSettings _userSettings;
@@ -56,7 +56,7 @@ namespace StreamLauncher.MediaPlayers
             var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var livestreamerConfig = Path.Combine(appDataPath, "livestreamer", "livestreamerrc");
 
-            var rtmpPath = Path.Combine(_userSettings.LiveStreamerPath, RtmpDumpRelativePath);
+            var rtmpPath = Path.Combine(Path.GetDirectoryName(_userSettings.LiveStreamerPath), RtmpDumpRelativePath);
 
             var configBuilder = new StringBuilder();
             configBuilder.AppendFormat("player=\"{0}\" {1}", _userSettings.MediaPlayerPath, _userSettings.MediaPlayerArguments);
