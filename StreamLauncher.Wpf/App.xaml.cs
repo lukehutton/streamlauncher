@@ -1,11 +1,38 @@
-﻿using System.Windows;
+﻿using System;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Threading;
+using log4net;
+using log4net.Config;
 
 namespace StreamLauncher.Wpf
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private ILog _log;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            XmlConfigurator.Configure();
+
+            _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+            DispatcherUnhandledException += OnAppDispatcherUnhandledException;
+        }
+
+        private void OnAppDispatcherUnhandledException(
+            object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("Sorry, an unhandled exception occurred and the application will shutdown. Please re-start.: " +
+                            Environment.NewLine + Environment.NewLine +
+                            e.Exception.GetType().Name +
+                            Environment.NewLine + Environment.NewLine +
+                            e.Exception.Message);
+            e.Handled = true;
+            _log.Error(e.Exception);
+            Shutdown();
+        }
     }
 }

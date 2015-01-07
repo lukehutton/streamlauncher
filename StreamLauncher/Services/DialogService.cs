@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 namespace StreamLauncher.Services
 {
+    // todo could implement custom dialog
     public class DialogService : IDialogService
     {
         public void ShowError(string errorMessage, string title, string buttonText)
