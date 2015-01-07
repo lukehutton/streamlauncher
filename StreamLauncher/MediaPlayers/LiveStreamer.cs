@@ -46,14 +46,16 @@ namespace StreamLauncher.MediaPlayers
                     streamSource,
                     qualityString,
                     RtmpTimeOutInSeconds);
-                var process = new ProcessUtil("cmd.exe", arguments);
-                process.Start();
-                process.OutputDataReceived += OutputDataReceived;
-                process.ErrorDataReceived += ErrorDataReceived;
-                process.Wait();
-                if (process.ExitCode != 0 || _output.ToString().Contains("error"))
+                using (var process = new ProcessUtil("cmd.exe", arguments))
                 {
-                    throw new LiveStreamerError(game);
+                    process.Start();
+                    process.OutputDataReceived += OutputDataReceived;
+                    process.ErrorDataReceived += ErrorDataReceived;
+                    process.Wait();
+                    if (process.ExitCode != 0 || _output.ToString().Contains("error"))
+                    {
+                        throw new LiveStreamerError(game);
+                    }
                 }
             }).ContinueWith(o => MyErrorHandler(o.Exception), TaskContinuationOptions.OnlyOnFaulted);
         }
