@@ -118,7 +118,8 @@ namespace StreamLauncher.Wpf.ViewModel
             try
             {
                 var stream = _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
-                _liveStreamer.Play(stream.Source, quality);
+                var game = string.Format("{0} at {1}", SelectedStream.AwayTeam, SelectedStream.HomeTeam);
+                _liveStreamer.Play(game, stream.Source, quality);
             }
             catch (StreamNotFoundException)
             {
@@ -137,12 +138,6 @@ namespace StreamLauncher.Wpf.ViewModel
             catch (MediaPlayerNotFound)
             {
                 ShowSettingsDialog("Media Player Path does not exist.");
-            }
-            catch (LiveStreamerError)
-            {
-                MessageBox.Show(string.Format("No live feed for {0} at {1} available.",
-                    SelectedStream.AwayTeam,
-                    SelectedStream.HomeTeam));
             }
         }
 

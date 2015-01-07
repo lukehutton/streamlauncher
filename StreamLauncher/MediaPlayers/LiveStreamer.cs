@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Repositories;
 using StreamLauncher.Util;
@@ -10,11 +12,10 @@ namespace StreamLauncher.MediaPlayers
 {
     public class LiveStreamer : ILiveStreamer
     {
+        private const int RtmpTimeOutInSeconds = 5;
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
-
         public static string RtmpDumpRelativePath = @"rtmpdump\rtmpdump.exe";
-        
         private readonly StringBuilder _output = new StringBuilder();
         private readonly IUserSettings _userSettings;
 
@@ -23,7 +24,7 @@ namespace StreamLauncher.MediaPlayers
             _userSettings = userSettings;
         }
 
-        public void Play(string streamSource, Quality quality)
+        public void Play(string game, string streamSource, Quality quality)
         {
             if (!File.Exists(_userSettings.LiveStreamerPath))
             {
@@ -33,22 +34,28 @@ namespace StreamLauncher.MediaPlayers
             {
                 throw new MediaPlayerNotFound();
             }
-            
-            _output.Clear();
 
-            var qualityString = quality == Quality.HD ? "best" : "worst";
-            var arguments = string.Format("/c \"\"{0}\" \"{1}\" \"{2}\"\"", _userSettings.LiveStreamerPath, streamSource, qualityString);
-            var process = new ProcessUtil("cmd.exe", arguments);
-            
-            process.Start();            
-            process.OutputDataReceived += OutputDataReceived;
-            process.ErrorDataReceived += ErrorDataReceived;
-            process.Wait();
-
-            if (process.ExitCode != 0 || _output.ToString().Contains("error"))
+            Task.Factory.StartNew(() =>
             {
-                throw new LiveStreamerError();
-            }
+                _output.Clear();
+
+                var qualityString = quality == Quality.HD ? "best" : "worst";
+                var arguments = string.Format(
+                    "/c \"\"{0}\" \"{1}\" \"{2}\"\" --rtmp-timeout {3}",
+                    _userSettings.LiveStreamerPath,
+                    streamSource,
+                    qualityString,
+                    RtmpTimeOutInSeconds);
+                var process = new ProcessUtil("cmd.exe", arguments);
+                process.Start();
+                process.OutputDataReceived += OutputDataReceived;
+                process.ErrorDataReceived += ErrorDataReceived;
+                process.Wait();
+                if (process.ExitCode != 0 || _output.ToString().Contains("error"))
+                {
+                    throw new LiveStreamerError(game);
+                }
+            }).ContinueWith(o => MyErrorHandler(o.Exception), TaskContinuationOptions.OnlyOnFaulted);
         }
 
         public void SaveConfig()
@@ -59,12 +66,23 @@ namespace StreamLauncher.MediaPlayers
             var rtmpPath = Path.Combine(Path.GetDirectoryName(_userSettings.LiveStreamerPath), RtmpDumpRelativePath);
 
             var configBuilder = new StringBuilder();
-            configBuilder.AppendFormat("player=\"{0}\" {1}", _userSettings.MediaPlayerPath, _userSettings.MediaPlayerArguments);
+            configBuilder.AppendFormat("player=\"{0}\" {1}", _userSettings.MediaPlayerPath,
+                _userSettings.MediaPlayerArguments);
             configBuilder.AppendLine();
             configBuilder.AppendFormat("rtmpdump={0}", rtmpPath);
             configBuilder.AppendLine();
-            
+            configBuilder.AppendLine("player-no-close");
+
             File.WriteAllText(livestreamerConfig, configBuilder.ToString());
+        }
+
+        private void MyErrorHandler(AggregateException exception)
+        {
+            // todo use dialog service
+            if (exception.InnerException is LiveStreamerError)
+            {
+                MessageBox.Show(string.Format("No live feed for {0} available.", exception.InnerException.Message));
+            }
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
