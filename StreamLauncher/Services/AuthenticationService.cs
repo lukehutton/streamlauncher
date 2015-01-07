@@ -4,7 +4,7 @@ using StreamLauncher.Dtos;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Models;
 
-namespace StreamLauncher.Authentication
+namespace StreamLauncher.Services
 {
     public class AuthenticationService : IAuthenticationService
     {

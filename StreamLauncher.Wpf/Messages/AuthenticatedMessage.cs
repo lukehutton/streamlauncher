@@ -1,4 +1,4 @@
-﻿using StreamLauncher.Authentication;
+﻿using StreamLauncher.Services;
 
 namespace StreamLauncher.Wpf.Messages
 {

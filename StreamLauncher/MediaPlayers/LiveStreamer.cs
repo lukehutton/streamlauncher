@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Repositories;
+using StreamLauncher.Services;
 using StreamLauncher.Util;
 
 namespace StreamLauncher.MediaPlayers
@@ -18,10 +18,12 @@ namespace StreamLauncher.MediaPlayers
         public static string RtmpDumpRelativePath = @"rtmpdump\rtmpdump.exe";
         private readonly StringBuilder _output = new StringBuilder();
         private readonly IUserSettings _userSettings;
+        private readonly IDialogService _dialogService;
 
-        public LiveStreamer(IUserSettings userSettings)
+        public LiveStreamer(IUserSettings userSettings, IDialogService dialogService)
         {
             _userSettings = userSettings;
+            _dialogService = dialogService;
         }
 
         public void Play(string game, string streamSource, Quality quality)
@@ -46,6 +48,7 @@ namespace StreamLauncher.MediaPlayers
                     streamSource,
                     qualityString,
                     RtmpTimeOutInSeconds);
+
                 using (var process = new ProcessUtil("cmd.exe", arguments))
                 {
                     process.Start();
@@ -79,11 +82,11 @@ namespace StreamLauncher.MediaPlayers
         }
 
         private void MyErrorHandler(AggregateException exception)
-        {
-            // todo use dialog service
+        {         
             if (exception.InnerException is LiveStreamerError)
             {
-                MessageBox.Show(string.Format("No live feed for {0} available.", exception.InnerException.Message));
+                _dialogService.ShowMessage(
+                    string.Format("No live feed for {0} available.", exception.InnerException.Message), "Error", "OK");                
             }
             //todo send status message to close window loading stream
         }

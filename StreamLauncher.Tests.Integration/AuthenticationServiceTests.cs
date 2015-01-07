@@ -2,7 +2,7 @@
 using System.Configuration;
 using NUnit.Framework;
 using StreamLauncher.Api;
-using StreamLauncher.Authentication;
+using StreamLauncher.Services;
 
 namespace StreamLauncher.Tests.Integration
 {

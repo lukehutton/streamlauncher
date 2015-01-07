@@ -2,9 +2,9 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using StreamLauncher.Authentication;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
+using StreamLauncher.Services;
 using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Util;
 

@@ -1,6 +1,6 @@
 using StreamLauncher.Models;
 
-namespace StreamLauncher.Authentication
+namespace StreamLauncher.Services
 {
     public interface IAuthenticationService
     {

@@ -16,12 +16,12 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using StreamLauncher.Api;
-using StreamLauncher.Authentication;
 using StreamLauncher.Design;
 using StreamLauncher.Filters;
 using StreamLauncher.Mappers;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
+using StreamLauncher.Services;
 using StreamLauncher.Validators;
 
 namespace StreamLauncher.Wpf.ViewModel
@@ -57,6 +57,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SimpleIoc.Default.Register<IUserSettings, UserSettings>();
                 SimpleIoc.Default.Register<IUserSettingsValidator, UserSettingsValidator>();
                 SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
+                SimpleIoc.Default.Register<IDialogService, DialogService>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();
