@@ -83,12 +83,17 @@ namespace StreamLauncher.MediaPlayers
             {
                 MessageBox.Show(string.Format("No live feed for {0} available.", exception.InnerException.Message));
             }
+            //todo send status message to close window loading stream
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
+                if (e.Data.Contains("Starting player"))
+                {
+                    //todo send status message to close window loading stream                    
+                }
                 _output.AppendLine(e.Data);
             }
         }
