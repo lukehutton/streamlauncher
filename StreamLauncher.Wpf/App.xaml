@@ -3,7 +3,7 @@
   <Application.Resources>
   	<ResourceDictionary>
   		<ResourceDictionary.MergedDictionaries>
-  			<ResourceDictionary Source="Simple Styles.xaml"/>
+  			<ResourceDictionary Source="Styles/Simple Styles.xaml"/>
   		</ResourceDictionary.MergedDictionaries>
   		<viewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
   	</ResourceDictionary>
