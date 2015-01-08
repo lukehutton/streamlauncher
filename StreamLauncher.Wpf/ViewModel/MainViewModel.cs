@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
 using System.Windows;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -18,7 +17,7 @@ using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : BaseViewModel
     {
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
@@ -34,7 +33,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public RelayCommand<CancelEventArgs> Closing { get; private set; }
 
-        public MainViewModel(IUserSettings userSettings,
+        public MainViewModel(
+            IUserSettings userSettings,
             IUserSettingsValidator userSettingsValidator,
             IAuthenticationService authenticationService,
             ITokenProvider tokenProvider,
@@ -49,7 +49,14 @@ namespace StreamLauncher.Wpf.ViewModel
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
-            Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);            
+            Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);
+            Messenger.Default.Register<BusyStatusMessage>(this, HandleBusyStatusMessage);
+        }
+
+        private void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage)
+        {            
+            BusyText = busyStatusMessage.Status;
+            IsBusy = busyStatusMessage.IsBusy;
         }
 
         private void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)

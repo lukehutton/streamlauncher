@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 
@@ -30,21 +29,13 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }        
 
-        public void ExecuteActionInBackground(Action workerMethod)
-        {
-            IsBusy = true;
-
-            var worker = new BackgroundWorker();
-            worker.DoWork += delegate { workerMethod(); };
-            worker.RunWorkerCompleted += delegate { IsBusy = false; };
-            worker.RunWorkerAsync();
-        }
-
-        public async void ExecuteAsyncActionInBackground(Action action)
-        {
-            IsBusy = true;
+        public async void ExecuteInBackground(Action action, Action completedAction)
+        {            
             var task = Task.Factory.StartNew(action);
-            await task.ContinueWith(_ => { IsBusy = false; });
+            await task.ContinueWith(_ =>
+            {
+                completedAction();
+            }, TaskScheduler.FromCurrentSynchronizationContext());        
         }
     }
 }

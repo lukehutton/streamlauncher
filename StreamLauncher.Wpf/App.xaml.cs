@@ -25,7 +25,7 @@ namespace StreamLauncher.Wpf
         private void OnAppDispatcherUnhandledException(
             object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("Sorry, an unhandled exception occurred and the application will shutdown. Please re-start.: " +
+            MessageBox.Show("Sorry, an unhandled exception has occurred and has been logged. The application will shutdown." +
                             Environment.NewLine + Environment.NewLine +
                             e.Exception.GetType().Name +
                             Environment.NewLine + Environment.NewLine +

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using GalaSoft.MvvmLight;
+using System.Windows.Data;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -31,6 +29,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
 
+        private readonly object _hockeyStreamsLock = new object();
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
 
@@ -57,8 +56,7 @@ namespace StreamLauncher.Wpf.ViewModel
         }
 
         private List<HockeyStream> _allHockeyStreams;
-        private bool _isAuthenticated;
-        private SynchronizationContext _uiContext;
+        private bool _isAuthenticated;        
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -76,7 +74,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings = userSettings;
             _dialogService = dialogService;
 
-            Streams = new ObservableCollection<HockeyStream>();
+            Streams = new ObservableCollection<HockeyStream>();                        
             Locations = new ObservableCollection<StreamLocation>();
 
             GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);
@@ -84,7 +82,16 @@ namespace StreamLauncher.Wpf.ViewModel
             PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
             PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
                         
-            Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);            
+            Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
+            BindingOperations.CollectionRegistering += BindingOperations_CollectionRegistering;
+        }
+
+        private void BindingOperations_CollectionRegistering(object sender, CollectionRegisteringEventArgs e)
+        {
+            if (e.Collection.Equals(Streams))
+            {
+                BindingOperations.EnableCollectionSynchronization(Streams, _hockeyStreamsLock);
+            }            
         }
 
         private void HandleSettingsCommand()
@@ -164,16 +171,16 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleGetStreamsCommand()
         {
-            _uiContext = SynchronizationContext.Current;
-            BusyText = "Getting streams...";
-            ExecuteAsyncActionInBackground(GetStreams);
+            Messenger.Default.Send(new BusyStatusMessage(true, "Getting streams..."));
+            Action completedAction = () => Messenger.Default.Send(new BusyStatusMessage(false, "DONE Getting streams."));
+            ExecuteInBackground(GetStreams, completedAction);            
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)
         {
             var filteredStreams = FilterByEventType(streams, SelectedFilterEventType);
-            filteredStreams = FilterByActiveState(filteredStreams, SelectedFilterActiveState);            
-            Streams = new ObservableCollection<HockeyStream>(filteredStreams);
+            filteredStreams = FilterByActiveState(filteredStreams, SelectedFilterActiveState);
+            Streams = new ObservableCollection<HockeyStream>(filteredStreams);            
         }
 
         private IEnumerable<HockeyStream> FilterByEventType(IEnumerable<HockeyStream> streams, string selectedEventType)
@@ -297,7 +304,10 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private async void GetStreams()
         {
-            _uiContext.Send(x => Streams.Clear(), null);         
+            lock (_hockeyStreamsLock)
+            {
+                Streams.Clear();
+            }
 
             var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
             var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
@@ -319,13 +329,15 @@ namespace StreamLauncher.Wpf.ViewModel
                     hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
                 }
 
-                var stream = hockeyStream;
-                _uiContext.Send(x => Streams.Add(stream), null);                
+                lock (_hockeyStreamsLock)
+                {
+                    Streams.Add(hockeyStream);
+                }
             }
 
             _allHockeyStreams = Streams.ToList();
 
-            FilterStreams(_allHockeyStreams);           
+            FilterStreams(_allHockeyStreams);
         }
 
         private void GetLocations()

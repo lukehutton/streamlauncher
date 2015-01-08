@@ -71,6 +71,7 @@
     <Compile Include="Messages\AuthenticatedMessage.cs" />
     <Compile Include="Messages\AutoLoginFailedMessage.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
+    <Compile Include="Messages\BusyStatusMessage.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
     <Compile Include="Models\LiveStream.cs" />
