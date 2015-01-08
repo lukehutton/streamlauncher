@@ -3,17 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:converters="clr-namespace:StreamLauncher.Wpf.Infrastructure.Converters"
+             xmlns:converters="clr-namespace:StreamLauncher.Wpf.Infrastructure.Converters"             
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              DataContext="{Binding Path=Streams, Source={StaticResource Locator}}"
-             d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">
+             d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">    
     <UserControl.Resources>
         <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
         <Image x:Key="SettingsIcon" Source="../Images/Icons/settings64x64.png" />
         <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
         <converters:IsFeedEnabled x:Key="IsFeedEnabled" />
     </UserControl.Resources>
-    <Grid>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}" >
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0*"/>
             <RowDefinition/>
@@ -125,6 +127,7 @@
         <Label Grid.ColumnSpan="2" Content="Filter Event:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
         <ComboBox HorizontalAlignment="Left" Margin="398.716,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" FontFamily="Segoe UI" FontSize="13.333" FontWeight="Bold" ItemsSource="{Binding ActiveStates}" SelectedValue="{Binding SelectedFilterActiveState}" />
         <Label Grid.ColumnSpan="2" Content="Filter Active:" HorizontalAlignment="Left" Margin="301.079,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
-        <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="706,17,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="True"/>
+        <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="706,17,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="True"/>                            
     </Grid>
+    </xctk:BusyIndicator>
 </UserControl>

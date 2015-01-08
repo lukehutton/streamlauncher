@@ -68,6 +68,9 @@
     <Compile Include="MediaPlayers\ILiveStreamer.cs" />
     <Compile Include="MediaPlayers\LiveStreamer.cs" />
     <Compile Include="MediaPlayers\Vlc.cs" />
+    <Compile Include="Messages\AuthenticatedMessage.cs" />
+    <Compile Include="Messages\AutoLoginFailedMessage.cs" />
+    <Compile Include="Messages\LoginSuccessfulMessage.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\HockeyStream.cs" />
     <Compile Include="Models\LiveStream.cs" />
@@ -100,7 +103,6 @@
     <Compile Include="Repositories\UserSettings.cs" />
     <Compile Include="Repositories\StreamLocationRepository.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />
     <Compile Include="Security\SecureIt.cs" />
     <Compile Include="Services\IDialogService.cs" />

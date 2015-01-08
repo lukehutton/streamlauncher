@@ -101,9 +101,8 @@
     <Compile Include="Infrastructure\Converters\ConvertImagePathForFeedToImage.cs" />
     <Compile Include="Infrastructure\Converters\IsFeedEnabled.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
-    <Compile Include="Messages\LoginSuccessfulMessage.cs" />
-    <Compile Include="Messages\AuthenticatedMessage.cs" />
-    <Compile Include="Messages\AutoLoginFailedMessage.cs" />
+    <Compile Include="StartUp\BootStrapper.cs" />
+    <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />

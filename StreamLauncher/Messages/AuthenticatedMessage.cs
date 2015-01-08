@@ -1,6 +1,6 @@
 ﻿using StreamLauncher.Services;
 
-namespace StreamLauncher.Wpf.Messages
+namespace StreamLauncher.Messages
 {
     public class AuthenticatedMessage
     {

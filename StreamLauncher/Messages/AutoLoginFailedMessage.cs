@@ -1,4 +1,4 @@
-﻿namespace StreamLauncher.Wpf.Messages
+﻿namespace StreamLauncher.Messages
 {
     public class AutoLoginFailedMessage
     {

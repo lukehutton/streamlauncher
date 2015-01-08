@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -12,21 +13,23 @@ using StreamLauncher.Constants;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
 using StreamLauncher.MediaPlayers;
+using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Services;
 using StreamLauncher.Util;
-using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class StreamsViewModel : ViewModelBase
+    public class StreamsViewModel : BaseViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
         private readonly IStreamLocationRepository _streamLocationRepository;
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettings _userSettings;
+        private readonly IDialogService _dialogService;
 
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
@@ -54,14 +57,16 @@ namespace StreamLauncher.Wpf.ViewModel
         }
 
         private List<HockeyStream> _allHockeyStreams;
-        private bool _isAuthenticated;        
+        private bool _isAuthenticated;
+        private SynchronizationContext _uiContext;
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
             IStreamLocationRepository streamLocationRepository,
             ILiveStreamer liveStreamer,
-            IUserSettings userSettings
+            IUserSettings userSettings,
+            IDialogService dialogService
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
@@ -69,6 +74,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _streamLocationRepository = streamLocationRepository;
             _liveStreamer = liveStreamer;
             _userSettings = userSettings;
+            _dialogService = dialogService;
 
             Streams = new ObservableCollection<HockeyStream>();
             Locations = new ObservableCollection<StreamLocation>();
@@ -78,7 +84,7 @@ namespace StreamLauncher.Wpf.ViewModel
             PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
             PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
                         
-            Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
+            Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);            
         }
 
         private void HandleSettingsCommand()
@@ -123,9 +129,9 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (StreamNotFoundException)
             {
-                MessageBox.Show(string.Format("Live feed for {0} at {1} not found",
+                _dialogService.ShowError(string.Format("Live feed for {0} at {1} not found",
                     SelectedStream.AwayTeam,
-                    SelectedStream.HomeTeam));
+                    SelectedStream.HomeTeam), "Error", "OK");
             }
             catch (HockeyStreamsApiBadRequest)
             {
@@ -158,10 +164,9 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleGetStreamsCommand()
         {
-            //Task.Run(async () => await GetStreamsFiltered());
-            GetStreams();
-
-            FilterStreams(_allHockeyStreams);
+            _uiContext = SynchronizationContext.Current;
+            BusyText = "Getting streams...";
+            ExecuteAsyncActionInBackground(GetStreams);
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)
@@ -290,21 +295,18 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
-        private async Task GetStreams()
+        private async void GetStreams()
         {
-            Streams.Clear();
-
-            // update status control on top off all controls - see http://msdn.microsoft.com/en-us/magazine/jj694937.aspx
-//            Messenger.Default.Send(new StatusMessage("Getting streams...", 0));
+            _uiContext.Send(x => Streams.Clear(), null);         
 
             var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
+            var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
+            if (!streams.Any())
+            {
+                _dialogService.ShowMessage("We couldn't find any streams.", "Error", "OK");
+            }
 
-//            if (hockeyStreams.Count == 0)
-//            {
-//                DialogService.ShowMessage("We couldn't find any streams.");
-//            }
-
-            foreach (var hockeyStream in hockeyStreams)
+            foreach (var hockeyStream in streams)
             {
                 if (hockeyStream.HomeTeam == FavouriteTeam)
                 {
@@ -317,12 +319,13 @@ namespace StreamLauncher.Wpf.ViewModel
                     hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
                 }
 
-                Streams.Add(hockeyStream);
+                var stream = hockeyStream;
+                _uiContext.Send(x => Streams.Add(stream), null);                
             }
 
             _allHockeyStreams = Streams.ToList();
 
-//            Messenger.Default.Send(new StatusMessage("Done", 3000));
+            FilterStreams(_allHockeyStreams);           
         }
 
         private void GetLocations()

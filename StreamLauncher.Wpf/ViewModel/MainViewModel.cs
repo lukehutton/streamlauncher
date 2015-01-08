@@ -9,11 +9,11 @@ using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.MediaPlayers;
+using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Services;
 using StreamLauncher.Validators;
-using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel

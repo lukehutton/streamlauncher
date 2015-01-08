@@ -24,3 +24,4 @@
 ** http://stackoverflow.com/questions/4208505/how-do-you-code-a-throbber-loading-or-waiting-graphic-in-wpf
 ** http://stackoverflow.com/questions/14825571/mvvm-throbber-in-viewmodel
 ** https://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator
+** https://mvvmlight.codeplex.com/discussions/404968

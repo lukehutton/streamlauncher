@@ -2,10 +2,10 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Services;
-using StreamLauncher.Wpf.Messages;
 using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
