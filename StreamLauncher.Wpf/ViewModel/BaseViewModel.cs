@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 
@@ -29,9 +28,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 _isBusy = value;
                 RaisePropertyChanged();
             }
-        }
-
-        public Thread ActiveThread { get; set; }
+        }        
 
         public void ExecuteActionInBackground(Action workerMethod)
         {
