@@ -14,6 +14,6 @@
 * custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
 * clear errors on dialogs when keypress into text boxes
 * add version info/commit sha to screen (about)
-* installer package
+* installer package - setup on appveyor and deploy to github releases
 * need to check multiple users? ask hs
 * if no score available, show n/a not 0-0
