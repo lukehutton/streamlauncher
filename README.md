@@ -48,3 +48,7 @@ How to install
 4. Set proper file caching for the media player under Media Player Args:
    (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
    i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
+
+Build History
+-------
+See [build history](https://ci.appveyor.com/project/lukehutton/streamlauncher/history) at CI/CD cloud provider [Appveyor](http://www.appveyor.com)
