@@ -1,14 +1,17 @@
-* resize main window and stretch all contents (file size bigger etc.?)
-* user settings - save preference of location, sd or hd, vlc install location, save filters default choice (nhl)
+* user settings
+** save league pref
+** save timeout rmtp 
+** save location pref
+** save scoring on/off pref
+** show user settings on startup always for first time
 * add unit tests on viewmodels
 * close app on bad login after 3 bad attempts
-* get feed when press button with location and quality dropdown values
 * hide/show scores
 * add api keys and user to app settings (make to sure add to .gitignore)
-* general exception catch, display error occurred message and log it
 * show event type in grid when ALL event type selected, or always show
 * make designer show streams again, fake out data
 * show no feeds available when grid empty
 * custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
-* keep login/settings dialog consistent
 * clear errors on dialogs when keypress into text boxes
+* add busy indicator to settings save
+* add busy indicator to play stream
