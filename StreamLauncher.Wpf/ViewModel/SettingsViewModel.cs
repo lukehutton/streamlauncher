@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
@@ -12,6 +14,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettingsValidator _userSettingsValidator;
+
+        private string _busyText;
+        private bool _isBusy;
 
         private bool? _dialogResult;
         private string _errorMessage;
@@ -50,7 +55,22 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
             _userSettings.Save();
-            _liveStreamer.SaveConfig();
+
+            SaveAsync();            
+        }
+
+        private async void SaveAsync()
+        {
+            BusyText = "Saving settings...";
+            IsBusy = true;
+
+            await Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                _liveStreamer.SaveConfig();
+            });
+
+            IsBusy = false;
 
             DialogResult = true;
         }
@@ -124,5 +144,25 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged(() => DialogResult);
             }
         }
+
+        public string BusyText
+        {
+            get { return _busyText; }
+            set
+            {
+                _busyText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                RaisePropertyChanged();
+            }
+        }     
     }
 }
