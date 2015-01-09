@@ -4,7 +4,7 @@
 ** save location pref
 ** save scoring on/off pref
 ** show user settings on startup always for first time
-* add unit tests on viewmodels
+* add unit tests on viewmodels/refactor
 * close app on bad login after 3 bad attempts
 * hide/show scores
 * add api keys and user to app settings (make to sure add to .gitignore)
@@ -13,5 +13,3 @@
 * show no feeds available when grid empty
 * custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
 * clear errors on dialogs when keypress into text boxes
-* add busy indicator to settings save
-* add busy indicator to play stream

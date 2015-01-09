@@ -44,6 +44,7 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<IUserSettings, UserSettings>();
                 SimpleIoc.Default.Register<IUserSettingsValidator, UserSettingsValidator>();
                 SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
+                SimpleIoc.Default.Register<IMessengerService, MessengerService>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

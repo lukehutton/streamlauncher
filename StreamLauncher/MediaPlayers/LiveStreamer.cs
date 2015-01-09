@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using StreamLauncher.Exceptions;
+using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
 using StreamLauncher.Util;
@@ -13,17 +14,22 @@ namespace StreamLauncher.MediaPlayers
     public class LiveStreamer : ILiveStreamer
     {
         private const int RtmpTimeOutInSeconds = 5;
+
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
         public static string RtmpDumpRelativePath = @"rtmpdump\rtmpdump.exe";
+
         private readonly StringBuilder _output = new StringBuilder();
+
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
+        private readonly IMessengerService _messengerService;
 
-        public LiveStreamer(IUserSettings userSettings, IDialogService dialogService)
+        public LiveStreamer(IUserSettings userSettings, IDialogService dialogService, IMessengerService messengerService)
         {
             _userSettings = userSettings;
             _dialogService = dialogService;
+            _messengerService = messengerService;
         }
 
         public void Play(string game, string streamSource, Quality quality)
@@ -36,6 +42,8 @@ namespace StreamLauncher.MediaPlayers
             {
                 throw new MediaPlayerNotFound();
             }
+
+            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."));
 
             Task.Factory.StartNew(() =>
             {
@@ -88,7 +96,7 @@ namespace StreamLauncher.MediaPlayers
                 _dialogService.ShowMessage(
                     string.Format("No live feed for {0} available.", exception.InnerException.Message), "Error", "OK");                
             }
-            //todo send status message to close window loading stream
+            _messengerService.Send(new BusyStatusMessage(false, ""));
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -97,7 +105,7 @@ namespace StreamLauncher.MediaPlayers
             {
                 if (e.Data.Contains("Starting player"))
                 {
-                    //todo send status message to close window loading stream                    
+                    _messengerService.Send(new BusyStatusMessage(false, ""));
                 }
                 _output.AppendLine(e.Data);
             }
