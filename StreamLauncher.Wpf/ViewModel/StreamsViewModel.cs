@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -156,17 +155,16 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
         {
-            SelectedFilterEventType = "ALL";
+            SelectedFilterEventType = _userSettings.PreferredEventType;
             SelectedFilterActiveState = "ALL";
 
             _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;            
             _isAuthenticated = true;
 
             GetLocations();
-            SetPreferredLocation();
-            SetPreferredQuality();
+            SelectedLocation = _userSettings.PreferredLocation;
 
-            HandleGetStreamsCommand();
+            HandleGetStreamsCommand();            
         }
 
         private async void GetStreamsAsync()
@@ -244,23 +242,6 @@ namespace StreamLauncher.Wpf.ViewModel
                     "Completed"
                 };
             }
-        }
-
-        private void SetPreferredLocation()
-        {
-            if (IsInDesignModeStatic)
-            {
-                SelectedLocation = "Location 2";
-            }
-            else
-            {
-                SelectedLocation = "North America - West"; // todo read from persisted settings or set default
-            }
-        }
-
-        private void SetPreferredQuality()
-        {
-           SelectedQuality = "High Quality (3200Kbps HD)"; // todo read from persisted settings or set default
         }
 
         public string SelectedLocation
