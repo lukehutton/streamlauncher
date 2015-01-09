@@ -104,10 +104,8 @@ namespace StreamLauncher.Wpf.ViewModel
         private void ShowSettingsDialog(string errorMessage = "")
         {
             var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            settingsViewModel.Init();
             settingsViewModel.ErrorMessage = errorMessage;
-            settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
-            settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
-            settingsViewModel.MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             var settingsWindow = new SettingsWindow
             {
                 DataContext = settingsViewModel

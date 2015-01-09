@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -49,23 +50,48 @@ namespace StreamLauncher.Wpf.ViewModel
             Locations = new ObservableCollection<StreamLocation>();
 
             SaveCommand = new RelayCommand(HandleSaveCommand);
-            CancelCommand = new RelayCommand(HandleCancelCommand);
-
-            //todo have an init
-            GetLocations(); 
-            SetPreferredEventType();
-            SetPreferredLocation();
+            CancelCommand = new RelayCommand(HandleCancelCommand);                    
         }
 
-        private void SetPreferredEventType()
+        public void Init()
         {
+            GetLocations();
+
+            if (_userSettings.LiveStreamerPath.IsNullOrEmpty())
+            {
+                LiveStreamerPath = Environment.Is64BitOperatingSystem
+                    ? LiveStreamer.Default64BitLocation
+                    : LiveStreamer.Default32BitLocation;
+            }
+            else
+            {
+                LiveStreamerPath = _userSettings.LiveStreamerPath;
+            }
+
+            if (_userSettings.MediaPlayerPath.IsNullOrEmpty())
+            {
+                MediaPlayerPath = Environment.Is64BitOperatingSystem
+                    ? Vlc.Default64BitLocation
+                    : Vlc.Default32BitLocation;
+            }
+            else
+            {
+                MediaPlayerPath = _userSettings.MediaPlayerPath;
+            }
+
+            if (_userSettings.MediaPlayerArguments.IsNullOrEmpty())
+            {
+                MediaPlayerArguments = Vlc.DefaultArgs;
+            }
+            else
+            {
+                MediaPlayerArguments = _userSettings.MediaPlayerArguments;
+            }
+
             PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty()
                 ? "NHL"
                 : _userSettings.PreferredEventType;
-        }
 
-        private void SetPreferredLocation()
-        {
             PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty()
                 ? "North America - West"
                 : _userSettings.PreferredLocation;
@@ -100,6 +126,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.LiveStreamerPath = LiveStreamerPath;
             _userSettings.MediaPlayerPath = MediaPlayerPath;
             _userSettings.MediaPlayerArguments = MediaPlayerArguments;
+            _userSettings.PreferredEventType = PreferredEventType;
+            _userSettings.PreferredLocation = PreferredLocation;
 
             var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any()) 
@@ -109,10 +137,10 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             _userSettings.Save();
 
-            SaveAsync();            
+            SaveLiveStreamerConfigAsync();            
         }
 
-        private async void SaveAsync()
+        private async void SaveLiveStreamerConfigAsync()
         {
             BusyText = "Saving settings...";
             IsBusy = true;

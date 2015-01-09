@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -7,7 +8,6 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
-using StreamLauncher.MediaPlayers;
 using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
@@ -22,8 +22,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
-        private readonly ITokenProvider _tokenProvider;
-        private readonly ILiveStreamer _liveStreamer;
+        private readonly ITokenProvider _tokenProvider;        
 
         private string _busyText;
         private bool _isBusy;
@@ -40,14 +39,12 @@ namespace StreamLauncher.Wpf.ViewModel
             IUserSettings userSettings,
             IUserSettingsValidator userSettingsValidator,
             IAuthenticationService authenticationService,
-            ITokenProvider tokenProvider,
-            ILiveStreamer liveStreamer)
+            ITokenProvider tokenProvider)
         {
             _userSettings = userSettings;
             _userSettingsValidator = userSettingsValidator;
             _authenticationService = authenticationService;
             _tokenProvider = tokenProvider;
-            _liveStreamer = liveStreamer;
             
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
@@ -80,36 +77,25 @@ namespace StreamLauncher.Wpf.ViewModel
             CurrentUser = string.Format("Hi {0}", _userName);
             CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
 
-            if (!_userSettings.IsFirstRun) return;
+            if (_userSettings.IsFirstRun)
+            {
+                ShowSettingsDialog();
+                _userSettings.IsFirstRun = false;
+                return;
+            } 
 
-            _userSettings.LiveStreamerPath = Environment.Is64BitOperatingSystem
-                ? LiveStreamer.Default64BitLocation
-                : LiveStreamer.Default32BitLocation;
-
-            _userSettings.MediaPlayerPath = Environment.Is64BitOperatingSystem
-                ? Vlc.Default64BitLocation
-                : Vlc.Default32BitLocation;
-
-            _userSettings.MediaPlayerArguments = Vlc.DefaultArgs;
-
-            var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
+            var brokenRules = _userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any())
             {
-                ShowSettingsDialog(brokenRules.First());
-                return;
-            }
-            _userSettings.IsFirstRun = false;
-            _userSettings.Save();
-            _liveStreamer.SaveConfig();
+                ShowSettingsDialog(brokenRules.First());                
+            }            
         }
 
-        private void ShowSettingsDialog(string errorMessage)
+        private void ShowSettingsDialog(string errorMessage = "")
         {
             var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            settingsViewModel.Init();
             settingsViewModel.ErrorMessage = errorMessage;
-            settingsViewModel.LiveStreamerPath = _userSettings.LiveStreamerPath;
-            settingsViewModel.MediaPlayerPath = _userSettings.MediaPlayerPath;
-            settingsViewModel.MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             var settingsWindow = new SettingsWindow
             {
                 DataContext = settingsViewModel
@@ -157,8 +143,14 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public async void AuthenticateUser()
         {
-            if (IsInDesignModeStatic) return;
-
+#if DEBUG
+            _userSettings.RememberMe = true;
+            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
+            using (var secureString =  ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
+            {
+                _userSettings.EncryptedPassword = secureString.EncryptString();
+            }
+#endif
             if (!_userSettings.RememberMe)
             {
                 OpenLoginDialog();                
