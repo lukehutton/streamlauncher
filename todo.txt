@@ -1,9 +1,7 @@
 * user settings
-** save league pref
 ** save timeout rmtp 
-** save location pref
 ** save scoring on/off pref
-** show user settings on startup always for first time
+** save quality pref
 * add unit tests on viewmodels/refactor
 * close app on bad login after 3 bad attempts
 * hide/show scores

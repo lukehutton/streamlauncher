@@ -1,6 +1,8 @@
 Hockey Streams Launcher
 =====================
 Hockey Streams Launcher is an open source application that enables you to view RTMP streams from hockeystreams.com in various media players such as VLC, MPC-HC, or MPlayer2 through [Livestreamer](http://livestreamer.tanuki.se/en/latest/) and [RTMPDump](http://rtmpdump.mplayerhq.hu/)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/o4exgam8doqcx96c?svg=true)](https://ci.appveyor.com/project/lukehutton/streamlauncher)
    
 ![](https://github.com/lukehutton/streamlauncher/blob/master/docs/screen1.PNG)
 
