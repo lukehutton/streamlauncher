@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using StreamLauncher.Models;
 
 namespace StreamLauncher.Services
 {
     public interface IAuthenticationService
     {
-        AuthenticationResult Authenticate(string userName, string password);
+        Task<AuthenticationResult> Authenticate(string userName, string password);
     }
 
     public class AuthenticationResult

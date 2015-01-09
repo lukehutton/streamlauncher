@@ -13,6 +13,7 @@
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}">
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="20*"/>
@@ -25,7 +26,8 @@
         <PasswordBox Name="txtPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,91,0,0" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
 		<Label Content="Password:" Grid.Column="1" HorizontalAlignment="Left" Margin="39.866,89,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
 		<Image Grid.Column="1" HorizontalAlignment="Center" Margin="39.866,0,76.207,0" VerticalAlignment="Top" Source="..\Images\hockeystreamslogo.png"/>
-		<Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,144.01,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red"/>
+		<Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,144.01,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" Foreground="Red"/>
 		<CheckBox IsChecked="True" Content="Remember me" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,123.05,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.136,0.65" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"/>		
 	</Grid>
+    </xctk:BusyIndicator>
 </Window>

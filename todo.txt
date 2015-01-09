@@ -3,25 +3,12 @@
 * add unit tests on viewmodels
 * close app on bad login after 3 bad attempts
 * get feed when press button with location and quality dropdown values
-* async get streams - update status control on top off all controls
 * hide/show scores
-* wait async message on login (takes ~3 seconds) - update status control on top off all controls
 * add api keys and user to app settings (make to sure add to .gitignore)
 * general exception catch, display error occurred message and log it
 * show event type in grid when ALL event type selected, or always show
-* status for refresh command
 * make designer show streams again, fake out data
 * show no feeds available when grid empty
-* for error messages and status messages, use dialogservice:
-** http://msdn.microsoft.com/en-us/magazine/jj694937.aspx
-** http://stackoverflow.com/questions/3801681/good-or-bad-practice-for-dialogs-in-wpf-with-mvvm
-** https://gallery.technet.microsoft.com/WPF-EntityFramework-MVVM-c7167301
-** http://blog.roboblob.com/2010/01/19/modal-dialogs-with-mvvm-and-silverlight-4/
-** custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
+* custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
 * keep login/settings dialog consistent
-* status messages when click on streams (timeout and success)
-* throbber
-** http://stackoverflow.com/questions/4208505/how-do-you-code-a-throbber-loading-or-waiting-graphic-in-wpf
-** http://stackoverflow.com/questions/14825571/mvvm-throbber-in-viewmodel
-** https://wpftoolkit.codeplex.com/wikipage?title=BusyIndicator
-** https://mvvmlight.codeplex.com/discussions/404968
+* clear errors on dialogs when keypress into text boxes

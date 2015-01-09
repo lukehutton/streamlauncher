@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
 using System.Windows;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -17,13 +17,16 @@ using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class MainViewModel : BaseViewModel
+    public class MainViewModel : ViewModelBase
     {
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
         private readonly ITokenProvider _tokenProvider;
         private readonly ILiveStreamer _liveStreamer;
+
+        private string _busyText;
+        private bool _isBusy;
 
         private string _userName;
         private string _currentUser;
@@ -152,18 +155,9 @@ namespace StreamLauncher.Wpf.ViewModel
             Messenger.Default.Send(new NotificationMessage(this, "ShowMainWindow"));
         }
 
-        public void AuthenticateUser()
+        public async void AuthenticateUser()
         {
             if (IsInDesignModeStatic) return;
-
-#if DEBUG
-            _userSettings.RememberMe = true;
-            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
-            using (var secureString = ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
-            {
-                _userSettings.EncryptedPassword = secureString.EncryptString();
-            }                            
-#endif 
 
             if (!_userSettings.RememberMe)
             {
@@ -175,7 +169,7 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 password = secureString.ToInsecureString();
             }
-            var result = _authenticationService.Authenticate(_userSettings.UserName, password);
+            var result = await _authenticationService.Authenticate(_userSettings.UserName, password);
             if (!result.IsAuthenticated)
             {
                 OpenLoginDialog(_userSettings.UserName, result.ErrorMessage);                
@@ -204,5 +198,25 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        public string BusyText
+        {
+            get { return _busyText; }
+            set
+            {
+                _busyText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                RaisePropertyChanged();
+            }
+        }   
     }
 }

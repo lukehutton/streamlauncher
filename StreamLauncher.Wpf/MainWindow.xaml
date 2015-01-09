@@ -19,7 +19,7 @@
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}" >
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}">
         <Grid HorizontalAlignment="Left" Height="530" Margin="10,10,0,0" VerticalAlignment="Top" Width="890">
             <Label Grid.ColumnSpan="2" Content="{Binding CurrentDate}" HorizontalAlignment="Left" Margin="0,-5.57,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="11" FontWeight="Bold" Foreground="White" />
             <Label Grid.ColumnSpan="2" Content="{Binding CurrentUser}" HorizontalAlignment="Left" Margin="584,-5.57,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontSize="11" FontWeight="Bold" Foreground="White" MaxWidth="150" RenderTransformOrigin="0.6,0.462" />

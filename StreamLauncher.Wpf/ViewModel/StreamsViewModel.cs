@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -20,7 +22,7 @@ using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class StreamsViewModel : BaseViewModel
+    public class StreamsViewModel : ViewModelBase
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
@@ -169,11 +171,18 @@ namespace StreamLauncher.Wpf.ViewModel
             HandleGetStreamsCommand();
         }
 
-        private void HandleGetStreamsCommand()
+        private async void GetStreamsAsync()
         {
             Messenger.Default.Send(new BusyStatusMessage(true, "Getting streams..."));
-            Action completedAction = () => Messenger.Default.Send(new BusyStatusMessage(false, "DONE Getting streams."));
-            ExecuteInBackground(GetStreams, completedAction);            
+
+            await Task.Run(() => GetStreams());
+
+            Messenger.Default.Send(new BusyStatusMessage(false, ""));
+        }
+
+        private void HandleGetStreamsCommand()
+        {
+            GetStreamsAsync();
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)

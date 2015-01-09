@@ -31,8 +31,10 @@ namespace StreamLauncher.Tests.Integration
 
                 var apiKeyProvider = new ApiKeyProvider();
                 var hockeyStreamsApi = new HockeyStreamsApiRequiringApiKey(apiKeyProvider);
-                _authenticationService = new AuthenticationService(hockeyStreamsApi);
-                var result = _authenticationService.Authenticate(_userName, _password);
+                _authenticationService = new AuthenticationService(hockeyStreamsApi);                
+                var authResult = _authenticationService.Authenticate(_userName, _password);
+                var result = authResult.Result;
+
                 if (result.IsAuthenticated)
                 {
                     AuthenticatedUser = result.AuthenticatedUser;

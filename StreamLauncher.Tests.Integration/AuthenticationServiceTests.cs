@@ -30,7 +30,8 @@ namespace StreamLauncher.Tests.Integration
             {
                 var userName = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.userName"]);
                 var password = Convert.ToString(ConfigurationManager.AppSettings["hockeystreams.password"]);
-                _result = AuthenticationService.Authenticate(userName, password);
+                var result = AuthenticationService.Authenticate(userName, password);
+                _result = result.Result;
             }
 
             [Test]
@@ -60,7 +61,8 @@ namespace StreamLauncher.Tests.Integration
             {
                 const string userName = "badUserTest";
                 const string password = "badPasswordTest";
-                _result = AuthenticationService.Authenticate(userName, password);
+                var result = AuthenticationService.Authenticate(userName, password);
+                _result = result.Result;                
             }
 
             [Test]

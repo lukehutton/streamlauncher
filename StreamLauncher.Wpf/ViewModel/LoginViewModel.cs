@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -15,10 +16,13 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserSettings _userSettings;
 
+        private string _busyText;
+        private bool _isBusy;
+
         private string _userName;        
         private string _errorMessage;
         private bool? _dialogResult;
-        private bool _rememberMe;
+        private bool _rememberMe;        
 
         public RelayCommand<object> LoginCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
@@ -37,6 +41,38 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = false;
         }
 
+        private async void AuthenticateAsync(string userName, string password)
+        {
+            BusyText = "Logging in...";
+            IsBusy = true;
+
+            var result = await Task.Run(() => _authenticationService.Authenticate(userName, password));                            
+            IsBusy = false;
+
+            if (!result.IsAuthenticated)
+            {
+                ErrorMessage = result.ErrorMessage;
+                return;
+            }
+
+            if (RememberMe)
+            {
+                _userSettings.UserName = userName;
+                using (var secureString = password.ToSecureString())
+                {
+                    _userSettings.EncryptedPassword = secureString.EncryptString();
+                }
+                _userSettings.RememberMe = true;
+            }
+
+            Messenger.Default.Send(new LoginSuccessfulMessage
+            {
+                AuthenticationResult = result
+            });
+            
+            DialogResult = true;             
+        }
+
         private void HandleLoginCommand(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
@@ -48,29 +84,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
 
-            var result = _authenticationService.Authenticate(UserName, password);
-            if (!result.IsAuthenticated)
-            {
-                ErrorMessage = result.ErrorMessage;
-                return;
-            }
-
-            if (RememberMe)
-            {
-                _userSettings.UserName = UserName;
-                using (var secureString = password.ToSecureString())
-                {
-                    _userSettings.EncryptedPassword = secureString.EncryptString();
-                }                
-                _userSettings.RememberMe = true;
-            }
-
-            Messenger.Default.Send(new LoginSuccessfulMessage
-            {
-                AuthenticationResult = result                
-            });
-
-            DialogResult = true;
+            AuthenticateAsync(UserName, password);                      
         }
 
         public string ErrorMessage
@@ -128,5 +142,25 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged(() => DialogResult);
             }
         }
+
+        public string BusyText
+        {
+            get { return _busyText; }
+            set
+            {
+                _busyText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set
+            {
+                _isBusy = value;
+                RaisePropertyChanged();
+            }
+        }     
     }
 }

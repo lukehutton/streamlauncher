@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using RestSharp;
 using StreamLauncher.Api;
 using StreamLauncher.Dtos;
@@ -16,7 +17,7 @@ namespace StreamLauncher.Services
             _hockeyStreamsApi = hockeyStreamsApi;            
         }
 
-        public AuthenticationResult Authenticate(string userName, string password)
+        public Task<AuthenticationResult> Authenticate(string userName, string password)
         {                        
             try
             {
@@ -26,19 +27,18 @@ namespace StreamLauncher.Services
                 var loginResponseDto = _hockeyStreamsApi.Execute<LoginResponseDto>(request);
                 if (loginResponseDto.Membership == RegularMembership)
                 {
-                    return new AuthenticationResult
+                    return Task.FromResult(new AuthenticationResult
                     {
                         IsAuthenticated = false,
                         ErrorMessage = "You must have PREMIUM membership to use this app."
-                    };                    
+                    });                    
                 }
-
                 var authenticatedUser = MapLoginResponseDtoToUser(loginResponseDto);
-                return new AuthenticationResult {IsAuthenticated = true, AuthenticatedUser = authenticatedUser};
+                return Task.FromResult(new AuthenticationResult {IsAuthenticated = true, AuthenticatedUser = authenticatedUser});
             }
             catch (HockeyStreamsApiBadRequest badRequest)
             {
-                return new AuthenticationResult {IsAuthenticated = false, ErrorMessage = badRequest.Message};
+                return Task.FromResult(new AuthenticationResult {IsAuthenticated = false, ErrorMessage = badRequest.Message});
             }
         }
 
