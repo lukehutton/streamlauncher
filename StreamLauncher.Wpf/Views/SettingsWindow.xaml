@@ -4,38 +4,43 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
         x:Class="StreamLauncher.Wpf.Views.SettingsWindow"
-        Title="Settings" Height="299" Width="450" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
+        Title="Settings" Height="352" Width="450" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
         DataContext="{Binding Path=Settings, Source={StaticResource Locator}}"      
         infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
     >
     <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+        <LinearGradientBrush EndPoint="0.1,1" StartPoint="0.5,0">
             <GradientStop Color="#FF161635" Offset="0"/>
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
     <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}">
         <Grid Margin="0,0,0,-1">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20*"/>
-            <ColumnDefinition Width="87*"/>
-            <ColumnDefinition Width="115*"/>
-        </Grid.ColumnDefinitions>
-        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="2" HorizontalAlignment="Left" Margin="42,227,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
-        <Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="2" HorizontalAlignment="Left" Margin="133,227,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
-        <Label Content="{Binding ErrorMessage}" HorizontalAlignment="Left" Margin="10,164,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red" Height="58" Width="412" Grid.ColumnSpan="3">
-            <Label.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="TextWrapping" Value="Wrap" />
-                </Style>
-            </Label.Resources>
-        </Label>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="107,48,0,0" TextWrapping="NoWrap" Text="{Binding LiveStreamerPath}" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
-        <Label Content="Livestreamer Path:" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="107,85,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerPath}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
-        <Label Content="Media Player Path:" HorizontalAlignment="Left" Margin="9,85,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
-        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="107,126,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerArguments}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
-        <Label Content="Media Player Args:" HorizontalAlignment="Left" Margin="9,120,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
-    </Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="87*"/>
+                <ColumnDefinition Width="115*"/>
+            </Grid.ColumnDefinitions>
+            <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="2" HorizontalAlignment="Left" Margin="43,284,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
+            <Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="2" HorizontalAlignment="Left" Margin="134,284,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
+            <Label Content="{Binding ErrorMessage}" HorizontalAlignment="Left" Margin="11,221,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red" Height="58" Width="412" Grid.ColumnSpan="3">
+                <Label.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                </Label.Resources>
+            </Label>
+            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="108,11,0,0" TextWrapping="NoWrap" Text="{Binding LiveStreamerPath}" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
+            <Label Content="Livestreamer Path:" HorizontalAlignment="Left" Margin="11,11,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="108,48,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerPath}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
+            <Label Content="Media Player Path:" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="108,89,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerArguments}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="2"/>
+            <Label Content="Media Player Args:" HorizontalAlignment="Left" Margin="10,83,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+            <Label Content="Preferred Event:" HorizontalAlignment="Left" Margin="26.753,124,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+            <ComboBox HorizontalAlignment="Left" Margin="108,129.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="275" Grid.ColumnSpan="2" Height="21.96" FontSize="12" FontWeight="Normal" ItemsSource="{Binding EventTypes}" SelectedValue="{Binding PreferredEventType}" Grid.Column="1"/>
+            <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="108.693,164.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="274.307" Height="21.96" FontSize="12" FontWeight="Normal" ItemsSource="{Binding Path=Locations}" DisplayMemberPath="Location" SelectedValue="{Binding PreferredLocation}" SelectedValuePath="Location" Grid.Column="1"/>
+            <Label Content="Preferred Location:" HorizontalAlignment="Left" Margin="10,157.62,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
+
+        </Grid>
     </xctk:BusyIndicator>
 </Window>

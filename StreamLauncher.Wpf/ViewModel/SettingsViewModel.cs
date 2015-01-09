@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
+using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Validators;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -14,6 +18,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettingsValidator _userSettingsValidator;
+        private readonly IStreamLocationRepository _streamLocationRepository;
 
         private string _busyText;
         private bool _isBusy;
@@ -23,19 +28,67 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _liveStreamerPath;
         private string _mediaPlayerPath;
         private string _mediaPlayerArguments;
+        private ObservableCollection<StreamLocation> _streamLocations;
+        private string _preferredLocation;
+        private string _preferredEventType;
 
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
-        public SettingsViewModel(IUserSettings userSettings, ILiveStreamer liveStreamer, IUserSettingsValidator userSettingsValidator)
+        public SettingsViewModel(
+            IUserSettings userSettings, 
+            ILiveStreamer liveStreamer, 
+            IUserSettingsValidator userSettingsValidator, 
+            IStreamLocationRepository streamLocationRepository)
         {
             _userSettings = userSettings;
             _liveStreamer = liveStreamer;
             _userSettingsValidator = userSettingsValidator;
+            _streamLocationRepository = streamLocationRepository;
+
+            Locations = new ObservableCollection<StreamLocation>();
 
             SaveCommand = new RelayCommand(HandleSaveCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);
+
+            //todo have an init
+            GetLocations(); 
+            SetPreferredEventType();
+            SetPreferredLocation();
         }
+
+        private void SetPreferredEventType()
+        {
+            PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty()
+                ? "NHL"
+                : _userSettings.PreferredEventType;
+        }
+
+        private void SetPreferredLocation()
+        {
+            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty()
+                ? "North America - West"
+                : _userSettings.PreferredLocation;
+        }
+
+        public string PreferredEventType
+        {
+            get { return _preferredEventType; }
+            set
+            {
+                _preferredEventType = value;
+                RaisePropertyChanged();
+            }
+        }   
+        public string PreferredLocation
+        {
+            get { return _preferredLocation; }
+            set
+            {
+                _preferredLocation = value;
+                RaisePropertyChanged();
+            }
+        }   
 
         private void HandleCancelCommand()
         {
@@ -73,6 +126,43 @@ namespace StreamLauncher.Wpf.ViewModel
             IsBusy = false;
 
             DialogResult = true;
+        }
+
+        public ObservableCollection<StreamLocation> Locations
+        {
+            get { return _streamLocations; }
+            set
+            {
+                _streamLocations = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private void GetLocations()
+        {
+            Locations.Clear();
+            var locations = _streamLocationRepository.GetLocations();
+
+            foreach (var location in locations)
+            {
+                Locations.Add(location);
+            }
+        }
+
+        public List<string> EventTypes
+        {
+            get
+            {
+                return new List<string>
+                {         
+                    "AHL",
+                    "NHL",
+                    "OHL",
+                    "QMJHL",
+                    "WHL",
+                    "World Juniors"
+                };
+            }
         }
 
         public string LiveStreamerPath

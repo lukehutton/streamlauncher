@@ -106,5 +106,29 @@ namespace StreamLauncher.Properties {
                 this["IsFirstRun"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PreferredLocation {
+            get {
+                return ((string)(this["PreferredLocation"]));
+            }
+            set {
+                this["PreferredLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PreferredEventType {
+            get {
+                return ((string)(this["PreferredEventType"]));
+            }
+            set {
+                this["PreferredEventType"] = value;
+            }
+        }
     }
 }

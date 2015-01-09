@@ -9,6 +9,8 @@
         string MediaPlayerPath { get; set; }
         string MediaPlayerArguments { get; set; }
         bool IsFirstRun { get; set; }
+        string PreferredLocation { get; set; }
+        string PreferredEventType { get; set; }
         void Save();
     }
 }

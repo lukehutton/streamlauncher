@@ -144,7 +144,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
             catch (HockeyStreamsApiBadRequest)
             {
-                MessageBox.Show("You must have PREMIUM membership to use this app.");
+                _dialogService.ShowError("You must have PREMIUM membership to use this app.", "Error", "OK");
             }
             catch (LiveStreamerExecutableNotFound)
             {
@@ -215,6 +215,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 };
             }
         }
+
         public List<string> Qualities
         {
             get
@@ -258,6 +259,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 SelectedLocation = "North America - West"; // todo read from persisted settings or set default
             }
         }
+
         private void SetPreferredQuality()
         {
            SelectedQuality = "High Quality (3200Kbps HD)"; // todo read from persisted settings or set default

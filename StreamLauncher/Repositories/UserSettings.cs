@@ -43,6 +43,18 @@
             set { Properties.Settings.Default.IsFirstRun = value; }
         }
 
+        public string PreferredLocation
+        {
+            get { return Properties.Settings.Default.PreferredLocation; }
+            set { Properties.Settings.Default.PreferredLocation = value; }
+        }
+
+        public string PreferredEventType
+        {
+            get { return Properties.Settings.Default.PreferredEventType; }
+            set { Properties.Settings.Default.PreferredEventType = value; }
+        }
+
         public void Save()
         {
             Properties.Settings.Default.Save();

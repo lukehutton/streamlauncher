@@ -15,3 +15,5 @@
 * clear errors on dialogs when keypress into text boxes
 * add version info/commit sha to screen (about)
 * installer package
+* need to check multiple users? ask hs
+* if no score available, show n/a not 0-0
