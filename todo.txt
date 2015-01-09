@@ -13,3 +13,5 @@
 * show no feeds available when grid empty
 * custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
 * clear errors on dialogs when keypress into text boxes
+* add version info/commit sha to screen (about)
+* installer package
