@@ -72,7 +72,7 @@ namespace StreamLauncher.Wpf.ViewModel
             });
         }
 
-        private void BootstrapApp()
+        public void BootstrapApp()
         {
             CurrentUser = string.Format("Hi {0}", _userName);
             CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
