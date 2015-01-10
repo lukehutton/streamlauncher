@@ -8,6 +8,7 @@ using StreamLauncher.Mappers;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
+using StreamLauncher.Util;
 using StreamLauncher.Validators;
 using StreamLauncher.Wpf.ViewModel;
 
@@ -45,6 +46,7 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<IUserSettingsValidator, UserSettingsValidator>();
                 SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
                 SimpleIoc.Default.Register<IMessengerService, MessengerService>();
+                SimpleIoc.Default.Register<IEnvironmentHelper, EnvironmentHelper>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

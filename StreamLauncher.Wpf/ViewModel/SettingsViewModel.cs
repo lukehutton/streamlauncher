@@ -20,6 +20,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IStreamLocationRepository _streamLocationRepository;
+        private readonly IEnvironmentHelper _environmentHelper;
 
         private string _busyText;
         private bool _isBusy;
@@ -40,12 +41,14 @@ namespace StreamLauncher.Wpf.ViewModel
             IUserSettings userSettings, 
             ILiveStreamer liveStreamer, 
             IUserSettingsValidator userSettingsValidator, 
-            IStreamLocationRepository streamLocationRepository)
+            IStreamLocationRepository streamLocationRepository,
+            IEnvironmentHelper environmentHelper)
         {
             _userSettings = userSettings;
             _liveStreamer = liveStreamer;
             _userSettingsValidator = userSettingsValidator;
             _streamLocationRepository = streamLocationRepository;
+            _environmentHelper = environmentHelper;
 
             Locations = new ObservableCollection<StreamLocation>();
 
@@ -59,7 +62,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             if (_userSettings.LiveStreamerPath.IsNullOrEmpty())
             {
-                LiveStreamerPath = Environment.Is64BitOperatingSystem
+                LiveStreamerPath = _environmentHelper.Is64BitEnvironment()
                     ? LiveStreamer.Default64BitLocation
                     : LiveStreamer.Default32BitLocation;
             }
@@ -70,7 +73,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             if (_userSettings.MediaPlayerPath.IsNullOrEmpty())
             {
-                MediaPlayerPath = Environment.Is64BitOperatingSystem
+                MediaPlayerPath = _environmentHelper.Is64BitEnvironment()
                     ? Vlc.Default64BitLocation
                     : Vlc.Default32BitLocation;
             }
