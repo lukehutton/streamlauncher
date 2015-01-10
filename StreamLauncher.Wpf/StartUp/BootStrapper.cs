@@ -47,6 +47,7 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<ILiveStreamer, LiveStreamer>();
                 SimpleIoc.Default.Register<IMessengerService, MessengerService>();
                 SimpleIoc.Default.Register<IEnvironmentHelper, EnvironmentHelper>();
+                SimpleIoc.Default.Register<IThreadSleeper, ThreadSleeper>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

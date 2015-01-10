@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -21,6 +19,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IStreamLocationRepository _streamLocationRepository;
         private readonly IEnvironmentHelper _environmentHelper;
+        private readonly IThreadSleeper _threadSleeper;
 
         private string _busyText;
         private bool _isBusy;
@@ -42,13 +41,15 @@ namespace StreamLauncher.Wpf.ViewModel
             ILiveStreamer liveStreamer, 
             IUserSettingsValidator userSettingsValidator, 
             IStreamLocationRepository streamLocationRepository,
-            IEnvironmentHelper environmentHelper)
+            IEnvironmentHelper environmentHelper,
+            IThreadSleeper threadSleeper)
         {
             _userSettings = userSettings;
             _liveStreamer = liveStreamer;
             _userSettingsValidator = userSettingsValidator;
             _streamLocationRepository = streamLocationRepository;
             _environmentHelper = environmentHelper;
+            _threadSleeper = threadSleeper;
 
             Locations = new ObservableCollection<StreamLocation>();
 
@@ -150,7 +151,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             await Task.Run(() =>
             {
-                Thread.Sleep(1000);
+                _threadSleeper.SleepFor(1);
                 _liveStreamer.SaveConfig();
             });
 

@@ -6,6 +6,7 @@ using StreamLauncher.Models;
 
 namespace StreamLauncher.Tests.Unit
 {
+    [TestFixture]
     public class HockeyStreamFilterTests
     {
         public class GivenAHockeyStreamFilter

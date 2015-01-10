@@ -7,6 +7,7 @@ using StreamLauncher.Models;
 
 namespace StreamLauncher.Tests.Unit
 {
+    [TestFixture]
     public class LiveStreamScheduleAggregatorAndMapperTests
     {
         public class GivenAListOfFeedsAndAggregator
