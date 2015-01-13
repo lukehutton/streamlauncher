@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -102,6 +103,12 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldSetUserName()
             {
                 Assert.That(ViewModel.CurrentUser, Is.EqualTo("Hi Foo bar"));
+            }
+
+            [Test]
+            public void ItShouldSetDate()
+            {
+                Assert.That(ViewModel.CurrentDate, Is.EqualTo(DateTime.Now.ToString("dddd, MMMM dd")));
             }
 
             [Test]
@@ -290,6 +297,45 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldShowLoginDialog()
             {
                 DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));
+            }
+        }
+
+        [TestFixture]
+        public class WhenClosing : GivenAMainViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                ViewModel.Closing.Execute(null);
+            }
+
+            [Test]
+            public void ItShouldSaveSettings()
+            {                
+                UserSettings.AssertWasCalled(x => x.Save());
+            }
+
+            [Test]
+            public void ItShouldShutdown()
+            {                
+                ApplicationDispatcher.AssertWasCalled(x => x.Shutdown());
+            }
+        }
+
+        [TestFixture]
+        public class WhenHandleBusyStatusMessage : GivenAMainViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                ViewModel.HandleBusyStatusMessage(new BusyStatusMessage(true, "busy..."));
+            }
+
+            [Test]
+            public void ItShouldSetBusyProperties()
+            {                
+                Assert.That(ViewModel.BusyText, Is.EqualTo("busy..."));
+                Assert.That(ViewModel.IsBusy, Is.True);
             }
         }
     }
