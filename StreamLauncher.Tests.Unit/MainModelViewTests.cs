@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.Api;
@@ -174,6 +175,92 @@ namespace StreamLauncher.Tests.Unit
             public void ItShouldSendAuthenticatedMessage()
             {
                 MessengerService.AssertWasCalled(x => x.Send(Arg<AuthenticatedMessage>.Is.Anything));
+            }
+        }
+
+        [TestFixture, RequiresSTA]
+        public class WhenHandleAuthenticateMessageAndRememberMeNotSet : GivenAMainViewModel
+        {
+            private ILoginViewModel _loginViewModel;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.RememberMe).Return(false);
+
+                _loginViewModel = MockRepository.GenerateMock<ILoginViewModel>();
+                ViewModelLocator.Expect(x => x.Login).Return(_loginViewModel);
+
+                var messengerService = new MessengerService();
+                messengerService.Send(new AuthenticateMessage());
+            }
+
+            [Test]
+            public void ItShouldShowLoginDialog()
+            {
+                DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));                
+            }
+        }
+        
+        [TestFixture, RequiresSTA]
+        public class WhenHandleAuthenticateMessageAndRememberMeSetAndUserGood : GivenAMainViewModel
+        {
+            private ILoginViewModel _loginViewModel;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.RememberMe).Return(true);
+
+                _loginViewModel = MockRepository.GenerateMock<ILoginViewModel>();
+                ViewModelLocator.Expect(x => x.Login).Return(_loginViewModel);
+
+                AuthenticationService.Expect(x => x.Authenticate(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                    .Return(Task.FromResult(new AuthenticationResult
+                    {
+                        IsAuthenticated = true,
+                        AuthenticatedUser = new User
+                        {
+                            Token = "Secret Token"
+                        }
+                    }));
+                var messengerService = new MessengerService();
+                messengerService.Send(new AuthenticateMessage());
+            }
+
+            [Test]
+            public void ItShouldSetToken()
+            {
+                TokenProvider.AssertWasCalled(x => x.Token = "Secret Token");
+            }
+        }
+
+        [TestFixture, RequiresSTA]
+        public class WhenHandleAuthenticateMessageAndRememberMeSetAndUserBad : GivenAMainViewModel
+        {
+            private ILoginViewModel _loginViewModel;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.RememberMe).Return(true);
+
+                _loginViewModel = MockRepository.GenerateMock<ILoginViewModel>();
+                ViewModelLocator.Expect(x => x.Login).Return(_loginViewModel);
+
+                AuthenticationService.Expect(x => x.Authenticate(Arg<string>.Is.Anything, Arg<string>.Is.Anything))
+                    .Return(Task.FromResult(new AuthenticationResult
+                    {
+                        IsAuthenticated = false
+                    }));
+                var messengerService = new MessengerService();
+                messengerService.Send(new AuthenticateMessage());
+            }
+
+            [Test]
+            public void ItShouldShowLoginDialog()
+            {
+                DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));
             }
         }
     }

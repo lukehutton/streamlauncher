@@ -85,7 +85,7 @@
     <Compile Include="MediaPlayers\LiveStreamer.cs" />
     <Compile Include="MediaPlayers\Vlc.cs" />
     <Compile Include="Messages\AuthenticatedMessage.cs" />
-    <Compile Include="Messages\AutoLoginFailedMessage.cs" />
+    <Compile Include="Messages\AuthenticateMessage.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
     <Compile Include="Messages\BusyStatusMessage.cs" />
     <Compile Include="Models\EventType.cs" />

@@ -59,6 +59,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
             Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);
             Messenger.Default.Register<BusyStatusMessage>(this, HandleBusyStatusMessage);
+            Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
+        }
+
+        private void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
+        {
+            AuthenticateUser();
         }
 
         private void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage)

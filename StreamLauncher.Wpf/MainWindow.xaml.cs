@@ -2,9 +2,8 @@
 using System.Windows;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Practices.ServiceLocation;
+using StreamLauncher.Messages;
 using StreamLauncher.Services;
-using StreamLauncher.Wpf.ViewModel;
 
 namespace StreamLauncher.Wpf
 {
@@ -15,8 +14,8 @@ namespace StreamLauncher.Wpf
             SimpleIoc.Default.Register<IDialogService>(() => this);            
             Messenger.Default.Register<NotificationMessage>(this, HandleNotificationMessage);            
             InitializeComponent();
-            var main = ServiceLocator.Current.GetInstance<MainViewModel>();
-            main.AuthenticateUser();
+
+            Messenger.Default.Send(new AuthenticateMessage());
         }
 
         private void HandleNotificationMessage(NotificationMessage notificationMessage)
