@@ -44,7 +44,7 @@ namespace StreamLauncher.Tests.Unit
             }
         }
 
-        [TestFixture, RequiresSTA]        
+        [TestFixture]        
         public class WhenHandleLoginSuccessfulMessageAndFirstTimeRun : GivenAMainViewModel
         {
             private ISettingsViewModel _settingsViewModel;
@@ -57,8 +57,7 @@ namespace StreamLauncher.Tests.Unit
                 _settingsViewModel = MockRepository.GenerateMock<ISettingsViewModel>();                
                 ViewModelLocator.Expect(x => x.Settings).Return(_settingsViewModel);
 
-                var messengerService = new MessengerService();
-                messengerService.Send(new LoginSuccessfulMessage()
+                ViewModel.HandleLoginSuccessfulMessage(new LoginSuccessfulMessage()
                 {
                     AuthenticationResult = new AuthenticationResult
                     {
@@ -109,7 +108,7 @@ namespace StreamLauncher.Tests.Unit
             }
         }
 
-        [TestFixture, RequiresSTA]        
+        [TestFixture]        
         public class WhenHandleLoginSuccessfulMessageAndBrokenSettings : GivenAMainViewModel
         {
             private ISettingsViewModel _settingsViewModel;
@@ -126,8 +125,7 @@ namespace StreamLauncher.Tests.Unit
                 _settingsViewModel = MockRepository.GenerateMock<ISettingsViewModel>();                
                 ViewModelLocator.Expect(x => x.Settings).Return(_settingsViewModel);
 
-                var messengerService = new MessengerService();
-                messengerService.Send(new LoginSuccessfulMessage()
+                ViewModel.HandleLoginSuccessfulMessage(new LoginSuccessfulMessage()
                 {
                     AuthenticationResult = new AuthenticationResult
                     {
@@ -178,7 +176,7 @@ namespace StreamLauncher.Tests.Unit
             }
         }
 
-        [TestFixture, RequiresSTA]
+        [TestFixture]
         public class WhenHandleAuthenticateMessageAndRememberMeNotSet : GivenAMainViewModel
         {
             private ILoginViewModel _loginViewModel;
@@ -224,8 +222,8 @@ namespace StreamLauncher.Tests.Unit
                             Token = "Secret Token"
                         }
                     }));
-                var messengerService = new MessengerService();
-                messengerService.Send(new AuthenticateMessage());
+
+                ViewModel.HandleAuthenticateMessage(new AuthenticateMessage());                
             }
 
             [Test]
@@ -235,7 +233,7 @@ namespace StreamLauncher.Tests.Unit
             }
         }
 
-        [TestFixture, RequiresSTA]
+        [TestFixture]
         public class WhenHandleAuthenticateMessageAndRememberMeSetAndUserBad : GivenAMainViewModel
         {
             private ILoginViewModel _loginViewModel;
@@ -253,11 +251,40 @@ namespace StreamLauncher.Tests.Unit
                     {
                         IsAuthenticated = false
                     }));
-                var messengerService = new MessengerService();
-                messengerService.Send(new AuthenticateMessage());
+                ViewModel.HandleAuthenticateMessage(new AuthenticateMessage());     
             }
 
             [Test]
+            public void ItShouldShowLoginDialog()
+            {
+                DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));
+            }
+        }
+
+        [TestFixture, Ignore("PENDING")]
+        public class WhenLogout : GivenAMainViewModel
+        {
+            private ILoginViewModel _loginViewModel;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.RememberMe).Return(true);
+
+                _loginViewModel = MockRepository.GenerateMock<ILoginViewModel>();
+                ViewModelLocator.Expect(x => x.Login).Return(_loginViewModel);
+
+                ViewModel.LogoutCommand.Execute(null);
+            }
+
+            [Test, Ignore("PENDING")]
+            public void ItShouldClearSettingsAndSave()
+            {
+                UserSettings.AssertWasCalled(x => x.UserName = string.Empty);
+                UserSettings.AssertWasCalled(x => x.Save());
+            }
+
+            [Test, Ignore("PENDING")]
             public void ItShouldShowLoginDialog()
             {
                 DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));

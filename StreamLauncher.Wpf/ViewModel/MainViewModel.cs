@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -62,7 +61,7 @@ namespace StreamLauncher.Wpf.ViewModel
             Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
         }
 
-        private void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
+        public void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
         {
             AuthenticateUser();
         }
@@ -73,7 +72,7 @@ namespace StreamLauncher.Wpf.ViewModel
             IsBusy = busyStatusMessage.IsBusy;
         }
 
-        private void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)
+        public void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)
         {
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
@@ -127,6 +126,7 @@ namespace StreamLauncher.Wpf.ViewModel
             var authenticated = _dialogService.ShowDialog<LoginWindow>(loginViewModel) ?? false;
             if (!authenticated)
             {
+                // todo not mockable
                 Application.Current.Shutdown();
             }            
         }
