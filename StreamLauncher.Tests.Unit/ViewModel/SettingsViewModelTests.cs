@@ -9,7 +9,7 @@ using StreamLauncher.Util;
 using StreamLauncher.Validators;
 using StreamLauncher.Wpf.ViewModel;
 
-namespace StreamLauncher.Tests.Unit
+namespace StreamLauncher.Tests.Unit.ViewModel
 {
     [TestFixture]
     public class SettingsViewModelTests

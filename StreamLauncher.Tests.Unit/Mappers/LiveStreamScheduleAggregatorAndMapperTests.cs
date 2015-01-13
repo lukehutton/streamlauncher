@@ -5,7 +5,7 @@ using StreamLauncher.Dtos;
 using StreamLauncher.Mappers;
 using StreamLauncher.Models;
 
-namespace StreamLauncher.Tests.Unit
+namespace StreamLauncher.Tests.Unit.Mappers
 {
     [TestFixture]
     public class LiveStreamScheduleAggregatorAndMapperTests

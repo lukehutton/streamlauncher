@@ -37,7 +37,7 @@ namespace StreamLauncher.Wpf.ViewModel
             CancelCommand = new RelayCommand(HandleCancelCommand);            
         }
 
-        private void HandleCancelCommand()
+        public void HandleCancelCommand()
         {                        
             DialogResult = false;
         }
@@ -74,14 +74,20 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = true;             
         }
 
-        private void HandleLoginCommand(object parameter)
+        public void HandleLoginCommand(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;
 
-            if (UserName.IsNullOrEmpty() || password.IsNullOrEmpty())
+            if (UserName.IsNullOrEmpty())
             {
-                ErrorMessage = "User Name or Password must not be empty.";
+                ErrorMessage = "User Name must not be empty.";
+                return;
+            }
+
+            if (password.IsNullOrEmpty())
+            {
+                ErrorMessage = "Password must not be empty.";
                 return;
             }
 

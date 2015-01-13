@@ -4,7 +4,7 @@ using NUnit.Framework;
 using StreamLauncher.Filters;
 using StreamLauncher.Models;
 
-namespace StreamLauncher.Tests.Unit
+namespace StreamLauncher.Tests.Unit.Filters
 {
     [TestFixture]
     public class HockeyStreamFilterTests
