@@ -3,6 +3,7 @@ using RestSharp;
 using StreamLauncher.Dtos;
 using StreamLauncher.Models;
 using System.Linq;
+using System.Runtime.Caching;
 using StreamLauncher.Api;
 
 namespace StreamLauncher.Repositories
@@ -17,12 +18,19 @@ namespace StreamLauncher.Repositories
         }
 
         public IEnumerable<StreamLocation> GetLocations()
-        {
-            // todo cache results
-            // todo handle exception and failed exception by caller            
-            var request = new RestRequest {Resource = "GetLocations"};
-            var locations = _hockeyStreamsApi.Execute<List<GetLocationsResponseDto>>(request);                        
-            return MapLocationDtoToStreamLocations(locations);
+        {            
+            ObjectCache cache = MemoryCache.Default;
+            var streamLocations = cache["streamLocations"] as IEnumerable<StreamLocation>;
+
+            if (streamLocations == null)
+            {            
+                var request = new RestRequest { Resource = "GetLocations" };
+                var locations = _hockeyStreamsApi.Execute<List<GetLocationsResponseDto>>(request);
+                streamLocations = MapLocationDtoToStreamLocations(locations);
+                cache.Set("streamLocations", streamLocations, new CacheItemPolicy());
+            }
+
+            return streamLocations;
         }
 
         private IEnumerable<StreamLocation> MapLocationDtoToStreamLocations(List<GetLocationsResponseDto> locations)
