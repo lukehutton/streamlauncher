@@ -113,15 +113,17 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 ShowSettingsDialog();
                 _userSettings.IsFirstRun = false;
-                return;
+            }
+            else
+            {
+
+                var brokenRules = _userSettingsValidator.BrokenRules(_userSettings).ToList();
+                if (brokenRules.Any())
+                {
+                    ShowSettingsDialog(brokenRules.First());
+                }
             }
 
-            var brokenRules = _userSettingsValidator.BrokenRules(_userSettings).ToList();
-            if (brokenRules.Any())
-            {
-                ShowSettingsDialog(brokenRules.First());
-            }    
-            
             _messengerService.Send(new AuthenticatedMessage
             {
                 AuthenticationResult = loginSuccessful.AuthenticationResult
