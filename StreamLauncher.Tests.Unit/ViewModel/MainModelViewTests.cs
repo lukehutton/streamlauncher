@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -34,8 +33,6 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [TestFixtureSetUp]
             public void Given()
             {
-                SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
                 UserSettings = MockRepository.GenerateMock<IUserSettings>();                
                 UserSettingsValidator = MockRepository.GenerateStub<IUserSettingsValidator>();
                 AuthenticationService = MockRepository.GenerateStub<IAuthenticationService>();
