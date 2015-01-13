@@ -3,6 +3,9 @@
 ** save scoring on/off pref
 ** save quality pref
 * add unit tests on viewmodels/refactor
+** mainviewmodel
+** loginviewmodel
+** streamsviewmodel
 * close app on bad login after 3 bad attempts
 * hide/show scores
 * add api keys and user to app settings (make to sure add to .gitignore)
@@ -15,3 +18,4 @@
 * installer package - setup on appveyor and deploy to github releases, i.e. clickonce? see http://www.jdibble.co.uk/blog/building-and-deploying-clickonce-applications-with-appveyor/
 * need to check multiple users? ask hs
 * if no score available, show n/a not 0-0
+* caching in settings dialog (getlocations)

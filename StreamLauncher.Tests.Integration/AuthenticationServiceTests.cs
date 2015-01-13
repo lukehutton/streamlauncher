@@ -6,6 +6,7 @@ using StreamLauncher.Services;
 
 namespace StreamLauncher.Tests.Integration
 {
+    [TestFixture]
     public class AuthenticationServiceTests
     {
         public class GivenAnAuthenticationService

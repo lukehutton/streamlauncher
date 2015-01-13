@@ -102,6 +102,9 @@
     <Compile Include="Infrastructure\Converters\IsFeedEnabled.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
     <Compile Include="StartUp\BootStrapper.cs" />
+    <Compile Include="ViewModel\ILoginViewModel.cs" />
+    <Compile Include="ViewModel\ISettingsViewModel.cs" />
+    <Compile Include="ViewModel\IViewModelLocator.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />

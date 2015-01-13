@@ -49,21 +49,13 @@ namespace StreamLauncher.Repositories
 
         public string PreferredLocation
         {
-            get
-            {
-                return Settings.Default.PreferredLocation.IsNullOrEmpty()
-                    ? "North America - West"
-                    : Settings.Default.PreferredLocation;
-            }
+            get { return Settings.Default.PreferredLocation; }
             set { Settings.Default.PreferredLocation = value; }
         }
 
         public string PreferredEventType
         {
-            get
-            {
-                return Settings.Default.PreferredEventType.IsNullOrEmpty() ? "NHL" : Settings.Default.PreferredEventType;
-            }
+            get { return Settings.Default.PreferredEventType; }
             set { Settings.Default.PreferredEventType = value; }
         }
 

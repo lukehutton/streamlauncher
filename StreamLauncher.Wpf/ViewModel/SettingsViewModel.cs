@@ -92,8 +92,8 @@ namespace StreamLauncher.Wpf.ViewModel
                 MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             }
 
-            PreferredEventType = _userSettings.PreferredEventType;
-            PreferredLocation = _userSettings.PreferredLocation;
+            PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
+            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;
         }
 
         public string PreferredEventType

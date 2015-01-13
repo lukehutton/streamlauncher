@@ -8,6 +8,7 @@ using StreamLauncher.Repositories;
 
 namespace StreamLauncher.Tests.Integration
 {
+    [TestFixture]
     public class StreamLocationRepositoryTests
     {
         public class GivenAStreamLocationRepository

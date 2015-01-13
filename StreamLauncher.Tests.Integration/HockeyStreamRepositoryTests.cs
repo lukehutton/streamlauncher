@@ -12,6 +12,7 @@ using StreamLauncher.Services;
 
 namespace StreamLauncher.Tests.Integration
 {
+    [TestFixture]
     public class HockeyStreamRepositoryTests
     {
         public class GivenAnAuthenticatedUser
