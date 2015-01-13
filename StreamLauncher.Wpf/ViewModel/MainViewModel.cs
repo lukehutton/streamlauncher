@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
-using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -17,7 +16,7 @@ using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase, IMainViewModel
     {
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
@@ -66,12 +65,37 @@ namespace StreamLauncher.Wpf.ViewModel
             Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
         }
 
-        public void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
+        public async void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
         {
-            AuthenticateUser();
+#if DEBUG
+            _userSettings.RememberMe = true;
+            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
+            using (var secureString = ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
+            {
+                _userSettings.EncryptedPassword = secureString.EncryptString();
+            }
+#endif
+            if (!_userSettings.RememberMe)
+            {
+                OpenLoginDialog();
+                return;
+            }
+            string password;
+            using (var secureString = _userSettings.EncryptedPassword.DecryptString())
+            {
+                password = secureString.ToInsecureString();
+            }
+            var result = await _authenticationService.Authenticate(_userSettings.UserName, password);
+            if (!result.IsAuthenticated)
+            {
+                OpenLoginDialog(_userSettings.UserName, result.ErrorMessage);
+                return;
+            }
+
+            HandleLoginSuccessfulMessage(new LoginSuccessfulMessage { AuthenticationResult = result });
         }
 
-        private void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage)
+        public void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage)
         {            
             BusyText = busyStatusMessage.Status;
             IsBusy = busyStatusMessage.IsBusy;
@@ -82,16 +106,6 @@ namespace StreamLauncher.Wpf.ViewModel
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
 
-            BootstrapApp();
-            
-            _messengerService.Send(new AuthenticatedMessage
-            {
-                AuthenticationResult = loginSuccessful.AuthenticationResult
-            });
-        }
-
-        public void BootstrapApp()
-        {
             CurrentUser = string.Format("Hi {0}", _userName);
             CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
 
@@ -100,13 +114,18 @@ namespace StreamLauncher.Wpf.ViewModel
                 ShowSettingsDialog();
                 _userSettings.IsFirstRun = false;
                 return;
-            } 
+            }
 
             var brokenRules = _userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any())
             {
-                ShowSettingsDialog(brokenRules.First());                
-            }            
+                ShowSettingsDialog(brokenRules.First());
+            }    
+            
+            _messengerService.Send(new AuthenticatedMessage
+            {
+                AuthenticationResult = loginSuccessful.AuthenticationResult
+            });
         }
 
         private void ShowSettingsDialog(string errorMessage = "")
@@ -120,7 +139,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private void HandleClosingCommand(CancelEventArgs obj)
         {
             _userSettings.Save();
-            Application.Current.Shutdown();
+            _applicationDispatcher.Shutdown();
         }
         
         private void OpenLoginDialog(string userName = "", string errorMessage = "")
@@ -149,36 +168,6 @@ namespace StreamLauncher.Wpf.ViewModel
             OpenLoginDialog();
 
             _messengerService.Send(new NotificationMessage(this, "ShowMainWindow"));
-        }
-
-        public async void AuthenticateUser()
-        {
-#if DEBUG
-            _userSettings.RememberMe = true;
-            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
-            using (var secureString =  ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
-            {
-                _userSettings.EncryptedPassword = secureString.EncryptString();
-            }
-#endif
-            if (!_userSettings.RememberMe)
-            {
-                OpenLoginDialog();                
-                return;
-            }
-            string password;
-            using (var secureString = _userSettings.EncryptedPassword.DecryptString())
-            {
-                password = secureString.ToInsecureString();
-            }
-            var result = await _authenticationService.Authenticate(_userSettings.UserName, password);
-            if (!result.IsAuthenticated)
-            {
-                OpenLoginDialog(_userSettings.UserName, result.ErrorMessage);                
-                return;
-            }
-
-            HandleLoginSuccessfulMessage(new LoginSuccessfulMessage { AuthenticationResult = result });
         }
 
         public string CurrentUser
