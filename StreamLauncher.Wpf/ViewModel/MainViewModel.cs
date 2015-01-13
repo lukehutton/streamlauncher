@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Api;
 using StreamLauncher.Messages;
@@ -22,7 +21,10 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
-        private readonly ITokenProvider _tokenProvider;        
+        private readonly ITokenProvider _tokenProvider;
+        private readonly IViewModelLocator _viewModelLocator;
+        private readonly IDialogService _dialogService;
+        private readonly IMessengerService _messengerService;
 
         private string _busyText;
         private bool _isBusy;
@@ -39,13 +41,19 @@ namespace StreamLauncher.Wpf.ViewModel
             IUserSettings userSettings,
             IUserSettingsValidator userSettingsValidator,
             IAuthenticationService authenticationService,
-            ITokenProvider tokenProvider)
+            ITokenProvider tokenProvider,
+            IViewModelLocator viewModelLocator,
+            IDialogService dialogService,
+            IMessengerService messengerService)
         {
             _userSettings = userSettings;
             _userSettingsValidator = userSettingsValidator;
             _authenticationService = authenticationService;
             _tokenProvider = tokenProvider;
-            
+            _viewModelLocator = viewModelLocator;
+            _dialogService = dialogService;
+            _messengerService = messengerService;
+
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
@@ -65,8 +73,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
 
             BootstrapApp();
-
-            Messenger.Default.Send(new AuthenticatedMessage
+            
+            _messengerService.Send(new AuthenticatedMessage
             {
                 AuthenticationResult = loginSuccessful.AuthenticationResult
             });
@@ -93,14 +101,10 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void ShowSettingsDialog(string errorMessage = "")
         {
-            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            var settingsViewModel = _viewModelLocator.Settings;
             settingsViewModel.Init();
             settingsViewModel.ErrorMessage = errorMessage;
-            var settingsWindow = new SettingsWindow
-            {
-                DataContext = settingsViewModel
-            };            
-            settingsWindow.ShowDialog();
+            _dialogService.ShowDialog<SettingsWindow>(settingsViewModel);
         }
 
         private void HandleClosingCommand(CancelEventArgs obj)
@@ -109,16 +113,12 @@ namespace StreamLauncher.Wpf.ViewModel
             Application.Current.Shutdown();
         }
         
-        private static void OpenLoginDialog(string userName = "", string errorMessage = "")
+        private void OpenLoginDialog(string userName = "", string errorMessage = "")
         {
-            var loginViewModel = SimpleIoc.Default.GetInstance<LoginViewModel>(Guid.NewGuid().ToString());
+            var loginViewModel = _viewModelLocator.Login;
             loginViewModel.UserName = userName;
             loginViewModel.ErrorMessage = errorMessage;
-            var loginWindow = new LoginWindow
-            {
-                DataContext = loginViewModel                
-            };
-            var authenticated = loginWindow.ShowDialog() ?? false;
+            var authenticated = _dialogService.ShowDialog<LoginWindow>(loginViewModel) ?? false;
             if (!authenticated)
             {
                 Application.Current.Shutdown();
@@ -127,7 +127,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandleLogoutCommand()
         {
-            Messenger.Default.Send(new NotificationMessage(this, "HideMainWindow"));
+            _messengerService.Send(new NotificationMessage(this, "HideMainWindow"));
 
             _tokenProvider.Token = string.Empty;
 
@@ -138,7 +138,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             OpenLoginDialog();
 
-            Messenger.Default.Send(new NotificationMessage(this, "ShowMainWindow"));
+            _messengerService.Send(new NotificationMessage(this, "ShowMainWindow"));
         }
 
         public async void AuthenticateUser()

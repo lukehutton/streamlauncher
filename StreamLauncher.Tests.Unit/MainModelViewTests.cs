@@ -1,6 +1,4 @@
-﻿using System;
-using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.Api;
@@ -9,8 +7,8 @@ using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
 using StreamLauncher.Validators;
-using StreamLauncher.Wpf.StartUp;
 using StreamLauncher.Wpf.ViewModel;
+using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Tests.Unit
 {
@@ -23,6 +21,9 @@ namespace StreamLauncher.Tests.Unit
             protected IUserSettingsValidator UserSettingsValidator;
             protected IAuthenticationService AuthenticationService;
             protected ITokenProvider TokenProvider;
+            protected IViewModelLocator ViewModelLocator;
+            protected IDialogService DialogService;
+            protected IMessengerService MessengerService;
 
             protected MainViewModel ViewModel;
 
@@ -32,22 +33,28 @@ namespace StreamLauncher.Tests.Unit
                 UserSettings = MockRepository.GenerateMock<IUserSettings>();                
                 UserSettingsValidator = MockRepository.GenerateStub<IUserSettingsValidator>();
                 AuthenticationService = MockRepository.GenerateStub<IAuthenticationService>();
-                TokenProvider = MockRepository.GenerateStub<ITokenProvider>();                
+                TokenProvider = MockRepository.GenerateMock<ITokenProvider>();
+                ViewModelLocator = MockRepository.GenerateMock<IViewModelLocator>();
+                DialogService = MockRepository.GenerateMock<IDialogService>();
+                MessengerService = MockRepository.GenerateMock<IMessengerService>();
 
-                ViewModel = new MainViewModel(UserSettings, UserSettingsValidator, AuthenticationService, TokenProvider);
+                ViewModel = new MainViewModel(UserSettings, UserSettingsValidator, AuthenticationService, TokenProvider,
+                    ViewModelLocator, DialogService, MessengerService);
             }
         }
 
-        [TestFixture, RequiresSTA]
+        [TestFixture, RequiresSTA]        
         public class WhenHandleLoginSuccessfulMessageAndFirstTimeRun : GivenAMainViewModel
         {
-            [SetUp]
+            private ISettingsViewModel _settingsViewModel;
+
+            [TestFixtureSetUp]
             public void When()
             {
-                BootStrapper.Start();
-                SimpleIoc.Default.Register<IDialogService, FakeDialogService>();
-
                 UserSettings.Expect(x => x.IsFirstRun).Return(true);
+
+                _settingsViewModel = MockRepository.GenerateMock<ISettingsViewModel>();                
+                ViewModelLocator.Expect(x => x.Settings).Return(_settingsViewModel);
 
                 var messengerService = new MessengerService();
                 messengerService.Send(new LoginSuccessfulMessage()
@@ -64,35 +71,110 @@ namespace StreamLauncher.Tests.Unit
                 });
             }
 
-            [Test, Ignore("PENDING")]
-            public void ItShouldShowSettingsDialog()
+            [Test]
+            public void ItShouldShowInitializeSettings()
             {
-                // todo mock window showdialog
+                _settingsViewModel.AssertWasCalled(x => x.Init());
             }
 
-            [Test, Ignore("PENDING")]
+            [Test]
+            public void ItShouldShowSettingsDialog()
+            {                
+                DialogService.AssertWasCalled(x => x.ShowDialog<SettingsWindow>(_settingsViewModel));
+            }
+
+            [Test]
             public void ItShouldSetIsFirstRunToFalse()
             {
-                Assert.That(UserSettings.IsFirstRun, Is.EqualTo(false));
+                UserSettings.AssertWasCalled(x => x.IsFirstRun = false);
+            }
+            
+            [Test]
+            public void ItShouldSetToken()
+            {
+                TokenProvider.AssertWasCalled(x => x.Token = "Secret Token");
+            }     
+       
+            [Test]
+            public void ItShouldSetUserName()
+            {
+                Assert.That(ViewModel.CurrentUser, Is.EqualTo("Hi Foo bar"));
+            }
+
+            [Test]
+            public void ItShouldSendAuthenticatedMessage()
+            {
+                MessengerService.AssertWasCalled(x => x.Send(Arg<AuthenticatedMessage>.Is.Anything));
             }
         }
-    }
 
-    public class FakeDialogService : IDialogService
-    {
-        public void ShowError(string errorMessage, string title, string buttonText)
+        [TestFixture, RequiresSTA]        
+        public class WhenHandleLoginSuccessfulMessageAndBrokenSettings : GivenAMainViewModel
         {
-            throw new NotImplementedException();
-        }
+            private ISettingsViewModel _settingsViewModel;
 
-        public void ShowError(Exception error, string title, string buttonText)
-        {
-            throw new NotImplementedException();
-        }
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.IsFirstRun).Return(false);
+                UserSettingsValidator.Expect(x => x.BrokenRules(UserSettings)).Return(new List<string>
+                {
+                    "Oops! Bad Path"
+                });
 
-        public void ShowMessage(string message, string title, string buttonText)
-        {
-            throw new NotImplementedException();
+                _settingsViewModel = MockRepository.GenerateMock<ISettingsViewModel>();                
+                ViewModelLocator.Expect(x => x.Settings).Return(_settingsViewModel);
+
+                var messengerService = new MessengerService();
+                messengerService.Send(new LoginSuccessfulMessage()
+                {
+                    AuthenticationResult = new AuthenticationResult
+                    {
+                        AuthenticatedUser = new User
+                        {
+                            FavoriteTeam = "Vancouver Canucks",
+                            Token = "Secret Token",
+                            UserName = "Foo bar"
+                        }
+                    }
+                });
+            }
+
+            [Test]
+            public void ItShouldShowInitializeSettings()
+            {
+                _settingsViewModel.AssertWasCalled(x => x.Init());
+            }
+
+            [Test]
+            public void ItShouldSetErrorOnSettings()
+            {
+                _settingsViewModel.AssertWasCalled(x => x.ErrorMessage = "Oops! Bad Path");
+            }
+
+            [Test]
+            public void ItShouldShowSettingsDialog()
+            {                
+                DialogService.AssertWasCalled(x => x.ShowDialog<SettingsWindow>(_settingsViewModel));
+            }
+            
+            [Test]
+            public void ItShouldSetToken()
+            {
+                TokenProvider.AssertWasCalled(x => x.Token = "Secret Token");
+            }     
+       
+            [Test]
+            public void ItShouldSetUserName()
+            {
+                Assert.That(ViewModel.CurrentUser, Is.EqualTo("Hi Foo bar"));
+            }
+
+            [Test]
+            public void ItShouldSendAuthenticatedMessage()
+            {
+                MessengerService.AssertWasCalled(x => x.Send(Arg<AuthenticatedMessage>.Is.Anything));
+            }
         }
     }
 }

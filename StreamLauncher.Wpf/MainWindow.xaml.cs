@@ -47,5 +47,11 @@ namespace StreamLauncher.Wpf
         {
             MessageBox.Show(message, title, MessageBoxButton.OK);
         }
+
+        public bool? ShowDialog<T>(object viewModel) where T : Window, new()
+        {
+            T view = new T {DataContext = viewModel};
+            return view.ShowDialog();
+        }
     }
 }

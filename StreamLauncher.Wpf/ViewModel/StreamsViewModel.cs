@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Constants;
 using StreamLauncher.Exceptions;
@@ -29,6 +28,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
+        private readonly IViewModelLocator _viewModelLocator;
 
         private readonly object _hockeyStreamsLock = new object();
         private ObservableCollection<HockeyStream> _hockeyStreams;
@@ -65,7 +65,8 @@ namespace StreamLauncher.Wpf.ViewModel
             IStreamLocationRepository streamLocationRepository,
             ILiveStreamer liveStreamer,
             IUserSettings userSettings,
-            IDialogService dialogService
+            IDialogService dialogService,
+            IViewModelLocator viewModelLocator
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
@@ -74,6 +75,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _liveStreamer = liveStreamer;
             _userSettings = userSettings;
             _dialogService = dialogService;
+            _viewModelLocator = viewModelLocator;
 
             Streams = new ObservableCollection<HockeyStream>();                        
             Locations = new ObservableCollection<StreamLocation>();
@@ -102,14 +104,10 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void ShowSettingsDialog(string errorMessage = "")
         {
-            var settingsViewModel = SimpleIoc.Default.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString());
+            var settingsViewModel = _viewModelLocator.Settings;            
             settingsViewModel.Init();
             settingsViewModel.ErrorMessage = errorMessage;
-            var settingsWindow = new SettingsWindow
-            {
-                DataContext = settingsViewModel
-            };
-            settingsWindow.ShowDialog();
+            _dialogService.ShowDialog<SettingsWindow>(settingsViewModel);
         }
 
         public HockeyStream SelectedStream { get; set; }
@@ -162,7 +160,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _isAuthenticated = true;
 
             GetLocations();
-            SelectedLocation = _userSettings.PreferredLocation;
+            SelectedLocation = _userSettings.PreferredLocation ?? "";
 
             HandleGetStreamsCommand();            
         }

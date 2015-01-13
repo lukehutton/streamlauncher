@@ -12,7 +12,7 @@ using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
@@ -92,13 +92,8 @@ namespace StreamLauncher.Wpf.ViewModel
                 MediaPlayerArguments = _userSettings.MediaPlayerArguments;
             }
 
-            PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty()
-                ? "NHL"
-                : _userSettings.PreferredEventType;
-
-            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty()
-                ? "North America - West"
-                : _userSettings.PreferredLocation;
+            PreferredEventType = _userSettings.PreferredEventType;
+            PreferredLocation = _userSettings.PreferredLocation;
         }
 
         public string PreferredEventType

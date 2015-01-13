@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
@@ -11,10 +10,11 @@ using StreamLauncher.Util;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserSettings _userSettings;
+        private readonly IMessengerService _messengerService;
 
         private string _busyText;
         private bool _isBusy;
@@ -27,10 +27,11 @@ namespace StreamLauncher.Wpf.ViewModel
         public RelayCommand<object> LoginCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
-        public LoginViewModel(IAuthenticationService authenticationService, IUserSettings userSettings)
+        public LoginViewModel(IAuthenticationService authenticationService, IUserSettings userSettings, IMessengerService messengerService)
         {
             _authenticationService = authenticationService;
             _userSettings = userSettings;
+            _messengerService = messengerService;
 
             LoginCommand = new RelayCommand<object>(HandleLoginCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);            
@@ -65,7 +66,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 _userSettings.RememberMe = true;
             }
 
-            Messenger.Default.Send(new LoginSuccessfulMessage
+            _messengerService.Send(new LoginSuccessfulMessage
             {
                 AuthenticationResult = result
             });
