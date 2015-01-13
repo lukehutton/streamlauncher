@@ -48,7 +48,7 @@ namespace StreamLauncher.Repositories
             return Task.FromResult(streamsWithScores);
         }
 
-        public LiveStream GetLiveStream(int streamId, string location, Quality quality)
+        public Task<LiveStream> GetLiveStream(int streamId, string location, Quality quality)
         {
             var request = new RestRequest {Resource = "GetLiveStream", Method = Method.GET};
             request.AddParameter("id", streamId, ParameterType.GetOrPost);
@@ -72,7 +72,7 @@ namespace StreamLauncher.Repositories
                     liveStream.Source = responseDto.TrueLiveHD.First().Src;
                     break;
             }
-            return liveStream;
+            return Task.FromResult(liveStream);
         }
 
         private static void StreamNotFoundException(int streamId, string location, Quality quality)

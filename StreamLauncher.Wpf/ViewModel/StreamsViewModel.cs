@@ -114,20 +114,25 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private void HandlePlayHomeFeedCommand()
         {
-            PlayFeed(SelectedStream.HomeStreamId);
+            Task.Run(() => PlayFeed(SelectedStream.HomeStreamId));
         }
         private void HandlePlayAwayFeedCommand()
         {
-            PlayFeed(SelectedStream.AwayStreamId);
+            Task.Run(() => PlayFeed(SelectedStream.AwayStreamId));
         }
 
-        private void PlayFeed(int streamId)
+        private async void PlayFeed(int streamId)
         {
             var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
 
             try
             {
-                var stream = _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
+                Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
+
+                var stream = await _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
+
+                Messenger.Default.Send(new BusyStatusMessage(false, ""));
+
                 var game = string.Format("{0} at {1}", SelectedStream.AwayTeam, SelectedStream.HomeTeam);
                 _liveStreamer.Play(game, stream.Source, quality);
             }

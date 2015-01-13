@@ -8,6 +8,6 @@ namespace StreamLauncher.Repositories
     public interface IHockeyStreamRepository
     {
         Task<IEnumerable<HockeyStream>> GetLiveStreams(DateTime date);
-        LiveStream GetLiveStream(int streamId, string location, Quality quality);
+        Task<LiveStream> GetLiveStream(int streamId, string location, Quality quality);
     }
 }
