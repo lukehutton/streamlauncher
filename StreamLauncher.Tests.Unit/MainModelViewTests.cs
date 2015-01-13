@@ -7,6 +7,7 @@ using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
+using StreamLauncher.Util;
 using StreamLauncher.Validators;
 using StreamLauncher.Wpf.ViewModel;
 using StreamLauncher.Wpf.Views;
@@ -25,6 +26,7 @@ namespace StreamLauncher.Tests.Unit
             protected IViewModelLocator ViewModelLocator;
             protected IDialogService DialogService;
             protected IMessengerService MessengerService;
+            protected IApplicationDispatcher ApplicationDispatcher;
 
             protected MainViewModel ViewModel;
 
@@ -38,9 +40,10 @@ namespace StreamLauncher.Tests.Unit
                 ViewModelLocator = MockRepository.GenerateMock<IViewModelLocator>();
                 DialogService = MockRepository.GenerateMock<IDialogService>();
                 MessengerService = MockRepository.GenerateMock<IMessengerService>();
+                ApplicationDispatcher = MockRepository.GenerateMock<IApplicationDispatcher>();
 
                 ViewModel = new MainViewModel(UserSettings, UserSettingsValidator, AuthenticationService, TokenProvider,
-                    ViewModelLocator, DialogService, MessengerService);
+                    ViewModelLocator, DialogService, MessengerService, ApplicationDispatcher);
             }
         }
 
@@ -261,7 +264,7 @@ namespace StreamLauncher.Tests.Unit
             }
         }
 
-        [TestFixture, Ignore("PENDING")]
+        [TestFixture]
         public class WhenLogout : GivenAMainViewModel
         {
             private ILoginViewModel _loginViewModel;
@@ -277,14 +280,14 @@ namespace StreamLauncher.Tests.Unit
                 ViewModel.LogoutCommand.Execute(null);
             }
 
-            [Test, Ignore("PENDING")]
+            [Test]
             public void ItShouldClearSettingsAndSave()
             {
                 UserSettings.AssertWasCalled(x => x.UserName = string.Empty);
                 UserSettings.AssertWasCalled(x => x.Save());
             }
 
-            [Test, Ignore("PENDING")]
+            [Test]
             public void ItShouldShowLoginDialog()
             {
                 DialogService.AssertWasCalled(x => x.ShowDialog<LoginWindow>(_loginViewModel));

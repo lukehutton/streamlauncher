@@ -125,7 +125,9 @@
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\IMessengerService.cs" />
     <Compile Include="Services\MessengerService.cs" />
+    <Compile Include="Util\ApplicationDispatcher.cs" />
     <Compile Include="Util\EnvironmentHelper.cs" />
+    <Compile Include="Util\IApplicationDispatcher.cs" />
     <Compile Include="Util\IEnvironmentHelper.cs" />
     <Compile Include="Util\IThreadSleeper.cs" />
     <Compile Include="Util\ProcessUtil.cs" />

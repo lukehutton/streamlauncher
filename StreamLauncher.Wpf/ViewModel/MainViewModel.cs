@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -10,6 +11,7 @@ using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Services;
+using StreamLauncher.Util;
 using StreamLauncher.Validators;
 using StreamLauncher.Wpf.Views;
 
@@ -24,6 +26,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IViewModelLocator _viewModelLocator;
         private readonly IDialogService _dialogService;
         private readonly IMessengerService _messengerService;
+        private readonly IApplicationDispatcher _applicationDispatcher;
 
         private string _busyText;
         private bool _isBusy;
@@ -43,7 +46,8 @@ namespace StreamLauncher.Wpf.ViewModel
             ITokenProvider tokenProvider,
             IViewModelLocator viewModelLocator,
             IDialogService dialogService,
-            IMessengerService messengerService)
+            IMessengerService messengerService,
+            IApplicationDispatcher applicationDispatcher)
         {
             _userSettings = userSettings;
             _userSettingsValidator = userSettingsValidator;
@@ -52,6 +56,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _viewModelLocator = viewModelLocator;
             _dialogService = dialogService;
             _messengerService = messengerService;
+            _applicationDispatcher = applicationDispatcher;
 
             LogoutCommand = new RelayCommand(HandleLogoutCommand);
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
@@ -126,8 +131,7 @@ namespace StreamLauncher.Wpf.ViewModel
             var authenticated = _dialogService.ShowDialog<LoginWindow>(loginViewModel) ?? false;
             if (!authenticated)
             {
-                // todo not mockable
-                Application.Current.Shutdown();
+                _applicationDispatcher.Shutdown();
             }            
         }
 
