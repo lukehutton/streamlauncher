@@ -17,3 +17,5 @@
 * installer package - setup on appveyor and deploy to github releases, i.e. clickonce? see http://www.jdibble.co.uk/blog/building-and-deploying-clickonce-applications-with-appveyor/
 * need to check multiple users? ask hs
 * if no score available, show n/a not 0-0
+* Unhandled Exception: ..............System.ArgumentNullException: Value cannot be null. on appveyor?
+* enable some code coverage reports? i.e. http://www.endzone.co.uk/opencover-nunit-test-coverage-on-appveyor/
