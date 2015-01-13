@@ -15,5 +15,7 @@ namespace StreamLauncher.Wpf.ViewModel
         void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage);
         void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage);
         void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful);
+        void HandleClosingCommand(CancelEventArgs obj);
+        void HandleLogoutCommand();
     }
 }

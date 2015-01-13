@@ -192,8 +192,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 _loginViewModel = MockRepository.GenerateMock<ILoginViewModel>();
                 ViewModelLocator.Expect(x => x.Login).Return(_loginViewModel);
 
-                var messengerService = new MessengerService();
-                messengerService.Send(new AuthenticateMessage());
+                ViewModel.HandleAuthenticateMessage(new AuthenticateMessage()); 
             }
 
             [Test]
