@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading.Tasks;
+using System.Windows.Controls;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.Repositories;
@@ -31,7 +32,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
         [TestFixture, RequiresSTA]
         public class WhenHandleLoginWithEmptyUserName : GivenALoginViewModel
         {
-            [SetUp]
+            [TestFixtureSetUp]
             public void When()
             {
                 ViewModel.UserName = string.Empty;
@@ -53,9 +54,9 @@ namespace StreamLauncher.Tests.Unit.ViewModel
         }
         
         [TestFixture, RequiresSTA]
-        public class WhenHandleLoginWithEmptyPassowrd : GivenALoginViewModel
+        public class WhenHandleLoginWithEmptyPassword : GivenALoginViewModel
         {
-            [SetUp]
+            [TestFixtureSetUp]
             public void When()
             {
                 ViewModel.UserName = "User Name";
@@ -73,6 +74,31 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldNotAttemptToAuthenticate()
             {
                 AuthenticationService.AssertWasNotCalled(x => x.Authenticate(Arg<string>.Is.Anything, Arg<string>.Is.Anything));
+            }
+        }       
+        
+        [TestFixture, RequiresSTA]
+        public class WhenHandleLoginWithInvalidAuth : GivenALoginViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                AuthenticationService.Expect(x => x.Authenticate("User Name", "password"))
+                    .Return(Task.FromResult(new AuthenticationResult
+                    {
+                        IsAuthenticated = false,
+                        ErrorMessage = "Bad login."
+                    }));
+
+                ViewModel.UserName = "User Name";
+                var passwordBox = new PasswordBox {Password = "password"};
+                ViewModel.LoginCommand.Execute(passwordBox);
+            }
+
+            [Test, Ignore("PENDING")]
+            public void ItShouldSetError()
+            {                
+                Assert.That(ViewModel.ErrorMessage, Is.EqualTo("Bad login."));
             }
         }
     }
