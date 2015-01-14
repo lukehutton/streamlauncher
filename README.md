@@ -17,12 +17,13 @@ Features
 * On/off scoring
 * Choose from multiple media players via [Livestreamer](http://livestreamer.tanuki.se/en/latest/)
 * Uses [RTMPDump](http://rtmpdump.mplayerhq.hu/) 
+* One click away to play
 
 Roadmap
 ----------
-* On-Demand
+* On-Demand with Date picker
 * Play live from beginning
-* Date picker
+* Game stats/roster/preview
 
 Prerequisites
 -------------
@@ -44,7 +45,9 @@ If you are experiencing any issues such as crashes, please report them [here](ht
 
 How to install
 -------
-1. Download prequisites above. Use the installer for Livestreamer bundled with RTMPDump (not .zip installation). Tested with version v1.11.1.
+1. Download prequisites above: 
+1.1 Install Livestreamer bundled with RTMPDump (not .zip installation). Tested with version v1.11.1.
+1.2 Install VLC Media Player. Tested with v2.1.5.
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
 3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
 4. Set proper file caching for the media player under Media Player Args:

@@ -3,7 +3,6 @@
 ** save scoring on/off pref
 ** save quality pref
 * add unit tests on viewmodels/refactor
-** loginviewmodel
 ** streamsviewmodel
 * close app on bad login after 3 bad attempts
 * hide/show scores
