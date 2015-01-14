@@ -156,7 +156,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
-        private void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
+        public void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
         {
             SelectedFilterEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
             SelectedFilterActiveState = "ALL";
