@@ -45,7 +45,6 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             }
         }
 
-
         [TestFixture]
         public class WhenHandleAuthenticationSuccessfulMessage : GivenAStreamsViewModel
         {
@@ -122,6 +121,40 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 HockeyStreamFilter.AssertWasCalled(
                     x => x.By(Arg<IList<HockeyStream>>.Is.Anything, Arg<EventTypeFilterSpecification>.Is.Anything),
                     options => options.Repeat.Once());
+            }
+        }
+
+        [TestFixture]
+        public class WhenPlayHomeFeedCommand : GivenAStreamsViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                ViewModel.SelectedStream = new HockeyStream
+                {
+                    HomeStreamId = 2342,
+                    AwayTeam = "Canucks",
+                    HomeTeam = "Maple Leafs"
+                };
+                ViewModel.SelectedQuality = "High Quality (3200Kbps HD)";
+                ViewModel.SelectedLocation = "North America - West";
+                HockeyStreamRepository.Expect(x => x.GetLiveStream(2342, "North America - West", Quality.HD)).Return(Task.FromResult(new LiveStream
+                {
+                    Source = @"RTMP:\\somewhere"
+                }));
+                ViewModel.PlayHomeFeedCommand.Execute(null);
+            }
+
+            [Test]
+            public void ItShouldGetLiveStreamWithSelectedStreamIdAndLocationAndQuality()
+            {
+                HockeyStreamRepository.AssertWasCalled(x => x.GetLiveStream(2342, "North America - West", Quality.HD));
+            }
+
+            [Test]
+            public void ItShouldPlayStreamSource()
+            {
+                LiveStreamer.AssertWasCalled(x => x.Play("Canucks at Maple Leafs", @"RTMP:\\somewhere", Quality.HD));
             }
         }
     }
