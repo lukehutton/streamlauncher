@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -16,7 +17,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IAuthenticationService AuthenticationService;
             protected IMessengerService MessengerService;
             protected IUserSettings UserSettings;
-            protected LoginViewModel ViewModel;
+
+            protected ILoginViewModel ViewModel;
 
             [TestFixtureSetUp]
             public void Given()
@@ -93,9 +95,10 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 ViewModel.UserName = "User Name";
                 var passwordBox = new PasswordBox {Password = "password"};
                 ViewModel.LoginCommand.Execute(passwordBox);
+                Thread.Sleep(50);
             }
 
-            [Test, Ignore("PENDING")]
+            [Test]
             public void ItShouldSetError()
             {                
                 Assert.That(ViewModel.ErrorMessage, Is.EqualTo("Bad login."));

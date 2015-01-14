@@ -104,11 +104,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public HockeyStream SelectedStream { get; set; }
 
-        private void HandlePlayHomeFeedCommand()
+        public void HandlePlayHomeFeedCommand()
         {
             Task.Run(() => PlayFeed(SelectedStream.HomeStreamId));
         }
-        private void HandlePlayAwayFeedCommand()
+
+        public void HandlePlayAwayFeedCommand()
         {
             Task.Run(() => PlayFeed(SelectedStream.AwayStreamId));
         }

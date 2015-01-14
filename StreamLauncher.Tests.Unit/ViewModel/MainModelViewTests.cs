@@ -29,7 +29,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IMessengerService MessengerService;
             protected IApplicationDispatcher ApplicationDispatcher;
 
-            protected MainViewModel ViewModel;
+            protected IMainViewModel ViewModel;
 
             [TestFixtureSetUp]
             public void Given()

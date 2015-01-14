@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -143,6 +144,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                     Source = @"RTMP:\\somewhere"
                 }));
                 ViewModel.PlayHomeFeedCommand.Execute(null);
+                Thread.Sleep(50);
             }
 
             [Test]

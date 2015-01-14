@@ -22,7 +22,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IUserSettings UserSettings;
             protected IUserSettingsValidator UserSettingsValidator;
             protected IThreadSleeper ThreadSleeper;
-            protected SettingsViewModel ViewModel;
+            protected ISettingsViewModel ViewModel;
 
             [TestFixtureSetUp]
             public void Given()

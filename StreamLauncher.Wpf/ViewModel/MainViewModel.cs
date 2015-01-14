@@ -138,7 +138,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _dialogService.ShowDialog<SettingsWindow>(settingsViewModel);
         }
 
-        public void HandleClosingCommand(CancelEventArgs obj)
+        private void HandleClosingCommand(CancelEventArgs obj)
         {
             _userSettings.Save();
             _applicationDispatcher.Shutdown();
@@ -156,7 +156,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }            
         }
 
-        public void HandleLogoutCommand()
+        private void HandleLogoutCommand()
         {
             _messengerService.Send(new NotificationMessage(this, "HideMainWindow"));
 

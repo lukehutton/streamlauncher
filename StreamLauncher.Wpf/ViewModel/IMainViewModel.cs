@@ -14,8 +14,6 @@ namespace StreamLauncher.Wpf.ViewModel
         bool IsBusy { get; set; }
         void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage);
         void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage);
-        void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful);
-        void HandleClosingCommand(CancelEventArgs obj);
-        void HandleLogoutCommand();
+        void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful);                
     }
 }

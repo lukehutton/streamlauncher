@@ -37,7 +37,7 @@ namespace StreamLauncher.Wpf.ViewModel
             CancelCommand = new RelayCommand(HandleCancelCommand);            
         }
 
-        public void HandleCancelCommand()
+        private void HandleCancelCommand()
         {                        
             DialogResult = false;
         }
@@ -74,7 +74,7 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = true;             
         }
 
-        public void HandleLoginCommand(object parameter)
+        private void HandleLoginCommand(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;

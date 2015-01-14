@@ -12,7 +12,5 @@ namespace StreamLauncher.Wpf.ViewModel
         bool? DialogResult { get; set; }
         string BusyText { get; set; }
         bool IsBusy { get; set; }
-        void HandleCancelCommand();
-        void HandleLoginCommand(object parameter);
     }
 }
