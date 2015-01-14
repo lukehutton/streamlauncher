@@ -47,14 +47,14 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn CanUserResize="False" Header="Home" MaxWidth="150" MinWidth="150">
+                <DataGridTemplateColumn CanUserResize="False" Header="Home" Width="148" MaxWidth="148" MinWidth="148">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn CanUserResize="False" Header="Away" MaxWidth="150" MinWidth="150">
+                <DataGridTemplateColumn CanUserResize="False" Header="Away" Width="148" MaxWidth="148" MinWidth="148">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
