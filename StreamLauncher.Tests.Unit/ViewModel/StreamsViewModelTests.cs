@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.Filters;
@@ -22,8 +24,10 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected ILiveStreamer LiveStreamer;
             protected IStreamLocationRepository StreamLocationRepository;
             protected IUserSettings UserSettings;
-            protected StreamsViewModel ViewModel;
+            protected IMessengerService MessengerService;
             protected IViewModelLocator ViewModelLocator;
+
+            protected StreamsViewModel ViewModel;
 
             [TestFixtureSetUp]
             public void Given()
@@ -35,8 +39,9 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 HockeyStreamFilter = MockRepository.GenerateMock<IHockeyStreamFilter>();
                 StreamLocationRepository = MockRepository.GenerateMock<IStreamLocationRepository>();
                 LiveStreamer = MockRepository.GenerateMock<ILiveStreamer>();
+                MessengerService = MockRepository.GenerateMock<IMessengerService>();
                 ViewModel = new StreamsViewModel(HockeyStreamRepository, HockeyStreamFilter, StreamLocationRepository,
-                    LiveStreamer, UserSettings, DialogService, ViewModelLocator);
+                    LiveStreamer, UserSettings, DialogService, ViewModelLocator, MessengerService);
             }
         }
 
@@ -44,24 +49,79 @@ namespace StreamLauncher.Tests.Unit.ViewModel
         [TestFixture]
         public class WhenHandleAuthenticationSuccessfulMessage : GivenAStreamsViewModel
         {
-            [SetUp]
+            [TestFixtureSetUp]
             public void When()
             {
-                UserSettings.Expect(x => x.PreferredEventType).Return("My favorite league");
+                UserSettings.Expect(x => x.PreferredEventType).Return("NHL");
+                UserSettings.Expect(x => x.PreferredLocation).Return("North America - East");
                 StreamLocationRepository.Expect(x => x.GetLocations()).Return(new List<StreamLocation>());
+                HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
+                    .Return(Task.FromResult<IEnumerable<HockeyStream>>(new List<HockeyStream>()));
+                HockeyStreamFilter.Expect(
+                    x => x.By(Arg<IList<HockeyStream>>.Is.Anything, Arg<EventTypeFilterSpecification>.Is.Anything))
+                    .Return(
+                        new List<HockeyStream>());
                 ViewModel.HandleAuthenticationSuccessfulMessage(new AuthenticatedMessage
                 {
                     AuthenticationResult = new AuthenticationResult
                     {
-                        AuthenticatedUser = new User()
+                        AuthenticatedUser = new User
+                        {
+                            FavoriteTeam = "The Destroyers"
+                        }
                     }
                 });
             }
 
             [Test]
-            public void ItShouldSetFilterEventType()
+            public void ItShouldSetPrefferedFilteredEventType()
             {
-                Assert.That(ViewModel.SelectedFilterEventType, Is.EqualTo("My favorite league"));
+                Assert.That(ViewModel.SelectedFilterEventType, Is.EqualTo("NHL"));
+            }
+
+            [Test]
+            public void ItShouldSetActiveStateToAll()
+            {
+                Assert.That(ViewModel.SelectedFilterActiveState, Is.EqualTo("ALL"));
+            }
+
+            [Test]
+            public void ItShouldSetFavouriteTeam()
+            {
+                Assert.That(ViewModel.FavouriteTeam, Is.EqualTo("The Destroyers"));
+            }
+
+            [Test]
+            public void ItShouldSetIsAuthenticated()
+            {
+                Assert.That(ViewModel.IsAuthenticated, Is.True);
+            }
+
+            [Test]
+            public void ItShouldSetPrefferedLocation()
+            {
+                Assert.That(ViewModel.SelectedLocation, Is.EqualTo("North America - East"));
+            }
+
+            [Test]
+            public void ItShouldSendBusyMessageToGetStreams()
+            {
+                MessengerService.AssertWasCalled(
+                    x => x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams...")));
+            }
+
+            [Test]
+            public void ItShouldGetStreams()
+            {
+                HockeyStreamRepository.AssertWasCalled(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything));
+            }
+
+            [Test]
+            public void ItShouldFilterByEventType()
+            {
+                HockeyStreamFilter.AssertWasCalled(
+                    x => x.By(Arg<IList<HockeyStream>>.Is.Anything, Arg<EventTypeFilterSpecification>.Is.Anything),
+                    options => options.Repeat.Once());
             }
         }
     }

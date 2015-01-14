@@ -24,6 +24,7 @@ Roadmap
 * On-Demand with Date picker
 * Play live from beginning
 * Game stats/roster/preview
+* Resizable window
 
 Prerequisites
 -------------

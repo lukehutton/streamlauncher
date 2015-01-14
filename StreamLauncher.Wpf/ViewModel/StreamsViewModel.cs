@@ -29,10 +29,12 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
         private readonly IViewModelLocator _viewModelLocator;
+        private readonly IMessengerService _messengerService;
 
         private readonly object _hockeyStreamsLock = new object();
         private ObservableCollection<HockeyStream> _hockeyStreams;
         private ObservableCollection<StreamLocation> _streamLocations;
+        private List<HockeyStream> _allHockeyStreams;
 
         public RelayCommand GetStreamsCommand { get; private set; }        
         public RelayCommand SettingsCommand { get; private set; }        
@@ -44,20 +46,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private string _filterEventType;
         private string _filterActiveState;
-        private string _favouriteTeam;
 
-        public string FavouriteTeam
-        {
-            get { return _favouriteTeam.MaxStrLen(AppConstants.MaxTeamStringLength); }
-            set
-            {
-                _favouriteTeam = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private List<HockeyStream> _allHockeyStreams;
-        private bool _isAuthenticated;        
+        private string _favouriteTeam;        
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -66,7 +56,8 @@ namespace StreamLauncher.Wpf.ViewModel
             ILiveStreamer liveStreamer,
             IUserSettings userSettings,
             IDialogService dialogService,
-            IViewModelLocator viewModelLocator
+            IViewModelLocator viewModelLocator,
+            IMessengerService messengerService
             )
         {
             _hockeyStreamRepository = hockeyStreamRepository;
@@ -76,6 +67,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings = userSettings;
             _dialogService = dialogService;
             _viewModelLocator = viewModelLocator;
+            _messengerService = messengerService;
 
             Streams = new ObservableCollection<HockeyStream>();                        
             Locations = new ObservableCollection<StreamLocation>();
@@ -122,11 +114,11 @@ namespace StreamLauncher.Wpf.ViewModel
         }
 
         private async void PlayFeed(int streamId)
-        {
-            var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
-
+        {            
             try
             {
+                var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
+
                 Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
 
                 var stream = await _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
@@ -162,26 +154,21 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedFilterActiveState = "ALL";
 
             _favouriteTeam = authenticatedMessage.AuthenticationResult.AuthenticatedUser.FavoriteTeam;            
-            _isAuthenticated = true;
+            IsAuthenticated = true;
 
             GetLocations();
-            SelectedLocation = _userSettings.PreferredLocation ?? "";
+            SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;
 
             HandleGetStreamsCommand();            
         }
 
-        private async void GetStreamsAsync()
+        private async void HandleGetStreamsCommand()
         {
-            Messenger.Default.Send(new BusyStatusMessage(true, "Getting streams..."));
+            _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."));
 
             await Task.Run(() => GetStreams());
 
-            Messenger.Default.Send(new BusyStatusMessage(false, ""));
-        }
-
-        private void HandleGetStreamsCommand()
-        {
-            GetStreamsAsync();
+            _messengerService.Send(new BusyStatusMessage(false, ""));
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)
@@ -274,7 +261,7 @@ namespace StreamLauncher.Wpf.ViewModel
             {                
                 _filterEventType = value;                
                 RaisePropertyChanged();
-                if (_isAuthenticated)
+                if (IsAuthenticated)
                 {
                     FilterStreams(_allHockeyStreams);
                 }
@@ -288,7 +275,7 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 _filterActiveState = value;
                 RaisePropertyChanged();
-                if (_isAuthenticated)
+                if (IsAuthenticated)
                 {
                     FilterStreams(_allHockeyStreams);
                 }                
@@ -343,6 +330,18 @@ namespace StreamLauncher.Wpf.ViewModel
                 Locations.Add(location);
             }            
         }
+
+        public string FavouriteTeam
+        {
+            get { return _favouriteTeam.MaxStrLen(AppConstants.MaxTeamStringLength); }
+            set
+            {
+                _favouriteTeam = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool IsAuthenticated { get; private set; }
 
         public ObservableCollection<HockeyStream> Streams
         {
