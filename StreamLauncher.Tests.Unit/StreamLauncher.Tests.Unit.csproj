@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Filters\HockeyStreamFilterTests.cs" />
     <Compile Include="Mappers\LiveStreamScheduleAggregatorAndMapperTests.cs" />
+    <Compile Include="Validators\UserSettingsValidatorTests.cs" />
     <Compile Include="ViewModel\LoginViewModelTests.cs" />
     <Compile Include="ViewModel\MainModelViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

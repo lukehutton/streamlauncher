@@ -105,6 +105,7 @@
     <Compile Include="ViewModel\ILoginViewModel.cs" />
     <Compile Include="ViewModel\IMainViewModel.cs" />
     <Compile Include="ViewModel\ISettingsViewModel.cs" />
+    <Compile Include="ViewModel\IStreamsViewModel.cs" />
     <Compile Include="ViewModel\IViewModelLocator.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
