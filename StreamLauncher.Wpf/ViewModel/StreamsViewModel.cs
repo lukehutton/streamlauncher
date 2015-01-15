@@ -46,7 +46,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private string _filterEventType;
         private string _filterActiveState;
-        private bool _isShowScoresEnabled;
+        private bool _showScores;
 
         private string _favouriteTeam;        
 
@@ -90,12 +90,12 @@ namespace StreamLauncher.Wpf.ViewModel
             }            
         }
 
-        public bool IsShowScoresEnabled
+        public bool ShowScores
         {
-            get { return _isShowScoresEnabled; }
+            get { return _showScores; }
             set
             {
-                _isShowScoresEnabled = value;
+                _showScores = value;
                 RaisePropertyChanged();
             }
         }   
