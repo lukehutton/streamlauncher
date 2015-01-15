@@ -52,8 +52,8 @@ How to install
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
 3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
 4. Set proper file caching for the media player under Media Player Args:
-   (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
-   i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
+  1. (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
+  2. i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
 
 Build History
 -------
