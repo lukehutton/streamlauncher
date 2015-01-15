@@ -48,7 +48,8 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _filterActiveState;
         private bool _showScores;
 
-        private string _favouriteTeam;        
+        private string _favouriteTeam;
+        private string _showScoresText;
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -96,6 +97,17 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _showScores = value;
+                RaisePropertyChanged();
+                ShowScoresText = _showScores ? "Scores Off" : "Scores On";
+            }
+        }          
+        
+        public string ShowScoresText
+        {
+            get { return _showScoresText; }
+            set
+            {
+                _showScoresText = value;
                 RaisePropertyChanged();
             }
         }   
@@ -169,7 +181,8 @@ namespace StreamLauncher.Wpf.ViewModel
             IsAuthenticated = true;
 
             GetLocations();
-            SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;
+            SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
+            ShowScores = true;
 
             HandleGetStreamsCommand();            
         }
