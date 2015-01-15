@@ -50,6 +50,7 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<IThreadSleeper, ThreadSleeper>();
                 SimpleIoc.Default.Register<IViewModelLocator, ViewModelLocator>();
                 SimpleIoc.Default.Register<IApplicationDispatcher, ApplicationDispatcher>();
+                SimpleIoc.Default.Register<IFileHelper, FileHelper>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

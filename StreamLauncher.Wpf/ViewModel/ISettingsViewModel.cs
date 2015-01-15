@@ -20,6 +20,7 @@ namespace StreamLauncher.Wpf.ViewModel
         bool? DialogResult { get; set; }
         string BusyText { get; set; }
         bool IsBusy { get; set; }
+        int RtmpTimeOutInSeconds { get; set; }
         void Init();
     }
 }

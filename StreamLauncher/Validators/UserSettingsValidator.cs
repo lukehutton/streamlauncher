@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using StreamLauncher.Repositories;
 using StreamLauncher.Util;
 
@@ -7,6 +6,13 @@ namespace StreamLauncher.Validators
 {
     public class UserSettingsValidator : IUserSettingsValidator
     {
+        private readonly IFileHelper _fileHelper;
+
+        public UserSettingsValidator(IFileHelper fileHelper)
+        {
+            _fileHelper = fileHelper;
+        }
+
         public IEnumerable<string> BrokenRules(IUserSettings userSettings)
         {
             if (userSettings.LiveStreamerPath.IsNullOrEmpty())
@@ -19,15 +25,20 @@ namespace StreamLauncher.Validators
                 yield return "Media Player Path must not be empty.";                
             }
 
-            if (!File.Exists(userSettings.LiveStreamerPath))
+            if (!_fileHelper.FileExists(userSettings.LiveStreamerPath))
             {
                 yield return "Livestreamer Path does not exist.";
 
             }
 
-            if (!File.Exists(userSettings.MediaPlayerPath))
+            if (!_fileHelper.FileExists(userSettings.MediaPlayerPath))
             {
                 yield return "Media Player Path does not exist.";
+            }
+
+            if (userSettings.RtmpTimeOutInSeconds < 1)
+            {
+                yield return "RTMP Timeout (seconds) must be greater than 0.";
             }
         }         
     }

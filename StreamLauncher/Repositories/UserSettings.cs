@@ -1,5 +1,4 @@
 ﻿using StreamLauncher.Properties;
-using StreamLauncher.Util;
 
 namespace StreamLauncher.Repositories
 {
@@ -57,6 +56,12 @@ namespace StreamLauncher.Repositories
         {
             get { return Settings.Default.PreferredEventType; }
             set { Settings.Default.PreferredEventType = value; }
+        }
+
+        public int RtmpTimeOutInSeconds
+        {
+            get { return Settings.Default.RtmpTimeOutInSeconds; }
+            set { Settings.Default.RtmpTimeOutInSeconds = value; }
         }
 
         public void Save()

@@ -11,6 +11,7 @@
         bool IsFirstRun { get; set; }
         string PreferredLocation { get; set; }
         string PreferredEventType { get; set; }
+        int RtmpTimeOutInSeconds { get; set; }
         void Save();
     }
 }

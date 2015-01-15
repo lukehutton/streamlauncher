@@ -12,9 +12,7 @@ using StreamLauncher.Util;
 namespace StreamLauncher.MediaPlayers
 {
     public class LiveStreamer : ILiveStreamer
-    {
-        private const int RtmpTimeOutInSeconds = 5;
-
+    {        
         public static string Default64BitLocation = @"C:\Program Files (x86)\Livestreamer\livestreamer.exe";
         public static string Default32BitLocation = @"C:\Program Files\Livestreamer\livestreamer.exe";
         public static string RtmpDumpRelativePath = @"rtmpdump\rtmpdump.exe";
@@ -24,21 +22,23 @@ namespace StreamLauncher.MediaPlayers
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
         private readonly IMessengerService _messengerService;
+        private readonly IFileHelper _fileHelper;
 
-        public LiveStreamer(IUserSettings userSettings, IDialogService dialogService, IMessengerService messengerService)
+        public LiveStreamer(IUserSettings userSettings, IDialogService dialogService, IMessengerService messengerService, IFileHelper fileHelper)
         {
             _userSettings = userSettings;
             _dialogService = dialogService;
             _messengerService = messengerService;
+            _fileHelper = fileHelper;
         }
 
         public void Play(string game, string streamSource, Quality quality)
         {
-            if (!File.Exists(_userSettings.LiveStreamerPath))
+            if (!_fileHelper.FileExists(_userSettings.LiveStreamerPath))
             {
                 throw new LiveStreamerExecutableNotFound();
             }
-            if (!File.Exists(_userSettings.MediaPlayerPath))
+            if (!_fileHelper.FileExists(_userSettings.MediaPlayerPath))
             {
                 throw new MediaPlayerNotFound();
             }
@@ -55,7 +55,7 @@ namespace StreamLauncher.MediaPlayers
                     _userSettings.LiveStreamerPath,
                     streamSource,
                     qualityString,
-                    RtmpTimeOutInSeconds);
+                    _userSettings.RtmpTimeOutInSeconds);
 
                 using (var process = new ProcessUtil("cmd.exe", arguments))
                 {

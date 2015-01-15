@@ -32,6 +32,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<StreamLocation> _streamLocations;
         private string _preferredLocation;
         private string _preferredEventType;
+        private int _rtmpTimeOutInSeconds;
 
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
@@ -94,7 +95,19 @@ namespace StreamLauncher.Wpf.ViewModel
 
             PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
             PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;
+            // todo can make nullable int?
+            RtmpTimeOutInSeconds = _userSettings.RtmpTimeOutInSeconds == 0 ? 5 : _userSettings.RtmpTimeOutInSeconds;            
         }
+
+        public int RtmpTimeOutInSeconds
+        {
+            get { return _rtmpTimeOutInSeconds; }
+            set
+            {
+                _rtmpTimeOutInSeconds = value;
+                RaisePropertyChanged();
+            }
+        }   
 
         public string PreferredEventType
         {
@@ -105,6 +118,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 RaisePropertyChanged();
             }
         }   
+
         public string PreferredLocation
         {
             get { return _preferredLocation; }
@@ -127,6 +141,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.MediaPlayerArguments = MediaPlayerArguments;
             _userSettings.PreferredEventType = PreferredEventType;
             _userSettings.PreferredLocation = PreferredLocation;
+            _userSettings.RtmpTimeOutInSeconds = RtmpTimeOutInSeconds;
 
             var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any()) 
