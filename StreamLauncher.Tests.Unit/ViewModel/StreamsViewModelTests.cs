@@ -71,6 +71,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                         }
                     }
                 });
+                Thread.Sleep(50);
             }
 
             [Test]

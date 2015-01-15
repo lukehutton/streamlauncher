@@ -82,10 +82,10 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn CanUserResize="False" Header="Score" MaxWidth="50" MinWidth="50">
+                    <DataGridTemplateColumn CanUserResize="False" Header="Score" MaxWidth="50" MinWidth="50" Visibility="{Binding IsShowScoresEnabled}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -125,6 +125,6 @@
             <Label Grid.ColumnSpan="2" Content="Filter Event:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
             <ComboBox HorizontalAlignment="Left" Margin="398.716,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" FontFamily="Segoe UI" FontSize="13.333" FontWeight="Bold" ItemsSource="{Binding ActiveStates}" SelectedValue="{Binding SelectedFilterActiveState}" />
             <Label Grid.ColumnSpan="2" Content="Filter Active:" HorizontalAlignment="Left" Margin="301.079,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
-            <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="706,17,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="True"/>
+        <ToggleButton Grid.ColumnSpan="2" Content="Scores On" HorizontalAlignment="Left" Margin="706,17,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="{Binding IsShowScoresEnabled}"/>
         </Grid>
 </UserControl>

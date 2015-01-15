@@ -46,6 +46,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private string _filterEventType;
         private string _filterActiveState;
+        private bool _isShowScoresEnabled;
 
         private string _favouriteTeam;        
 
@@ -88,6 +89,16 @@ namespace StreamLauncher.Wpf.ViewModel
                 BindingOperations.EnableCollectionSynchronization(Streams, _hockeyStreamsLock);
             }            
         }
+
+        public bool IsShowScoresEnabled
+        {
+            get { return _isShowScoresEnabled; }
+            set
+            {
+                _isShowScoresEnabled = value;
+                RaisePropertyChanged();
+            }
+        }   
 
         private void HandleSettingsCommand()
         {

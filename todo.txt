@@ -3,8 +3,7 @@
 ** save timeout rtmp 
 ** save scoring on/off pref
 ** save quality pref
-* close app on bad login after 3 bad attempts
-* hide/show scores
+* hide/show scores - http://www.thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/
 * add api keys and user to app settings (make to sure add to .gitignore)
 * show event type in grid when ALL event type selected, or always show
 * make designer show streams again, fake out data
