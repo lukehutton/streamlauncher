@@ -1,12 +1,5 @@
-* user settings
-** on app close save
-* add api keys and user to app settings (make to sure add to .gitignore)
-* make designer show streams again, fake out data OR just delete all design classes
-* show no feeds available when grid empty
-* custom dialog box instead of message box: https://github.com/NatuLearn/NumbersGame/blob/master/NumbersGame/NumbersGame.WP8/Helpers/PhonePageBase.cs
 * clear errors on dialogs when keypress into text boxes (settings, login)
 * add version info/commit sha to screen (right bottom corner), release number (from ci server)
 * installer package - setup on appveyor and deploy to github releases, i.e. clickonce? see http://www.jdibble.co.uk/blog/building-and-deploying-clickonce-applications-with-appveyor/
+  and clickonce host on github, https://github.com/BlythMeister/Gallifrey/wiki/Click-Once-Deployment-In-GitHub
 * need to check multiple users? ask hs
-* Unhandled Exception: ..............System.ArgumentNullException: Value cannot be null. on appveyor?
-* 3 unit tests fail when all run as suite, yet pass by themselves, adding small sleep time and they pass, figure out why and replace bad hack

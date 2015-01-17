@@ -33,7 +33,8 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _userName;
         private string _currentUser;
         private string _currentDate;
-        
+        private string _applicationVersion;
+
         public RelayCommand LogoutCommand { get; private set; }
 
         public RelayCommand<CancelEventArgs> Closing { get; private set; }
@@ -103,6 +104,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)
         {
+            ApplicationVersion = "Version: " + GetPublishedVersion();
+
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
 
@@ -128,6 +131,16 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 AuthenticationResult = loginSuccessful.AuthenticationResult
             });
+        }
+
+        private string GetPublishedVersion()
+        {
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.
+                    CurrentVersion.ToString();
+            }
+            return "0.0.0.0";
         }
 
         private void ShowSettingsDialog(string errorMessage = "")
@@ -170,6 +183,16 @@ namespace StreamLauncher.Wpf.ViewModel
             OpenLoginDialog();
 
             _messengerService.Send(new NotificationMessage(this, "ShowMainWindow"));
+        }
+
+        public string ApplicationVersion
+        {
+            get { return _applicationVersion; }
+            set
+            {
+                _applicationVersion = value;
+                RaisePropertyChanged();
+            }
         }
 
         public string CurrentUser

@@ -25,8 +25,8 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<IHockeyStreamRepository, DesignHockeyStreamRepository>();
                 SimpleIoc.Default.Register<IStreamLocationRepository, DesignStreamLocationRepository>();
                 SimpleIoc.Default.Register<IHockeyStreamFilter, HockeyStreamFilter>();
-                SimpleIoc.Default.Register<ITokenProvider, AuthenticationTokenProvider>(); //todo make design
-                SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>(); //todo make design
+                SimpleIoc.Default.Register<ITokenProvider, AuthenticationTokenProvider>(); 
+                SimpleIoc.Default.Register<IAuthenticationService, AuthenticationService>();
             }
             else
             {
