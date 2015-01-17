@@ -18,8 +18,7 @@ namespace StreamLauncher.Repositories
         }
 
         public IEnumerable<Score> GetScores()
-        {
-            // todo handle exception and failed exception by caller            
+        {            
             var request = new RestRequest { Resource = "Scores" };
             request.AddParameter("date", DateTime.Now.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
             var scoresResponseDto = _hockeyStreamsApi.Execute<ScoresResponseDto>(request);

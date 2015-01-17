@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using RestSharp;
 using StreamLauncher.Api;
+using StreamLauncher.Constants;
 using StreamLauncher.Dtos;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Mappers;
 using StreamLauncher.Models;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Repositories
 {
@@ -39,10 +41,14 @@ namespace StreamLauncher.Repositories
             var streamsWithScores = hockeyStreams.Select(stream =>
             {
                 stream.PeriodAndTimeLeft = scores
-                    .Where(score => score.HomeTeam == stream.HomeTeam && stream.IsPlaying)
+                    .Where(
+                        score =>
+                            score.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength) == stream.HomeTeam &&
+                            stream.IsPlaying)
                     .Select(p => p.PeriodAndTimeLeft)
                     .FirstOrDefault() ?? "-";
-                DeterminePeriod(stream);         
+                DeterminePeriodAndScore(stream);
+
                 return stream;
             });
             return Task.FromResult(streamsWithScores);
@@ -82,7 +88,7 @@ namespace StreamLauncher.Repositories
                     quality));
         }
 
-        private static void DeterminePeriod(HockeyStream stream)
+        private static void DeterminePeriodAndScore(HockeyStream stream)
         {
             if (!(stream.PeriodAndTimeLeft.Contains("1st") ||
                   stream.PeriodAndTimeLeft.Contains("2nd") ||
@@ -98,6 +104,10 @@ namespace StreamLauncher.Repositories
                 {
                     stream.PeriodAndTimeLeft = "Final";
                 }
+            }
+            if (stream.PeriodAndTimeLeft == "-")
+            {
+                stream.Score = "n/a";
             }
         }
     }
