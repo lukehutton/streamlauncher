@@ -1,4 +1,4 @@
-using System.Configuration;
+using StreamLauncher.Properties;
 
 namespace StreamLauncher.Api
 {
@@ -6,11 +6,11 @@ namespace StreamLauncher.Api
     {
         public string GetApiKey()
         {
-            return ConfigurationManager.AppSettings["hockeystreams.apiKey"];            
+            return Settings.Default.HockeystreamsApiKey;
         }
         public string GetScoresApiKey()
         {
-            return ConfigurationManager.AppSettings["hockeystreams.scoresApiKey"];            
+            return Settings.Default.HockeystreamsScoresApiKey;
         }
     }
 }

@@ -58,10 +58,22 @@ namespace StreamLauncher.Repositories
             set { Settings.Default.PreferredEventType = value; }
         }
 
-        public int RtmpTimeOutInSeconds
+        public int? RtmpTimeOutInSeconds
         {
             get { return Settings.Default.RtmpTimeOutInSeconds; }
             set { Settings.Default.RtmpTimeOutInSeconds = value; }
+        }
+
+        public bool? ShowScoring
+        {
+            get { return Settings.Default.ShowScoring; }
+            set { Settings.Default.ShowScoring = value; }
+        }
+
+        public string PreferredQuality
+        {
+            get { return Settings.Default.PreferredQuality; }
+            set { Settings.Default.PreferredQuality = value; }
         }
 
         public void Save()

@@ -29,8 +29,20 @@
     <Setting Name="PreferredEventType" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="RtmpTimeOutInSeconds" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="RtmpTimeOutInSeconds" Type="System.Nullable&lt;System.Int32&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ShowScoring" Type="System.Nullable&lt;System.Boolean&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PreferredQuality" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HockeystreamsApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">170404a094468fbdd0bea2f9621d772e</Value>
+    </Setting>
+    <Setting Name="HockeystreamsScoresApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">3560abdc296d1019a8ba8b0d893f07a3</Value>
     </Setting>
   </Settings>
 </SettingsFile>

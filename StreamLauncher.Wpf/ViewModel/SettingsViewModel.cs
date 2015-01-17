@@ -33,6 +33,8 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _preferredLocation;
         private string _preferredEventType;
         private int _rtmpTimeOutInSeconds;
+        private bool _showScoring;
+        private string _preferredQuality;
 
         public RelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
@@ -94,10 +96,43 @@ namespace StreamLauncher.Wpf.ViewModel
             }
 
             PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
-            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;
-            // todo can make nullable int?
-            RtmpTimeOutInSeconds = _userSettings.RtmpTimeOutInSeconds == 0 ? 5 : _userSettings.RtmpTimeOutInSeconds;            
+            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
+            RtmpTimeOutInSeconds = _userSettings.RtmpTimeOutInSeconds ?? 5;            
+            ShowScoring = _userSettings.ShowScoring ?? true;            
+            PreferredQuality = _userSettings.PreferredQuality.IsNullOrEmpty() ? Qualities.First() : _userSettings.PreferredQuality;            
         }
+
+        public string PreferredQuality
+        {
+            get { return _preferredQuality; }
+            set
+            {
+                _preferredQuality = value;
+                RaisePropertyChanged();
+            }
+        }   
+
+        public List<string> Qualities
+        {
+            get
+            {
+                return new List<string>
+                {
+                    "High Quality (3200Kbps HD)",
+                    "Low Quality (800Kbps SD)"
+                };
+            }
+        }
+
+        public bool ShowScoring
+        {
+            get { return _showScoring; }
+            set
+            {
+                _showScoring = value;
+                RaisePropertyChanged();
+            }
+        }   
 
         public int RtmpTimeOutInSeconds
         {

@@ -141,7 +141,7 @@ namespace StreamLauncher.Wpf.ViewModel
         {            
             try
             {
-                var quality = SelectedQuality == "High Quality (3200Kbps HD)" ? Quality.HD : Quality.SD;
+                var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
 
                 Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
 

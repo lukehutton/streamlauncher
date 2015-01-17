@@ -1,7 +1,5 @@
 * user settings
-** nullable user settings
-** save scoring on/off pref
-** save quality pref
+** on app close save
 * add api keys and user to app settings (make to sure add to .gitignore)
 * make designer show streams again, fake out data OR just delete all design classes
 * show no feeds available when grid empty
