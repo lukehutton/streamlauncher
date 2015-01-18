@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
@@ -25,7 +26,8 @@ namespace StreamLauncher.Wpf
         private void OnAppDispatcherUnhandledException(
             object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("Sorry, an unhandled exception has occurred and has been logged. The application will shutdown." +
+            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "streamlauncher");
+            MessageBox.Show(string.Format("Sorry, an unhandled exception has occurred and has been logged to folder {0}. The application will shutdown.", folder)  +
                             Environment.NewLine + Environment.NewLine +
                             e.Exception.GetType().Name +
                             Environment.NewLine + Environment.NewLine +
