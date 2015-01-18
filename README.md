@@ -51,6 +51,9 @@ How to install
   1. Install Livestreamer bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
   2. Install VLC Media Player. Tested with v2.1.5.
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
+  1. Download Unzip StreamLauncher.Wpf.zip
+  2. Unzip to any directory
+  3. Run setup.exe
 3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
 4. Set proper file caching for the media player under Media Player Args:
   1. (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)

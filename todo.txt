@@ -1,4 +1,2 @@
-* installer package - setup on appveyor and deploy to github releases, i.e. clickonce? see http://www.jdibble.co.uk/blog/building-and-deploying-clickonce-applications-with-appveyor/
-  and clickonce host on github, https://github.com/BlythMeister/Gallifrey/wiki/Click-Once-Deployment-In-GitHub
 * test for a week at separate machine
 * need to check multiple users? ask hs
