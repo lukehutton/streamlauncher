@@ -14,20 +14,26 @@
         </LinearGradientBrush>
     </Window.Background>
     <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}">
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="20*"/>
-			<ColumnDefinition Width="201*"/>
-		</Grid.ColumnDefinitions>
-        <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Login" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=txtPassword}"/>
-		<Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
-		<TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,54.002,0,0" TextWrapping="Wrap" Text="{Binding UserName}" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
-		<Label Content="User Name:" Grid.Column="1" HorizontalAlignment="Left" Margin="29.999,51,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
-        <PasswordBox Name="txtPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,91,0,0" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
-		<Label Content="Password:" Grid.Column="1" HorizontalAlignment="Left" Margin="39.866,89,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
-		<Image Grid.Column="1" HorizontalAlignment="Center" Margin="39.866,0,76.207,0" VerticalAlignment="Top" Source="..\Images\hockeystreamslogo.png"/>
-		<Label Content="{Binding ErrorMessage}" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,144.01,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" Foreground="Red"/>
-		<CheckBox IsChecked="True" Content="Remember me" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,123.05,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.136,0.65" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"/>		
-	</Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="201*"/>
+            </Grid.ColumnDefinitions>
+            <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Login" Grid.Column="1" HorizontalAlignment="Left" Margin="183,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=TxtPassword}"/>
+            <Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="1" HorizontalAlignment="Left" Margin="284.819,172.513,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
+            <TextBox Name="UserName" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,54.002,0,0" TextWrapping="Wrap" Text="{Binding UserName}" TextChanged="UserName_OnTextChanged" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="User Name:" Grid.Column="1" HorizontalAlignment="Left" Margin="29.999,51,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+            <PasswordBox Name="TxtPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,91,0,0" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+            <Label Content="Password:" Grid.Column="1" HorizontalAlignment="Left" Margin="39.866,89,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
+            <Image Grid.Column="1" HorizontalAlignment="Center" Margin="39.866,0,76.207,0" VerticalAlignment="Top" Source="..\Images\hockeystreamslogo.png"/>
+            <CheckBox IsChecked="True" Content="Remember me" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,123.05,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.136,0.65" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"/>
+            <Label Name="ErrorMessage" Content="{Binding ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Margin="135,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Foreground="Red" Height="29" Width="225" Grid.Column="1">
+                <Label.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                </Label.Resources>
+            </Label>
+        </Grid>
     </xctk:BusyIndicator>
 </Window>

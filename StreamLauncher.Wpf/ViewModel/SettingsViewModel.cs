@@ -184,12 +184,11 @@ namespace StreamLauncher.Wpf.ViewModel
                 ErrorMessage = brokenRules.First();                
                 return;
             }
-            _userSettings.Save();
 
-            SaveLiveStreamerConfigAsync();            
+            SaveSettingsAndLiveStreamerConfigAsync();            
         }
 
-        private async void SaveLiveStreamerConfigAsync()
+        private async void SaveSettingsAndLiveStreamerConfigAsync()
         {
             BusyText = "Saving settings...";
             IsBusy = true;
@@ -197,6 +196,7 @@ namespace StreamLauncher.Wpf.ViewModel
             await Task.Run(() =>
             {
                 _threadSleeper.SleepFor(1);
+                _userSettings.Save();
                 _liveStreamer.SaveConfig();
             });
 
@@ -318,7 +318,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _busyText = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(() => BusyText);
             }
         }
 
@@ -328,7 +328,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _isBusy = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(() => IsBusy);
             }
         }     
     }

@@ -24,18 +24,11 @@
             </Grid.ColumnDefinitions>
             <Button IsDefault="True" Style="{DynamicResource SimpleButton}" Content="Save" Grid.Column="3" HorizontalAlignment="Left" Margin="5,386,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding SaveCommand}" />
             <Button IsCancel="True" Style="{DynamicResource SimpleButton}" Content="Cancel" Grid.Column="3" HorizontalAlignment="Left" Margin="96,386,0,0" VerticalAlignment="Top" Width="75" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Command="{Binding CancelCommand}"/>
-            <Label HorizontalAlignment="Left" Margin="22,311,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="Red" Height="58" Width="412" Grid.ColumnSpan="4">
-                <Label.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="TextWrapping" Value="Wrap" />
-                    </Style>
-                </Label.Resources>
-            </Label>
-            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,12,0,0" TextWrapping="NoWrap" Text="{Binding LiveStreamerPath}" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
+            <TextBox Name="LiveStreamerPath" TextChanged="LiveStreamerPath_OnTextChanged" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,12,0,0" TextWrapping="NoWrap" Text="{Binding LiveStreamerPath}" VerticalAlignment="Top" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
             <Label Content="Livestreamer Path:" HorizontalAlignment="Left" Margin="21,12,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
-            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,86,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerPath}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
+            <TextBox Name="MediaPlayerPath" TextChanged="MediaPlayerPath_OnTextChanged" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,86,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerPath}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
             <Label Content="Media Player Path:" Margin="19,80,62,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
-            <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,122,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerArguments}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
+            <TextBox Name="MediaPlayerArgs" TextChanged="MediaPlayerArgs_OnTextChanged" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="118,122,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Text="{Binding MediaPlayerArguments}" Width="275" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Grid.ColumnSpan="3"/>
             <Label Content="Media Player Args:" HorizontalAlignment="Left" Margin="19,116,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
             <Label Content="Preferred Event:" HorizontalAlignment="Left" Margin="37,156,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
             <ComboBox HorizontalAlignment="Left" Margin="118,163,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="275" Grid.ColumnSpan="3" Height="22" FontSize="12" FontWeight="Normal" ItemsSource="{Binding EventTypes}" SelectedValue="{Binding PreferredEventType}" Grid.Column="1"/>
@@ -48,6 +41,13 @@
             <Label Content="Preferred Quality:" HorizontalAlignment="Left" Margin="26,224,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.ColumnSpan="2"/>
             <Label Content="Show Scoring:" HorizontalAlignment="Left" Margin="10,258,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Grid.Column="1"/>
             <CheckBox Content="" Grid.Column="1" HorizontalAlignment="Left" Margin="118,265,0,0" VerticalAlignment="Top" IsChecked="{Binding ShowScoring}"/>
+            <Label Name="ErrorMessage" Content="{Binding ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="118,301,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Foreground="Red" Height="58" Width="272" Grid.ColumnSpan="3" Grid.Column="1">
+                <Label.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                </Label.Resources>
+            </Label>
         </Grid>
     </xctk:BusyIndicator>
 </Window>

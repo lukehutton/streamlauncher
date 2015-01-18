@@ -104,7 +104,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _errorMessage = value;
-                RaisePropertyChanged(() => ErrorMessage);
+                RaisePropertyChanged(() => ErrorMessage);                
             }
         }        
         
@@ -118,7 +118,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _userName = value;
-                RaisePropertyChanged(() => UserName);
+                RaisePropertyChanged(() => UserName);                
             }
         }
 
@@ -156,7 +156,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _busyText = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(() => BusyText);
             }
         }
 
@@ -166,7 +166,7 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _isBusy = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(() => IsBusy);
             }
         }     
     }

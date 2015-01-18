@@ -33,7 +33,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _userName;
         private string _currentUser;
         private string _currentDate;
-        private string _applicationVersion;
+        private string _title;
 
         public RelayCommand LogoutCommand { get; private set; }
 
@@ -104,7 +104,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public void HandleLoginSuccessfulMessage(LoginSuccessfulMessage loginSuccessful)
         {
-            ApplicationVersion = "Version: " + GetPublishedVersion();
+            Title = "Hockey Streams Launcher v" + GetPublishedVersion();
 
             _tokenProvider.Token = loginSuccessful.AuthenticationResult.AuthenticatedUser.Token;
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
@@ -185,12 +185,12 @@ namespace StreamLauncher.Wpf.ViewModel
             _messengerService.Send(new NotificationMessage(this, "ShowMainWindow"));
         }
 
-        public string ApplicationVersion
+        public string Title
         {
-            get { return _applicationVersion; }
+            get { return _title; }
             set
             {
-                _applicationVersion = value;
+                _title = value;
                 RaisePropertyChanged();
             }
         }
