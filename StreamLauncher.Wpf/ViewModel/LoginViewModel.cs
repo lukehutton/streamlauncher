@@ -64,6 +64,7 @@ namespace StreamLauncher.Wpf.ViewModel
                     _userSettings.EncryptedPassword = secureString.EncryptString();
                 }
                 _userSettings.RememberMe = true;
+                _userSettings.Save();
             }
 
             _messengerService.Send(new LoginSuccessfulMessage

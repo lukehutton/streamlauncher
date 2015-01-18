@@ -1,2 +1,3 @@
 * test for a week at separate machine
 * need to check multiple users? ask hs
+* desktop icon
