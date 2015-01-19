@@ -38,9 +38,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private List<HockeyStream> _allHockeyStreams;
 
         public AsyncRelayCommand GetStreamsCommand { get; private set; }        
-        public RelayCommand SettingsCommand { get; private set; }        
-        public RelayCommand PlayHomeFeedCommand { get; private set; }        
-        public RelayCommand PlayAwayFeedCommand { get; private set; }        
+        public RelayCommand SettingsCommand { get; private set; }
+        public AsyncRelayCommand PlayHomeFeedCommand { get; private set; }
+        public AsyncRelayCommand PlayAwayFeedCommand { get; private set; }        
 
         private string _location;
         private string _quality;
@@ -77,8 +77,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new AsyncRelayCommand(HandleGetStreamsCommand);
             SettingsCommand = new RelayCommand(HandleSettingsCommand);
-            PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
-            PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
+            PlayHomeFeedCommand = new AsyncRelayCommand(HandlePlayHomeFeedCommand);
+            PlayAwayFeedCommand = new AsyncRelayCommand(HandlePlayAwayFeedCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
             BindingOperations.CollectionRegistering += BindingOperations_CollectionRegistering;
@@ -128,17 +128,17 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public HockeyStream SelectedStream { get; set; }
 
-        public void HandlePlayHomeFeedCommand()
+        private async Task HandlePlayHomeFeedCommand()
         {
-            Task.Run(() => PlayFeed(SelectedStream.HomeStreamId));
+            await PlayFeed(SelectedStream.HomeStreamId);
         }
 
-        public void HandlePlayAwayFeedCommand()
+        private async Task HandlePlayAwayFeedCommand()
         {
-            Task.Run(() => PlayFeed(SelectedStream.AwayStreamId));
+            await PlayFeed(SelectedStream.AwayStreamId);
         }
 
-        private async void PlayFeed(int streamId)
+        private async Task PlayFeed(int streamId)
         {            
             try
             {

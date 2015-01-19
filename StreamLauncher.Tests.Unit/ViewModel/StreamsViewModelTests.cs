@@ -147,8 +147,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 {
                     Source = @"RTMP:\\somewhere"
                 }));
-                ViewModel.PlayHomeFeedCommand.Execute(null);
-                Thread.Sleep(50);
+                var task = ViewModel.PlayHomeFeedCommand.ExecuteAsync();
+                task.Wait();
             }
 
             [Test]

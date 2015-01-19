@@ -11,8 +11,8 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         AsyncRelayCommand GetStreamsCommand { get; }
         RelayCommand SettingsCommand { get; }
-        RelayCommand PlayHomeFeedCommand { get; }
-        RelayCommand PlayAwayFeedCommand { get; }
+        AsyncRelayCommand PlayHomeFeedCommand { get; }
+        AsyncRelayCommand PlayAwayFeedCommand { get; }
         bool ShowScores { get; set; }
         string ShowScoresText { get; set; }
         HockeyStream SelectedStream { get; set; }
@@ -27,8 +27,6 @@ namespace StreamLauncher.Wpf.ViewModel
         bool IsAuthenticated { get; }
         ObservableCollection<HockeyStream> Streams { get; set; }
         ObservableCollection<StreamLocation> Locations { get; set; }
-        void HandlePlayHomeFeedCommand();
-        void HandlePlayAwayFeedCommand();
         void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage);
     }
 }
