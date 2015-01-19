@@ -37,6 +37,11 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<StreamLocation> _streamLocations;
         private List<HockeyStream> _allHockeyStreams;
 
+        public List<HockeyStream> AllHockeyStreams
+        {
+            get { return _allHockeyStreams; }
+        }
+
         public AsyncRelayCommand GetStreamsCommand { get; private set; }        
         public RelayCommand SettingsCommand { get; private set; }
         public AsyncRelayCommand PlayHomeFeedCommand { get; private set; }
@@ -185,17 +190,16 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
             ShowScores = true;
 
-            HandleGetStreamsCommand();            
+            Task.Run(() => HandleGetStreamsCommand());            
         }
 
-        private Task HandleGetStreamsCommand()
+        private async Task HandleGetStreamsCommand()
         {
             _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."));
 
-            return Task.Factory
-                .StartNew(GetStreams)
-                .ContinueWith(task => { _messengerService.Send(new BusyStatusMessage(false, "")); },
-                    TaskScheduler.FromCurrentSynchronizationContext());
+            await GetStreams();
+
+            _messengerService.Send(new BusyStatusMessage(false, "")); 
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)
@@ -309,7 +313,7 @@ namespace StreamLauncher.Wpf.ViewModel
             }
         }
 
-        private async void GetStreams()
+        private async Task GetStreams()
         {
             lock (_hockeyStreamsLock)
             {
@@ -320,7 +324,8 @@ namespace StreamLauncher.Wpf.ViewModel
             var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
             if (!streams.Any())
             {
-                _dialogService.ShowMessage("We couldn't find any streams.", "Error", "OK");
+                _dialogService.ShowError("We couldn't find any streams.", "Error", "OK");
+                return;
             }
 
             foreach (var hockeyStream in streams)

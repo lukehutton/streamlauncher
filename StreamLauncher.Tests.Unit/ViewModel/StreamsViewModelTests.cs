@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IMessengerService MessengerService;
             protected IViewModelLocator ViewModelLocator;
 
-            protected StreamsViewModel ViewModel;
+            protected IStreamsViewModel ViewModel;
 
             [TestFixtureSetUp]
             public void Given()
@@ -73,8 +74,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                             FavoriteTeam = "The Destroyers"
                         }
                     }
-                });
-                Thread.Sleep(50);
+                });                
             }
 
             [Test]
@@ -106,6 +106,21 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             {
                 Assert.That(ViewModel.SelectedLocation, Is.EqualTo("North America - East"));
             }
+        }    
+        
+        [TestFixture]
+        public class WhenGetStreamsCommandWithNoStreams : GivenAStreamsViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                UserSettings.Expect(x => x.PreferredEventType).Return("NHL");
+                HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
+                    .Return(Task.FromResult<IEnumerable<HockeyStream>>(new List<HockeyStream>()));
+
+                var task = ViewModel.GetStreamsCommand.ExecuteAsync();
+                task.Wait();
+            }          
 
             [Test]
             public void ItShouldSendBusyMessageToGetStreams()
@@ -121,11 +136,63 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             }
 
             [Test]
-            public void ItShouldFilterByEventType()
+            public void ItShouldShowNoStreamsFound()
+            {
+                DialogService.AssertWasCalled(x => x.ShowError("We couldn't find any streams.", "Error", "OK"));
+            }
+        }
+
+        [TestFixture]
+        public class WhenGetStreamsCommandWithSomeStreams : GivenAStreamsViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                ViewModel.SelectedFilterEventType = "NHL";
+                ViewModel.FavouriteTeam = "Favourite";
+                HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
+                    .Return(Task.FromResult<IEnumerable<HockeyStream>>(new List<HockeyStream>()
+                    {
+                        new HockeyStream()
+                        {
+                            HomeTeam = ViewModel.FavouriteTeam
+                        }
+                    }));
+                HockeyStreamFilter.Expect(
+                    x => x.By(Arg<IList<HockeyStream>>.Is.Anything, Arg<EventTypeFilterSpecification>.Is.Anything))
+                    .Return(
+                        new List<HockeyStream>());
+
+                var task = ViewModel.GetStreamsCommand.ExecuteAsync();
+                task.Wait();
+            }          
+
+            [Test]
+            public void ItShouldSendBusyMessageToGetStreams()
+            {
+                MessengerService.AssertWasCalled(
+                    x => x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams...")));
+            }
+
+            [Test]
+            public void ItShouldGetStreams()
+            {
+                HockeyStreamRepository.AssertWasCalled(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything));
+            }
+
+            [Test]
+            public void ItShouldFilter()
             {
                 HockeyStreamFilter.AssertWasCalled(
                     x => x.By(Arg<IList<HockeyStream>>.Is.Anything, Arg<EventTypeFilterSpecification>.Is.Anything),
-                    options => options.Repeat.Once());
+                    options => options.Repeat.Twice());
+            }
+
+            [Test]
+            public void ItShouldMarkFavouriteTeam()
+            {
+                Assert.That(ViewModel.AllHockeyStreams.First().HomeTeam, Is.EqualTo("*" + ViewModel.FavouriteTeam));
+                Assert.That(ViewModel.AllHockeyStreams.First().IsFavorite, Is.True);
             }
         }
 

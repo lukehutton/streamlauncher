@@ -22,6 +22,7 @@ namespace StreamLauncher.Util
 
         public static string MaxStrLen(this string value, int length)
         {
+            if (value.IsNullOrEmpty()) return string.Empty;
             if (value.Length > length)
                 return value.Substring(0, length) + "..";
             return value;
