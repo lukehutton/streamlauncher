@@ -9,6 +9,7 @@ using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Validators;
 using StreamLauncher.Util;
+using StreamLauncher.Wpf.Infrastructure;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -36,7 +37,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private bool _showScoring;
         private string _preferredQuality;
 
-        public RelayCommand SaveCommand { get; private set; }
+        public AsyncRelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
         public SettingsViewModel(
@@ -56,7 +57,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             Locations = new ObservableCollection<StreamLocation>();
 
-            SaveCommand = new RelayCommand(HandleSaveCommand);
+            SaveCommand = new AsyncRelayCommand(HandleSaveCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);                    
         }
 
@@ -169,7 +170,7 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = false;
         }
 
-        private void HandleSaveCommand()
+        private async Task HandleSaveCommand()
         {
             _userSettings.LiveStreamerPath = LiveStreamerPath;
             _userSettings.MediaPlayerPath = MediaPlayerPath;
@@ -185,24 +186,26 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
 
-            SaveSettingsAndLiveStreamerConfigAsync();            
+            await SaveSettingsAndLiveStreamerConfigAsync();            
         }
 
-        private async void SaveSettingsAndLiveStreamerConfigAsync()
+        private Task SaveSettingsAndLiveStreamerConfigAsync()
         {
             BusyText = "Saving settings...";
             IsBusy = true;
 
-            await Task.Run(() =>
-            {
-                _threadSleeper.SleepFor(1);
-                _userSettings.Save();
-                _liveStreamer.SaveConfig();
-            });
-
-            IsBusy = false;
-
-            DialogResult = true;
+            return Task.Factory
+                .StartNew(() =>
+                {
+                    _threadSleeper.SleepFor(1);
+                    _userSettings.Save();
+                    _liveStreamer.SaveConfig();
+                })
+                .ContinueWith(task =>
+                {
+                    IsBusy = false;
+                    DialogResult = true;
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public ObservableCollection<StreamLocation> Locations

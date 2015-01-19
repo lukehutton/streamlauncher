@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.Models;
+using StreamLauncher.Wpf.Infrastructure;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
     public interface ISettingsViewModel
     {
-        RelayCommand SaveCommand { get; }
+        AsyncRelayCommand SaveCommand { get; }
         RelayCommand CancelCommand { get; }
         string PreferredQuality { get; set; }
         List<string> Qualities { get; }

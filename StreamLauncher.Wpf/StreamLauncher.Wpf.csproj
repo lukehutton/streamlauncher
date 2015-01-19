@@ -29,7 +29,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Streams Launcher</ProductName>
     <PublisherName>Streams Launcher</PublisherName>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -121,6 +121,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrastructure\AsyncRelayCommand.cs" />
     <Compile Include="Infrastructure\BindingException.cs" />
     <Compile Include="Infrastructure\BindingExceptionInformation.cs" />
     <Compile Include="Infrastructure\BindingListener.cs" />
