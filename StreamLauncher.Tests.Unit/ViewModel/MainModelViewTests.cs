@@ -231,6 +231,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                             Token = "Secret Token"
                         }
                     }));
+                UserSettingsValidator.Expect(x => x.BrokenRules(UserSettings)).Return(new List<string>());
 
                 ViewModel.HandleAuthenticateMessage(new AuthenticateMessage());                
             }

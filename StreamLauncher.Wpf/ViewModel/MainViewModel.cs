@@ -66,7 +66,7 @@ namespace StreamLauncher.Wpf.ViewModel
             Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
         }
 
-        public async void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
+        public void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
         {
 #if DEBUG
             _userSettings.RememberMe = true;
@@ -86,7 +86,9 @@ namespace StreamLauncher.Wpf.ViewModel
             {
                 password = secureString.ToInsecureString();
             }
-            var result = await _authenticationService.Authenticate(_userSettings.UserName, password);
+            var task = _authenticationService.Authenticate(_userSettings.UserName, password);
+            task.Wait();
+            var result = task.Result;
             if (!result.IsAuthenticated)
             {
                 OpenLoginDialog(_userSettings.UserName, result.ErrorMessage);
