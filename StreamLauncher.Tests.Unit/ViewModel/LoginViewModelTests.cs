@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Controls;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -39,7 +38,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             {
                 ViewModel.UserName = string.Empty;
                 var passwordBox = new PasswordBox {Password = "password"};
-                ViewModel.LoginCommand.Execute(passwordBox);
+                var task = ViewModel.LoginCommand.ExecuteAsync(passwordBox);
+                task.Wait();
             }
 
             [Test]
@@ -63,7 +63,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             {
                 ViewModel.UserName = "User Name";
                 var passwordBox = new PasswordBox {Password = ""};
-                ViewModel.LoginCommand.Execute(passwordBox);
+                var task = ViewModel.LoginCommand.ExecuteAsync(passwordBox);
+                task.Wait();
             }
 
             [Test]
@@ -94,8 +95,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
 
                 ViewModel.UserName = "User Name";
                 var passwordBox = new PasswordBox {Password = "password"};
-                ViewModel.LoginCommand.Execute(passwordBox);
-                Thread.Sleep(50);
+                var task = ViewModel.LoginCommand.ExecuteAsync(passwordBox);
+                task.Wait();
             }
 
             [Test]

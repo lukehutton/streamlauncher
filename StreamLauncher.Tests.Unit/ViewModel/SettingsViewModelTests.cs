@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.MediaPlayers;
@@ -121,9 +120,6 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [SetUp]
             public void When()
             {
-                var context = new SynchronizationContext();
-                SynchronizationContext.SetSynchronizationContext(context);
-
                 UserSettingsValidator.Expect(x => x.BrokenRules(UserSettings)).Return(new List<string>());                
                 var task = ViewModel.SaveCommand.ExecuteAsync(); 
                 task.Wait();

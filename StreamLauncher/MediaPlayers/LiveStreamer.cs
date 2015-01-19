@@ -45,7 +45,7 @@ namespace StreamLauncher.MediaPlayers
 
             _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."));
 
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 _output.Clear();
 

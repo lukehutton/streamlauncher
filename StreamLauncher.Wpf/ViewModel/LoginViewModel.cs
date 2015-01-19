@@ -7,6 +7,7 @@ using StreamLauncher.Repositories;
 using StreamLauncher.Security;
 using StreamLauncher.Services;
 using StreamLauncher.Util;
+using StreamLauncher.Wpf.Infrastructure;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
@@ -22,9 +23,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private string _userName;        
         private string _errorMessage;
         private bool? _dialogResult;
-        private bool _rememberMe;        
+        private bool _rememberMe;
 
-        public RelayCommand<object> LoginCommand { get; private set; }
+        public AsyncRelayCommand<object> LoginCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
 
         public LoginViewModel(IAuthenticationService authenticationService, IUserSettings userSettings, IMessengerService messengerService)
@@ -33,7 +34,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings = userSettings;
             _messengerService = messengerService;
 
-            LoginCommand = new RelayCommand<object>(HandleLoginCommand);
+            LoginCommand = new AsyncRelayCommand<object>(HandleLoginCommand);
             CancelCommand = new RelayCommand(HandleCancelCommand);            
         }
 
@@ -42,7 +43,7 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = false;
         }
 
-        private async void AuthenticateAsync(string userName, string password)
+        private async Task AuthenticateAsync(string userName, string password)
         {
             BusyText = "Logging in...";
             IsBusy = true;
@@ -75,7 +76,7 @@ namespace StreamLauncher.Wpf.ViewModel
             DialogResult = true;             
         }
 
-        private void HandleLoginCommand(object parameter)
+        private async Task HandleLoginCommand(object parameter)
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;
@@ -92,7 +93,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
 
-            AuthenticateAsync(UserName, password);                      
+            await AuthenticateAsync(UserName, password);                      
         }
 
         public string ErrorMessage

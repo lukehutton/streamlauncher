@@ -1,10 +1,11 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using StreamLauncher.Wpf.Infrastructure;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
     public interface ILoginViewModel
     {
-        RelayCommand<object> LoginCommand { get; }
+        AsyncRelayCommand<object> LoginCommand { get; }
         RelayCommand CancelCommand { get; }
         string ErrorMessage { get; set; }
         string UserName { get; set; }

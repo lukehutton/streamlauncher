@@ -189,23 +189,20 @@ namespace StreamLauncher.Wpf.ViewModel
             await SaveSettingsAndLiveStreamerConfigAsync();            
         }
 
-        private Task SaveSettingsAndLiveStreamerConfigAsync()
+        private async Task SaveSettingsAndLiveStreamerConfigAsync()
         {
             BusyText = "Saving settings...";
             IsBusy = true;
 
-            return Task.Factory
-                .StartNew(() =>
-                {
-                    _threadSleeper.SleepFor(1);
-                    _userSettings.Save();
-                    _liveStreamer.SaveConfig();
-                })
-                .ContinueWith(task =>
-                {
-                    IsBusy = false;
-                    DialogResult = true;
-                }, TaskScheduler.FromCurrentSynchronizationContext());
+            await Task.Run(() =>
+            {
+                _threadSleeper.SleepFor(1);
+                _userSettings.Save();
+                _liveStreamer.SaveConfig();
+            });
+
+            IsBusy = false;
+            DialogResult = true;
         }
 
         public ObservableCollection<StreamLocation> Locations
