@@ -16,11 +16,12 @@ using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
 using StreamLauncher.Util;
+using StreamLauncher.Wpf.Infrastructure;
 using StreamLauncher.Wpf.Views;
 
 namespace StreamLauncher.Wpf.ViewModel
 {
-    public class StreamsViewModel : ViewModelBase
+    public class StreamsViewModel : ViewModelBase, IStreamsViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
@@ -36,7 +37,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private ObservableCollection<StreamLocation> _streamLocations;
         private List<HockeyStream> _allHockeyStreams;
 
-        public RelayCommand GetStreamsCommand { get; private set; }        
+        public AsyncRelayCommand GetStreamsCommand { get; private set; }        
         public RelayCommand SettingsCommand { get; private set; }        
         public RelayCommand PlayHomeFeedCommand { get; private set; }        
         public RelayCommand PlayAwayFeedCommand { get; private set; }        
@@ -74,7 +75,7 @@ namespace StreamLauncher.Wpf.ViewModel
             Streams = new ObservableCollection<HockeyStream>();                        
             Locations = new ObservableCollection<StreamLocation>();
 
-            GetStreamsCommand = new RelayCommand(HandleGetStreamsCommand);
+            GetStreamsCommand = new AsyncRelayCommand(HandleGetStreamsCommand);
             SettingsCommand = new RelayCommand(HandleSettingsCommand);
             PlayHomeFeedCommand = new RelayCommand(HandlePlayHomeFeedCommand);            
             PlayAwayFeedCommand = new RelayCommand(HandlePlayAwayFeedCommand);            
@@ -187,13 +188,14 @@ namespace StreamLauncher.Wpf.ViewModel
             HandleGetStreamsCommand();            
         }
 
-        private async void HandleGetStreamsCommand()
+        private Task HandleGetStreamsCommand()
         {
             _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."));
 
-            await Task.Run(() => GetStreams());
-
-            _messengerService.Send(new BusyStatusMessage(false, ""));
+            return Task.Factory
+                .StartNew(GetStreams)
+                .ContinueWith(task => { _messengerService.Send(new BusyStatusMessage(false, "")); },
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)

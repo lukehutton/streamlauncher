@@ -52,6 +52,9 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [TestFixtureSetUp]
             public void When()
             {
+                var context = new SynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(context);
+
                 UserSettings.Expect(x => x.PreferredEventType).Return("NHL");
                 UserSettings.Expect(x => x.PreferredLocation).Return("North America - East");
                 StreamLocationRepository.Expect(x => x.GetLocations()).Return(new List<StreamLocation>());
