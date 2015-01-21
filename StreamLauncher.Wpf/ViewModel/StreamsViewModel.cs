@@ -133,14 +133,14 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public HockeyStream SelectedStream { get; set; }
 
-        private async Task HandlePlayHomeFeedCommand()
+        private Task HandlePlayHomeFeedCommand()
         {
-            await PlayFeed(SelectedStream.HomeStreamId);
+            return Task.Run(() => PlayFeed(SelectedStream.HomeStreamId));
         }
 
-        private async Task HandlePlayAwayFeedCommand()
+        private Task HandlePlayAwayFeedCommand()
         {
-            await PlayFeed(SelectedStream.AwayStreamId);
+            return Task.Run(() => PlayFeed(SelectedStream.AwayStreamId));
         }
 
         private async Task PlayFeed(int streamId)
@@ -190,16 +190,17 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
             ShowScores = true;
 
-            Task.Run(() => HandleGetStreamsCommand());            
+            HandleGetStreamsCommand();            
         }
 
-        private async Task HandleGetStreamsCommand()
+        private Task HandleGetStreamsCommand()
         {
             _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."));
 
-            await GetStreams();
-
-            _messengerService.Send(new BusyStatusMessage(false, "")); 
+            return Task.Run(() => GetStreams()).ContinueWith(task =>
+            {
+                _messengerService.Send(new BusyStatusMessage(false, ""));
+            }, TaskScheduler.FromCurrentSynchronizationContext());              
         }
 
         private void FilterStreams(IEnumerable<HockeyStream> streams)

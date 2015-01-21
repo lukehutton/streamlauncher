@@ -114,6 +114,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [TestFixtureSetUp]
             public void When()
             {
+                var context = new SynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(context);
                 UserSettings.Expect(x => x.PreferredEventType).Return("NHL");
                 HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
                     .Return(Task.FromResult<IEnumerable<HockeyStream>>(new List<HockeyStream>()));
@@ -148,6 +150,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [TestFixtureSetUp]
             public void When()
             {
+                var context = new SynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(context);
                 ViewModel.SelectedFilterEventType = "NHL";
                 ViewModel.FavouriteTeam = "Favourite";
                 HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
