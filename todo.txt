@@ -1,4 +1,3 @@
-* test for a week at separate machine
-* need to check multiple users? ask hs
+* test different environments in vms (win8, etc.)
+* need to check multiple users? ask HS
 * desktop icon
-* Fix remember me
