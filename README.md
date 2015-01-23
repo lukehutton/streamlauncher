@@ -48,13 +48,14 @@ If you are experiencing any issues such as crashes, please report them [here](ht
 How to install
 -------
 1. Install prequisites above: 
-  1. Install Livestreamer bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
-  2. Install VLC Media Player. Tested with v2.1.5.
+  1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
+  2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5.
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
   1. Download Unzip StreamLauncher.Wpf.zip
   2. Unzip to any directory
   3. Run setup.exe
 3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
+  1. VLC Media Player is usually C:\Program Files (x86)\VideoLAN\VLC\vlc.exe or C:\Program Files\VideoLAN\VLC\vlc.exe
 4. Set proper file caching for the media player under Media Player Args:
   1. (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
   2. i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
