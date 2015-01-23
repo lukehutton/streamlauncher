@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
 using StreamLauncher.Wpf.ViewModel;
@@ -103,6 +104,39 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldSetError()
             {                
                 Assert.That(ViewModel.ErrorMessage, Is.EqualTo("Bad login."));
+            }
+        }      
+        
+        [TestFixture, RequiresSTA]
+        public class WhenHandleLoginWithValidAuthAndRememberMeSet : GivenALoginViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                AuthenticationService.Expect(x => x.Authenticate("User Name", "password"))
+                    .Return(Task.FromResult(new AuthenticationResult
+                    {
+                        IsAuthenticated = true                        
+                    }));
+
+                ViewModel.UserName = "User Name";
+                var passwordBox = new PasswordBox {Password = "password"};
+                var task = ViewModel.LoginCommand.ExecuteAsync(passwordBox);
+                task.Wait();
+            }
+
+            [Test]
+            public void ItShouldSetUserSettingsToRemember()
+            {                
+                UserSettings.AssertWasCalled(x => x.UserName = "User Name");
+                UserSettings.AssertWasCalled(x => x.RememberMe = true);
+                UserSettings.AssertWasCalled(x => x.Save());
+            }
+
+            [Test]
+            public void ItShouldSendLoginSuccessfulMessage()
+            {                
+                MessengerService.AssertWasCalled(x => x.Send(Arg<LoginSuccessfulMessage>.Is.Anything));
             }
         }
     }
