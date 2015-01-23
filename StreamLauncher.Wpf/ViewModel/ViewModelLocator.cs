@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Practices.ServiceLocation;
 using StreamLauncher.Wpf.StartUp;
 
@@ -23,12 +22,12 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public ILoginViewModel Login
         {
-            get { return ServiceLocator.Current.GetInstance<LoginViewModel>(Guid.NewGuid().ToString()); }
+            get { return ServiceLocator.Current.GetInstance<LoginViewModel>(); }            
         }
 
         public ISettingsViewModel Settings
         {
-            get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString()); }
+            get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(); }
         }
 
         public static void Cleanup()
