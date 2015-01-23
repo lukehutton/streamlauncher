@@ -26,7 +26,7 @@
             <PasswordBox Name="TxtPassword" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="134.819,91,0,0" VerticalAlignment="Top" Width="225" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
             <Label Content="Password:" Grid.Column="1" HorizontalAlignment="Left" Margin="39.866,89,0,0" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold"/>
             <Image Grid.Column="1" HorizontalAlignment="Center" Margin="39.866,0,76.207,0" VerticalAlignment="Top" Source="..\Images\hockeystreamslogo.png"/>
-            <CheckBox IsChecked="True" Content="Remember me" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,123.05,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.136,0.65" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"/>
+            <CheckBox IsChecked="{Binding RememberMe}" Content="Remember me" Grid.Column="1" HorizontalAlignment="Left" Margin="134.819,123.05,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.136,0.65" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold"/>
             <Label Name="ErrorMessage" Content="{Binding ErrorMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Margin="135,139,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.316,-0.039" FontFamily="Segoe UI" FontSize="12" FontWeight="Normal" Foreground="Red" Height="29" Width="225" Grid.Column="1">
                 <Label.Resources>
                     <Style TargetType="TextBlock">
