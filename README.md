@@ -31,7 +31,7 @@ Prerequisites
 -------------
  - [.NET Framework 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) [Required] 
  - [Microsoft Visual C++ 2008 Redistributable Package](http://www.microsoft.com/en-us/download/details.aspx?id=29) [Required]
- - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/) [Required] 
+ - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) [Required] 
  - One of the following media players:
    - [VLC Media Player](http://www.videolan.org/vlc/index.html) 
    - [MPC-HC](http://mpc-hc.org/)
