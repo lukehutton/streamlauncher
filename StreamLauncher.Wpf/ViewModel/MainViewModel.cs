@@ -68,14 +68,6 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public void HandleAuthenticateMessage(AuthenticateMessage authenticateMessage)
         {
-#if DEBUG
-            _userSettings.RememberMe = true;
-            _userSettings.UserName = ConfigurationManager.AppSettings["hockeystreams.userName"];
-            using (var secureString = ConfigurationManager.AppSettings["hockeystreams.password"].ToSecureString())
-            {
-                _userSettings.EncryptedPassword = secureString.EncryptString();
-            }
-#endif
             if (!_userSettings.RememberMe)
             {
                 OpenLoginDialog();

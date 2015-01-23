@@ -35,7 +35,9 @@ namespace StreamLauncher.Wpf.ViewModel
             _messengerService = messengerService;
 
             LoginCommand = new AsyncRelayCommand<object>(HandleLoginCommand);
-            CancelCommand = new RelayCommand(HandleCancelCommand);            
+            CancelCommand = new RelayCommand(HandleCancelCommand);
+
+            RememberMe = true;
         }
 
         private void HandleCancelCommand()
