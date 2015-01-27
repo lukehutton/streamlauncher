@@ -136,12 +136,6 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             {
                 HockeyStreamRepository.AssertWasCalled(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything));
             }
-
-            [Test]
-            public void ItShouldShowNoStreamsFound()
-            {
-                DialogService.AssertWasCalled(x => x.ShowError("We couldn't find any streams.", "Error", "OK"));
-            }
         }
 
         [TestFixture]

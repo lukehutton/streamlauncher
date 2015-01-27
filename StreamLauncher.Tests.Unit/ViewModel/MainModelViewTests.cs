@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -108,7 +109,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             [Test]
             public void ItShouldSetDate()
             {
-                Assert.That(ViewModel.CurrentDate, Is.EqualTo(DateTime.Now.ToString("dddd, MMMM dd")));
+                Assert.That(ViewModel.CurrentDate, Is.EqualTo(DateTime.Now.ToString("dddd, MMMM dd", CultureInfo.InvariantCulture)));
             }
 
             [Test]

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -104,7 +105,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userName = loginSuccessful.AuthenticationResult.AuthenticatedUser.UserName;
 
             CurrentUser = string.Format("Hi {0}", _userName);
-            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd");
+            CurrentDate = DateTime.Now.ToString("dddd, MMMM dd", CultureInfo.InvariantCulture);
 
             if (_userSettings.IsFirstRun)
             {

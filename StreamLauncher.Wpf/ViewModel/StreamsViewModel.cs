@@ -138,47 +138,75 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private Task HandlePlayHomeFeedCommand()
         {
-            return Task.Run(() => PlayFeed(SelectedStream.HomeStreamId));
+            var context = TaskScheduler.FromCurrentSynchronizationContext();
+            return
+                Task.Run(
+                    () =>
+                    {
+                        PlayFeed(SelectedStream.HomeStreamId)
+                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
+                                context);
+                    });       
         }
 
         private Task HandlePlayAwayFeedCommand()
         {
-            return Task.Run(() => PlayFeed(SelectedStream.AwayStreamId));
+            var context = TaskScheduler.FromCurrentSynchronizationContext();
+            return
+                Task.Run(
+                    () =>
+                    {
+                        PlayFeed(SelectedStream.AwayStreamId)
+                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
+                                context);
+                    });  
+        }
+
+        private void HandleExceptionWhenPlayingIfAny(Task task)
+        {
+            if (!task.IsFaulted) return;
+            Exception ex = task.Exception;
+            if (ex is AggregateException && ex.InnerException != null)
+            {
+                ex = ex.InnerException;
+                if (ex is StreamNotFoundException)
+                {
+                    _dialogService.ShowError(string.Format("Live feed for {0} at {1} not found",
+                        SelectedStream.AwayTeam,
+                        SelectedStream.HomeTeam), "Error", "OK");
+                }
+                else if (ex is HockeyStreamsApiBadRequest)
+                {
+                    _dialogService.ShowError("You must have PREMIUM membership to use this app.", "Error", "OK");
+                }
+                else if (ex is LiveStreamerExecutableNotFound)
+                {
+                    ShowSettingsDialog("Livestreamer Path does not exist.");
+                }
+                else if (ex is MediaPlayerNotFound)
+                {
+                    ShowSettingsDialog("Media Player Path does not exist.");
+                }
+                else
+                {
+                    Log.Error("An exception occurred while playing stream.", ex);
+                }
+            }
         }
 
         private async Task PlayFeed(int streamId)
-        {            
-            try
-            {
-                var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
+        {
+            var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
 
-                Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
+            Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
 
-                var stream = await _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
+            var stream = await _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
 
-                Messenger.Default.Send(new BusyStatusMessage(false, ""));
+            Messenger.Default.Send(new BusyStatusMessage(false, ""));
 
-                var game = string.Format("{0} at {1}", SelectedStream.AwayTeam, SelectedStream.HomeTeam);
-                _liveStreamer.Play(game, stream.Source, quality);
-            }
-            catch (StreamNotFoundException)
-            {
-                _dialogService.ShowError(string.Format("Live feed for {0} at {1} not found",
-                    SelectedStream.AwayTeam,
-                    SelectedStream.HomeTeam), "Error", "OK");
-            }
-            catch (HockeyStreamsApiBadRequest)
-            {
-                _dialogService.ShowError("You must have PREMIUM membership to use this app.", "Error", "OK");
-            }
-            catch (LiveStreamerExecutableNotFound)
-            {
-                ShowSettingsDialog("Livestreamer Path does not exist.");
-            }
-            catch (MediaPlayerNotFound)
-            {
-                ShowSettingsDialog("Media Player Path does not exist.");
-            }
+            var game = string.Format("{0} at {1}", SelectedStream.AwayTeam, SelectedStream.HomeTeam);
+
+            _liveStreamer.Play(game, stream.Source, quality);
         }
 
         public void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
@@ -202,6 +230,24 @@ namespace StreamLauncher.Wpf.ViewModel
 
             return Task.Run(() => GetStreams()).ContinueWith(task =>
             {
+                if (task.IsFaulted)
+                {
+                    Exception ex = task.Exception;
+                    if (ex is AggregateException)
+                    {
+                        while (ex.InnerException != null)
+                        {
+                            ex = ex.InnerException;
+                            const string message = "An error occurred while getting live streams.";
+                            Log.Error(message, ex);
+                            _dialogService.ShowError(ex, message, "OK");
+                        }
+                    }
+                }
+                else if (!Streams.Any())
+                {
+                    _dialogService.ShowMessage("We couldn't find any streams.", "Streams not found", "OK");
+                }                                 
                 _messengerService.Send(new BusyStatusMessage(false, ""));
             }, TaskScheduler.FromCurrentSynchronizationContext());              
         }
@@ -319,49 +365,40 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private async Task GetStreams()
         {
-
-            try
+            lock (_hockeyStreamsLock)
             {
+                Streams.Clear();
+            }
+                
+            var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
+            var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
+            if (!streams.Any())
+            {
+                return;
+            }
+
+            foreach (var hockeyStream in streams)
+            {
+                if (hockeyStream.HomeTeam == FavouriteTeam)
+                {
+                    hockeyStream.IsFavorite = true;
+                    hockeyStream.HomeTeam = "*" + hockeyStream.HomeTeam;
+                }
+                else if (hockeyStream.AwayTeam == FavouriteTeam)
+                {
+                    hockeyStream.IsFavorite = true;
+                    hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
+                }
+
                 lock (_hockeyStreamsLock)
                 {
-                    Streams.Clear();
+                    Streams.Add(hockeyStream);
                 }
-
-                var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
-                var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
-                if (!streams.Any())
-                {
-                    _dialogService.ShowError("We couldn't find any streams.", "Error", "OK");
-                    return;
-                }
-
-                foreach (var hockeyStream in streams)
-                {
-                    if (hockeyStream.HomeTeam == FavouriteTeam)
-                    {
-                        hockeyStream.IsFavorite = true;
-                        hockeyStream.HomeTeam = "*" + hockeyStream.HomeTeam;
-                    }
-                    else if (hockeyStream.AwayTeam == FavouriteTeam)
-                    {
-                        hockeyStream.IsFavorite = true;
-                        hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
-                    }
-
-                    lock (_hockeyStreamsLock)
-                    {
-                        Streams.Add(hockeyStream);
-                    }
-                }
-
-                _allHockeyStreams = Streams.ToList();
-
-                FilterStreams(_allHockeyStreams);
             }
-            catch (Exception e)
-            {
-                Log.Error("Exception occurred while trying to get streams.", e);
-            }
+
+            _allHockeyStreams = Streams.ToList();
+
+            FilterStreams(_allHockeyStreams);
         }
 
         private void GetLocations()

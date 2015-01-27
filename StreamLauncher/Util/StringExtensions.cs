@@ -27,6 +27,7 @@ namespace StreamLauncher.Util
                 return value.Substring(0, length) + "..";
             return value;
         }
+
         public static string Repeat(this string value, int times)
         {
             if (!string.IsNullOrEmpty(value))

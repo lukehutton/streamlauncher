@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using RestSharp;
 using StreamLauncher.Api;
@@ -20,7 +21,7 @@ namespace StreamLauncher.Repositories
         public IEnumerable<Score> GetScores()
         {            
             var request = new RestRequest { Resource = "Scores" };
-            request.AddParameter("date", DateTime.Now.ToString("MM/dd/yyyy"), ParameterType.GetOrPost);
+            request.AddParameter("date", DateTime.Now.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture), ParameterType.GetOrPost);
             var scoresResponseDto = _hockeyStreamsApi.Execute<ScoresResponseDto>(request);
             return MapScoreDtoToScores(scoresResponseDto);        
         }

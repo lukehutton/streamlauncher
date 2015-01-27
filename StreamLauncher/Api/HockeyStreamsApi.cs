@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -8,6 +7,7 @@ using RestSharp;
 using RestSharp.Deserializers;
 using StreamLauncher.Dtos;
 using StreamLauncher.Exceptions;
+using StreamLauncher.Util;
 
 namespace StreamLauncher.Api
 {
@@ -21,16 +21,11 @@ namespace StreamLauncher.Api
         {
             var client = new RestClient { BaseUrl = new Uri(BaseUrl) };            
 
-            var parameters = new StringBuilder();
-            foreach (var parameter in request.Parameters.Where(parameter => parameter.Name != "password" && parameter.Name != "token"))
-            {
-                parameters.Append(parameter + "&");
-            }            
-            Log.InfoFormat("Request {0}/{1}?{2}", client.BaseUrl, request.Resource, parameters.ToString().TrimEnd('&'));
-            
+            LogRequest(request, client);
+
             var response = client.Execute<T>(request);
             
-            Log.Info(string.Format("Response status: {0}, Response content: {1}", response.StatusCode, response.Content));
+            LogResponse(response);
 
             if (response.ErrorException != null)
             {
@@ -47,6 +42,28 @@ namespace StreamLauncher.Api
                 throw new ApplicationException(string.Format("Error. Api returned {0} status", response.StatusCode));
             }
             return response.Data; // 200 OK
+        }
+
+        private static void LogResponse<T>(IRestResponse<T> response) where T : new()
+        {
+            Log.Info(string.Format("Response status: {0}, Response content: {1}", response.StatusCode, response.Content));
+        }
+
+        private static void LogRequest(IRestRequest request, IRestClient client)
+        {
+            var parameters = new StringBuilder();
+            foreach (var parameter in request.Parameters)
+            {
+                if (parameter.Name.ToLower() == "password")
+                {
+                    parameters.AppendFormat("password={0}&", "*".Repeat(Convert.ToString(parameter.Value).Length));
+                }
+                else
+                {
+                    parameters.Append(parameter + "&");
+                }
+            }
+            Log.InfoFormat("Request {0}{1}?{2}", client.BaseUrl, request.Resource, parameters.ToString().TrimEnd('&'));
         }
     }
 

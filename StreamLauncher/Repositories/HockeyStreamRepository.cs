@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace StreamLauncher.Repositories
             var dateParameter = new Parameter
             {
                 Name = "date",
-                Value = date.ToString("MM/dd/yyyy"),
+                Value = date.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
                 Type = ParameterType.GetOrPost
             };
             request.AddParameter(dateParameter);
