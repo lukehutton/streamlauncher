@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
@@ -23,6 +25,7 @@ namespace StreamLauncher.MediaPlayers
         private readonly IDialogService _dialogService;
         private readonly IMessengerService _messengerService;
         private readonly IFileHelper _fileHelper;
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public LiveStreamer(IUserSettings userSettings, IDialogService dialogService, IMessengerService messengerService, IFileHelper fileHelper)
         {
@@ -35,12 +38,18 @@ namespace StreamLauncher.MediaPlayers
         public void Play(string game, string streamSource, Quality quality)
         {
             if (!_fileHelper.FileExists(_userSettings.LiveStreamerPath))
-            {
-                throw new LiveStreamerExecutableNotFound();
+            {                
+                var message = string.Format("Live Streamer at path {0} not found.", _userSettings.LiveStreamerPath);
+                var exception = new LiveStreamerExecutableNotFound(message);        
+                Log.Error(exception.Message, exception);
+                throw exception;
             }
             if (!_fileHelper.FileExists(_userSettings.MediaPlayerPath))
             {
-                throw new MediaPlayerNotFound();
+                var message = string.Format("Media Player at path {0} not found.", _userSettings.MediaPlayerPath);
+                var exception = new MediaPlayerNotFound(message);
+                Log.Error(exception.Message, exception);
+                throw exception;
             }
 
             _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."));
@@ -56,7 +65,7 @@ namespace StreamLauncher.MediaPlayers
                     streamSource,
                     qualityString,
                     _userSettings.RtmpTimeOutInSeconds);
-
+                Log.InfoFormat("Attempting to play stream {0} with cmd.exe {1} using media player at {2}.", game, arguments, _userSettings.MediaPlayerPath);
                 using (var process = new ProcessUtil("cmd.exe", arguments))
                 {
                     process.Start();
@@ -65,7 +74,9 @@ namespace StreamLauncher.MediaPlayers
                     process.Wait();
                     if (process.ExitCode != 0 || _output.ToString().Contains("error"))
                     {
-                        throw new LiveStreamerError(game);
+                        var exception = new LiveStreamerError(game);
+                        Log.Error(string.Format("Could not play stream {0}", game), exception);
+                        throw exception;
                     }
                 }
             }).ContinueWith(o => MyErrorHandler(o.Exception), TaskContinuationOptions.OnlyOnFaulted);
@@ -87,14 +98,16 @@ namespace StreamLauncher.MediaPlayers
             configBuilder.AppendLine("player-no-close");
 
             File.WriteAllText(livestreamerConfig, configBuilder.ToString());
+            Log.InfoFormat("Saved Live Streamer configuration at {0}", livestreamerConfig);
         }
 
         private void MyErrorHandler(AggregateException exception)
         {         
             if (exception.InnerException is LiveStreamerError)
             {
-                _dialogService.ShowMessage(
-                    string.Format("No live feed for {0} available.", exception.InnerException.Message), "Error", "OK");                
+                var message = string.Format("No live feed for {0} available.", exception.InnerException.Message);
+                Log.Error(message);
+                _dialogService.ShowMessage(message, "Error", "OK");
             }
             _messengerService.Send(new BusyStatusMessage(false, ""));
         }
@@ -105,6 +118,7 @@ namespace StreamLauncher.MediaPlayers
             {
                 if (e.Data.Contains("Starting player"))
                 {
+                    Log.Info("Stream started playing.");
                     _messengerService.Send(new BusyStatusMessage(false, ""));
                 }
                 _output.AppendLine(e.Data);
