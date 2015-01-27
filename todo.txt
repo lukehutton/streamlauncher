@@ -1,3 +1,7 @@
-* test different environments in vms (win8, etc.)
-* need to check multiple users? ask HS
-* desktop icon
+* Test different environments in vms (win8, etc.)
+* Need to check multiple users? ask HS
+* On-Demand with Date picker
+* Play live from beginning
+* Game stats/roster/preview
+* Resizable window
+* Auto-update app via clickonce
