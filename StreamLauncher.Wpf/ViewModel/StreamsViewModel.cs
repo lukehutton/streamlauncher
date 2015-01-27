@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using log4net;
 using StreamLauncher.Constants;
 using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
@@ -31,6 +33,7 @@ namespace StreamLauncher.Wpf.ViewModel
         private readonly IDialogService _dialogService;
         private readonly IViewModelLocator _viewModelLocator;
         private readonly IMessengerService _messengerService;
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly object _hockeyStreamsLock = new object();
         private ObservableCollection<HockeyStream> _hockeyStreams;
@@ -316,41 +319,49 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private async Task GetStreams()
         {
-            lock (_hockeyStreamsLock)
-            {
-                Streams.Clear();
-            }
 
-            var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
-            var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
-            if (!streams.Any())
+            try
             {
-                _dialogService.ShowError("We couldn't find any streams.", "Error", "OK");
-                return;
-            }
-
-            foreach (var hockeyStream in streams)
-            {
-                if (hockeyStream.HomeTeam == FavouriteTeam)
-                {
-                    hockeyStream.IsFavorite = true;
-                    hockeyStream.HomeTeam = "*" + hockeyStream.HomeTeam;
-                }
-                else if (hockeyStream.AwayTeam == FavouriteTeam)
-                {
-                    hockeyStream.IsFavorite = true;
-                    hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
-                }
-
                 lock (_hockeyStreamsLock)
                 {
-                    Streams.Add(hockeyStream);
+                    Streams.Clear();
                 }
+
+                var hockeyStreams = await _hockeyStreamRepository.GetLiveStreams(DateTime.Now);
+                var streams = hockeyStreams as IList<HockeyStream> ?? hockeyStreams.ToList();
+                if (!streams.Any())
+                {
+                    _dialogService.ShowError("We couldn't find any streams.", "Error", "OK");
+                    return;
+                }
+
+                foreach (var hockeyStream in streams)
+                {
+                    if (hockeyStream.HomeTeam == FavouriteTeam)
+                    {
+                        hockeyStream.IsFavorite = true;
+                        hockeyStream.HomeTeam = "*" + hockeyStream.HomeTeam;
+                    }
+                    else if (hockeyStream.AwayTeam == FavouriteTeam)
+                    {
+                        hockeyStream.IsFavorite = true;
+                        hockeyStream.AwayTeam = "*" + hockeyStream.AwayTeam;
+                    }
+
+                    lock (_hockeyStreamsLock)
+                    {
+                        Streams.Add(hockeyStream);
+                    }
+                }
+
+                _allHockeyStreams = Streams.ToList();
+
+                FilterStreams(_allHockeyStreams);
             }
-
-            _allHockeyStreams = Streams.ToList();
-
-            FilterStreams(_allHockeyStreams);
+            catch (Exception e)
+            {
+                Log.Error("Exception occurred while trying to get streams.", e);
+            }
         }
 
         private void GetLocations()

@@ -5,3 +5,4 @@
 * Game stats/roster/preview
 * Resizable window
 * Auto-update app via clickonce
+* Auto refresh of streams

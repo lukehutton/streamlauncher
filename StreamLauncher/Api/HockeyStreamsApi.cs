@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Text;
+using log4net;
 using RestSharp;
 using RestSharp.Deserializers;
 using StreamLauncher.Dtos;
@@ -8,15 +12,26 @@ using StreamLauncher.Exceptions;
 namespace StreamLauncher.Api
 {
     public class BaseHockeyStreamsApi
-    {     
+    {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         const string BaseUrl = "https://api.hockeystreams.com";
 
         public T Execute<T>(RestRequest request) where T : new()
         {
-            var client = new RestClient { BaseUrl = new Uri(BaseUrl) };
+            var client = new RestClient { BaseUrl = new Uri(BaseUrl) };            
+
+            var parameters = new StringBuilder();
+            foreach (var parameter in request.Parameters.Where(parameter => parameter.Name != "password" && parameter.Name != "token"))
+            {
+                parameters.Append(parameter + "&");
+            }            
+            Log.InfoFormat("Request {0}/{1}?{2}", client.BaseUrl, request.Resource, parameters.ToString().TrimEnd('&'));
             
             var response = client.Execute<T>(request);
             
+            Log.Info(string.Format("Response status: {0}, Response content: {1}", response.StatusCode, response.Content));
+
             if (response.ErrorException != null)
             {
                 const string message = "Error retrieving response. Check inner details for more info.";
