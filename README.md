@@ -44,6 +44,7 @@ You are more than welcome to take the code provided and compile a version of it 
 Issues
 -------
 If you are experiencing any issues such as crashes, please report them [here](https://github.com/lukehutton/streamlauncher/issues/new).
+Please make sure to include the logs found at %APPDATA%\streamlauncher (usually C:\Users\[You]\AppData\Roaming\streamlauncher)
 
 How to install
 -------
