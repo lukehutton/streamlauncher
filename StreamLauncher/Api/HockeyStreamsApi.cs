@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -63,7 +64,8 @@ namespace StreamLauncher.Api
                     parameters.Append(parameter + "&");
                 }
             }
-            Log.InfoFormat("Request {0}{1}?{2}", client.BaseUrl, request.Resource, parameters.ToString().TrimEnd('&'));
+            Log.InfoFormat("Request {0}{1}{2}{3}", client.BaseUrl, request.Resource,
+                request.Parameters.Any() ? "?" : string.Empty, parameters.ToString().TrimEnd('&'));
         }
     }
 
