@@ -47,6 +47,8 @@ If you are experiencing any issues such as crashes, please report them [here](ht
 
 How to install
 -------
+*Tested on both Windows 7 and Windows 8.1 x64 based systems.
+
 1. Install prequisites above: 
   1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
   2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5.
@@ -54,6 +56,7 @@ How to install
   1. Download StreamLauncher.Wpf.zip
   2. Unzip to any directory
   3. Run setup.exe
+  4. If installing on Windows 8 and smartscreen prompt is displayed during installation, click More Info -> Run Anyway.
 3. Set the correct paths in the Settings dialog for Livestreamer and media player installations.
   1. VLC Media Player is usually C:\Program Files (x86)\VideoLAN\VLC\vlc.exe or C:\Program Files\VideoLAN\VLC\vlc.exe
 4. Set proper file caching for the media player under Media Player Args:
