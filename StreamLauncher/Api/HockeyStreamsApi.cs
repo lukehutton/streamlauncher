@@ -24,6 +24,8 @@ namespace StreamLauncher.Api
 
             LogRequest(request, client);
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             var response = client.Execute<T>(request);
             
             LogResponse(response);
