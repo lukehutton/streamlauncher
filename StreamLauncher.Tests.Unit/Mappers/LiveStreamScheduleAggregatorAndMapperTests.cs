@@ -38,6 +38,18 @@ namespace StreamLauncher.Tests.Unit.Mappers
                         IsPlaying = "0",
                         Event = "NHL"
                     },
+                    new LiveStreamDto // unknown feed type
+                    {
+                        Id = "34189",           
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "NBC Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    },
                     new LiveStreamDto // single home feed only
                     {
                         Id = "34181",           
@@ -129,9 +141,9 @@ namespace StreamLauncher.Tests.Unit.Mappers
             }
 
             [Test]
-            public void ItShouldReturnFiveHockeyStreams()
+            public void ItShouldReturnSixHockeyStreams()
             {
-                Assert.That(_hockeyStreams.Count(), Is.EqualTo(5));
+                Assert.That(_hockeyStreams.Count(), Is.EqualTo(6));
             }
 
             [Test]
@@ -161,6 +173,8 @@ namespace StreamLauncher.Tests.Unit.Mappers
             {                
                 Assert.That(_hockeyStreams.ElementAt(3).HomeStreamId, Is.EqualTo(34180));
                 Assert.That(_hockeyStreams.ElementAt(3).AwayStreamId, Is.EqualTo(0));
+                Assert.That(_hockeyStreams.ElementAt(4).HomeStreamId, Is.EqualTo(34189));
+                Assert.That(_hockeyStreams.ElementAt(4).AwayStreamId, Is.EqualTo(0));
             }
 
             [Test]
@@ -173,8 +187,8 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedsThatHaveOnlyHomeFeeds()
             {                
-                Assert.That(_hockeyStreams.ElementAt(4).HomeStreamId, Is.EqualTo(34181));
-                Assert.That(_hockeyStreams.ElementAt(4).AwayStreamId, Is.EqualTo(0));
+                Assert.That(_hockeyStreams.ElementAt(5).HomeStreamId, Is.EqualTo(34181));
+                Assert.That(_hockeyStreams.ElementAt(5).AwayStreamId, Is.EqualTo(0));
             }
         }
     }

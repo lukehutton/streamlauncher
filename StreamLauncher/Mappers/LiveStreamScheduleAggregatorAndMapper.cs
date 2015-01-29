@@ -22,7 +22,11 @@ namespace StreamLauncher.Mappers
             {
                 var homeFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Home Feed");
                 var awayFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Away Feed");
-                var noFeedType = schedule.Find(x => x.HomeTeam == team && x.FeedType == null);
+                var noFeedType =
+                    schedule.Find(
+                        x =>
+                            x.HomeTeam == team &&
+                            (x.FeedType == null || (x.FeedType != "Home Feed" && x.FeedType != "Away Feed")));
                 var stream = MapHockeyStream(homeFeed, awayFeed, noFeedType);
                 if (stream != null)
                 {
