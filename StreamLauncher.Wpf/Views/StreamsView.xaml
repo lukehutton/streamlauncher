@@ -90,7 +90,7 @@
                 <DataGridTemplateColumn CanUserResize="False" Header="Score" MaxWidth="50" MinWidth="50" Visibility="{Binding Data.ShowScores, Converter={StaticResource VisibilityConverter}, Source={StaticResource Proxy}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
