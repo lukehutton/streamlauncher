@@ -87,14 +87,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 MediaPlayerPath = _userSettings.MediaPlayerPath;
             }
 
-            if (_userSettings.MediaPlayerArguments.IsNullOrEmpty())
-            {
-                MediaPlayerArguments = Vlc.DefaultArgs;
-            }
-            else
-            {
-                MediaPlayerArguments = _userSettings.MediaPlayerArguments;
-            }
+            MediaPlayerArguments = _userSettings.MediaPlayerArguments ?? Vlc.DefaultArgs;
 
             PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
             PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
