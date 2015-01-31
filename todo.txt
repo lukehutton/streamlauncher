@@ -7,3 +7,5 @@
 * Auto-update app via clickonce
 * Auto refresh of streams
 * Set level of api logging to DEBUG and make logging level into user setting
+* more than 2 feeds - either show play button with dialog with feeds (double click plays too), put list of feeds with team name when home or way feed and feed name with unknown feed type, show is busy on play feeds dialog?
+  OR show play feeds button and then show dialog

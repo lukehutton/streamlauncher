@@ -203,6 +203,7 @@
   <ItemGroup>
     <Resource Include="Images\hs16x16.png" />
     <Resource Include="Images\hs40x40.png" />
+    <Resource Include="Views\playbutton.PNG" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StreamLauncher\StreamLauncher.csproj">
@@ -292,6 +293,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="hsicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\play64x64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

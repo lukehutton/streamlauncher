@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
         <Image x:Key="SettingsIcon" Source="../Images/Icons/settings64x64.png" />
+		<Image x:Key="PlayIcon" Source="../Images/Icons/play64x64.png" />
         <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
         <converters:IsFeedEnabled x:Key="IsFeedEnabled" />
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
@@ -28,7 +29,7 @@
             </ComboBox>
             <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="75.22,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="188.207" Height="21.96" FontSize="13.333" FontWeight="Bold" ItemsSource="{Binding Path=Locations}" DisplayMemberPath="Location" SelectedValue="{Binding SelectedLocation}" SelectedValuePath="Location">
             </ComboBox>
-            <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="367.433,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="215" Height="21.96" FontSize="13.333" FontWeight="Bold" SelectedIndex="0" ItemsSource="{Binding Path=Qualities}" SelectedValue="{Binding SelectedQuality}" />
+            <ComboBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="343.433,481.38,0,0" Grid.RowSpan="2" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="215" Height="21.96" FontSize="13.333" FontWeight="Bold" SelectedIndex="0" ItemsSource="{Binding Path=Qualities}" SelectedValue="{Binding SelectedQuality}" />
             <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding GetStreamsCommand}" />
             <Button Grid.ColumnSpan="2" Content="{StaticResource SettingsIcon}" HorizontalAlignment="Left" Margin="783,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding SettingsCommand}" />
             <DataGrid Name="StreamsDataGrid" SelectionMode="Single" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Streams, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStream, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True">
@@ -52,17 +53,17 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Home" Width="148" MaxWidth="148" MinWidth="148">
+                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Home" Width="191" MaxWidth="191" MinWidth="191">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                                <Label Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Away" Width="148" MaxWidth="148" MinWidth="148">
+                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Away" Width="191" MaxWidth="191" MinWidth="191">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                                <Label Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -73,63 +74,36 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Start Time" MaxWidth="93" MinWidth="93">
+                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Start Time" Width="120" MaxWidth="120" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding StartTime}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                                <Label Content="{Binding StartTime}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Period" Width="69" MaxWidth="69" MinWidth="69">
+                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Period" Width="94" MaxWidth="94" MinWidth="94">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold" />
+                                <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" Header="Score" MaxWidth="50" MinWidth="50" Visibility="{Binding Data.ShowScores, Converter={StaticResource VisibilityConverter}, Source={StaticResource Proxy}}">
+                <DataGridTemplateColumn CanUserResize="False" Header="Score" Width="70" MaxWidth="70" MinWidth="70" Visibility="{Binding Data.ShowScores, Converter={StaticResource VisibilityConverter}, Source={StaticResource Proxy}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Width="78" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayHomeFeedText}" Command="{Binding Path=DataContext.PlayHomeFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold">
-                                    <Button.IsEnabled>
-                                        <MultiBinding Converter="{StaticResource IsFeedEnabled}">
-                                            <Binding Path="IsPlaying" />
-                                            <Binding Path="PlayHomeFeedText" />
-                                        </MultiBinding>
-                                    </Button.IsEnabled>
-                                </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Width="78" Padding="5,2" HorizontalAlignment="Center" Style="{DynamicResource SimpleButton}" Content="{Binding PlayAwayFeedText}" Command="{Binding Path=DataContext.PlayAwayFeedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" FontFamily="Segoe UI" FontSize="12" FontWeight="Bold">
-                                    <Button.IsEnabled>
-                                        <MultiBinding Converter="{StaticResource IsFeedEnabled}">
-                                            <Binding Path="IsPlaying" />
-                                            <Binding Path="PlayAwayFeedText" />
-                                        </MultiBinding>
-                                    </Button.IsEnabled>
-                                </Button>
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="19" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <Image Grid.ColumnSpan="2" Margin="635,467,0,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
+            <Image Grid.ColumnSpan="2" Margin="563.433,467,59,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
             <Label Grid.ColumnSpan="2" Content="Location:" HorizontalAlignment="Left" Margin="0,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
-            <Label Grid.ColumnSpan="2" Content="Quality:" HorizontalAlignment="Left" Margin="301.079,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
+            <Label Grid.ColumnSpan="2" Content="Quality:" HorizontalAlignment="Left" Margin="277.079,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
             <Label Grid.ColumnSpan="2" Content="Filter Event:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
             <ComboBox HorizontalAlignment="Left" Margin="398.716,16.66,0,0" Style="{DynamicResource SimpleComboBox}" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Height="21.96" Grid.RowSpan="2" FontFamily="Segoe UI" FontSize="13.333" FontWeight="Bold" ItemsSource="{Binding ActiveStates}" SelectedValue="{Binding SelectedFilterActiveState}" />
             <Label Grid.ColumnSpan="2" Content="Filter Active:" HorizontalAlignment="Left" Margin="301.079,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />
             <ToggleButton Grid.ColumnSpan="2" Content="{Binding ShowScoresText}" HorizontalAlignment="Left" Margin="706,17,0,0" Grid.RowSpan="2" VerticalAlignment="Top" IsChecked="{Binding ShowScores}"/>
+            <Button Grid.ColumnSpan="2" Content="{StaticResource PlayIcon}" HorizontalAlignment="Left" Margin="842,469,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding SettingsCommand}" />
         </Grid>
 </UserControl>
