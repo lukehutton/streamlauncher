@@ -10,9 +10,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
 using StreamLauncher.Constants;
-using StreamLauncher.Exceptions;
 using StreamLauncher.Filters;
-using StreamLauncher.MediaPlayers;
 using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
@@ -27,8 +25,7 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         private readonly IHockeyStreamRepository _hockeyStreamRepository;
         private readonly IHockeyStreamFilter _hockeyStreamFilter;
-        private readonly IStreamLocationRepository _streamLocationRepository;
-        private readonly ILiveStreamer _liveStreamer;
+        private readonly IStreamLocationRepository _streamLocationRepository;        
         private readonly IUserSettings _userSettings;
         private readonly IDialogService _dialogService;
         private readonly IViewModelLocator _viewModelLocator;
@@ -47,8 +44,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public AsyncRelayCommand GetStreamsCommand { get; private set; }        
         public RelayCommand SettingsCommand { get; private set; }
-        public AsyncRelayCommand PlayHomeFeedCommand { get; private set; }
-        public AsyncRelayCommand PlayAwayFeedCommand { get; private set; }        
+        public RelayCommand ChooseFeedsCommand { get; private set; }        
 
         private string _location;
         private string _quality;
@@ -63,8 +59,7 @@ namespace StreamLauncher.Wpf.ViewModel
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
             IHockeyStreamFilter hockeyStreamFilter,
-            IStreamLocationRepository streamLocationRepository,
-            ILiveStreamer liveStreamer,
+            IStreamLocationRepository streamLocationRepository,            
             IUserSettings userSettings,
             IDialogService dialogService,
             IViewModelLocator viewModelLocator,
@@ -73,8 +68,7 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
-            _streamLocationRepository = streamLocationRepository;
-            _liveStreamer = liveStreamer;
+            _streamLocationRepository = streamLocationRepository;            
             _userSettings = userSettings;
             _dialogService = dialogService;
             _viewModelLocator = viewModelLocator;
@@ -85,8 +79,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetStreamsCommand = new AsyncRelayCommand(HandleGetStreamsCommand);
             SettingsCommand = new RelayCommand(HandleSettingsCommand);
-            PlayHomeFeedCommand = new AsyncRelayCommand(HandlePlayHomeFeedCommand);
-            PlayAwayFeedCommand = new AsyncRelayCommand(HandlePlayAwayFeedCommand);            
+            ChooseFeedsCommand = new RelayCommand(HandleChooseFeedsCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
             BindingOperations.CollectionRegistering += BindingOperations_CollectionRegistering;
@@ -136,78 +129,13 @@ namespace StreamLauncher.Wpf.ViewModel
 
         public HockeyStream SelectedStream { get; set; }
 
-        private Task HandlePlayHomeFeedCommand()
-        {
-            var context = TaskScheduler.FromCurrentSynchronizationContext();
-            return
-                Task.Run(
-                    () =>
-                    {
-                        PlayFeed(SelectedStream.HomeStreamId)
-                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
-                                context);
-                    });       
-        }
-
-        private Task HandlePlayAwayFeedCommand()
-        {
-            var context = TaskScheduler.FromCurrentSynchronizationContext();
-            return
-                Task.Run(
-                    () =>
-                    {
-                        PlayFeed(SelectedStream.AwayStreamId)
-                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
-                                context);
-                    });  
-        }
-
-        private void HandleExceptionWhenPlayingIfAny(Task task)
-        {
-            if (!task.IsFaulted) return;
-            Exception ex = task.Exception;
-            if (ex is AggregateException && ex.InnerException != null)
-            {
-                ex = ex.InnerException;
-                if (ex is StreamNotFoundException)
-                {
-                    _dialogService.ShowError(string.Format("Live feed for {0} at {1} not found",
-                        SelectedStream.AwayTeam,
-                        SelectedStream.HomeTeam), "Error", "OK");
-                }
-                else if (ex is HockeyStreamsApiBadRequest)
-                {
-                    _dialogService.ShowError("You must have PREMIUM membership to use this app.", "Error", "OK");
-                }
-                else if (ex is LiveStreamerExecutableNotFound)
-                {
-                    ShowSettingsDialog("Livestreamer Path does not exist.");
-                }
-                else if (ex is MediaPlayerNotFound)
-                {
-                    ShowSettingsDialog("Media Player Path does not exist.");
-                }
-                else
-                {
-                    Log.Error("An exception occurred while playing stream.", ex);
-                }
-            }
-        }
-
-        private async Task PlayFeed(int streamId)
-        {
+        private void HandleChooseFeedsCommand()
+        {            
+            var showFeedsViewModel = _viewModelLocator.ChooseFeeds;
             var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
-
-            Messenger.Default.Send(new BusyStatusMessage(true, "Getting stream..."));
-
-            var stream = await _hockeyStreamRepository.GetLiveStream(streamId, SelectedLocation, quality);
-
-            Messenger.Default.Send(new BusyStatusMessage(false, ""));
-
-            var game = string.Format("{0} at {1}", SelectedStream.AwayTeam, SelectedStream.HomeTeam);
-
-            _liveStreamer.Play(game, stream.Source, quality);
-        }
+            showFeedsViewModel.Init(SelectedStream.Feeds, SelectedLocation,  quality);         
+            _dialogService.ShowDialog<ChooseFeedsWindow>(showFeedsViewModel);
+        }      
 
         public void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage)
         {

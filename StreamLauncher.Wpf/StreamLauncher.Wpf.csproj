@@ -136,13 +136,18 @@
     <Compile Include="ViewModel\ILoginViewModel.cs" />
     <Compile Include="ViewModel\IMainViewModel.cs" />
     <Compile Include="ViewModel\ISettingsViewModel.cs" />
+    <Compile Include="ViewModel\IChooseFeedsViewModel.cs" />
     <Compile Include="ViewModel\IStreamsViewModel.cs" />
     <Compile Include="ViewModel\IViewModelLocator.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
+    <Compile Include="ViewModel\ChooseFeedsViewModel.cs" />
     <Compile Include="ViewModel\StreamsViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Views\ChooseFeedsWindow.xaml.cs">
+      <DependentUpon>ChooseFeedsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +170,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Styles\Simple Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ChooseFeedsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -203,7 +212,6 @@
   <ItemGroup>
     <Resource Include="Images\hs16x16.png" />
     <Resource Include="Images\hs40x40.png" />
-    <Resource Include="Views\playbutton.PNG" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StreamLauncher\StreamLauncher.csproj">

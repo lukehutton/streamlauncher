@@ -1,0 +1,30 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
+        x:Class="StreamLauncher.Wpf.Views.ChooseFeedsWindow"
+        Title="Choose Feed" Height="236.486" Width="503" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
+        DataContext="{Binding Path=ChooseFeeds, Source={StaticResource Locator}}"      
+        infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
+    >
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.1,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF161635" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <xctk:BusyIndicator IsBusy="{Binding IsBusy}" BusyContent="{Binding BusyText}">
+        <UniformGrid  Margin="20,20,20,20">
+			<Border BorderBrush="Black" BorderThickness="2">
+            <ItemsControl ItemsSource="{Binding Feeds}">
+                <ItemsControl.ItemTemplate>					
+                    <DataTemplate>
+                        <Button Margin="5" Content="{Binding FeedType}" Command="{Binding Path=DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter ="{Binding StreamId}" FontFamily="Segoe UI" FontSize="18" FontWeight="Bold" />						
+                    </DataTemplate>					
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+			</Border>
+        </UniformGrid>
+    </xctk:BusyIndicator>
+</Window>

@@ -57,6 +57,7 @@ namespace StreamLauncher.Wpf.StartUp
             SimpleIoc.Default.Register<StreamsViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<ChooseFeedsViewModel>();
         }
     }
 }
