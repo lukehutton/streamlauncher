@@ -6,7 +6,12 @@ namespace StreamLauncher.Services
     {
         public void Send<TMessage>(TMessage message)
         {
-            Messenger.Default.Send(message); // todo send a key since we want choosefeedsviewmodel to catch the playing stream message
+            Messenger.Default.Send(message); 
+        }
+
+        public void Send<TMessage>(TMessage message, object token)
+        {
+            Messenger.Default.Send(message, token);
         }
     }
 }

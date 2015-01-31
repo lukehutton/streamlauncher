@@ -12,6 +12,7 @@ using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
+using StreamLauncher.Util;
 using StreamLauncher.Wpf.Infrastructure;
 using StreamLauncher.Wpf.Views;
 
@@ -34,6 +35,9 @@ namespace StreamLauncher.Wpf.ViewModel
         private bool _isBusy;
         private bool? _dialogResult;
 
+        private bool _isPlaying;
+        private string _chooseFeedsTitle;
+
         public AsyncRelayCommand<int> PlayCommand { get; private set; } 
 
         public ChooseFeedsViewModel(
@@ -49,6 +53,14 @@ namespace StreamLauncher.Wpf.ViewModel
             _viewModelLocator = viewModelLocator;
 
             PlayCommand = new AsyncRelayCommand<int>(HandlePlayCommand);
+
+            Messenger.Default.Register<BusyStatusMessage>(this, MessengerTokens.ChooseFeedsViewModelToken, HandleBusyStatusMessage);
+        }
+
+        public void HandleBusyStatusMessage(BusyStatusMessage busyStatusMessage)
+        {
+            BusyText = busyStatusMessage.Status;
+            IsBusy = busyStatusMessage.IsBusy;
         }
 
         private Task HandlePlayCommand(int streamId)
@@ -118,8 +130,10 @@ namespace StreamLauncher.Wpf.ViewModel
         {            
             Feeds = feeds;
             _game = _feeds.First().Game;
+            IsPlaying = _feeds.First().IsPlaying;
             _location = location;
-            _quality = quality;            
+            _quality = quality;
+            ChooseFeedsTitle = "Choose Feeds - {0}".Fmt(_game);
         }
 
         public IEnumerable<Feed> Feeds
@@ -166,6 +180,26 @@ namespace StreamLauncher.Wpf.ViewModel
             set
             {
                 _isBusy = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }     
+        
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            set
+            {
+                _isPlaying = value;
+                RaisePropertyChanged(() => IsBusy);
+            }
+        }    
+        
+        public string ChooseFeedsTitle
+        {
+            get { return _chooseFeedsTitle; }
+            set
+            {
+                _chooseFeedsTitle = value;
                 RaisePropertyChanged(() => IsBusy);
             }
         }     

@@ -12,8 +12,7 @@
         <Image x:Key="RefreshIcon" Source="../Images/Icons/refresh64x64.png" />
         <Image x:Key="SettingsIcon" Source="../Images/Icons/settings64x64.png" />
 		<Image x:Key="PlayIcon" Source="../Images/Icons/play64x64.png" />
-        <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />
-        <converters:IsFeedEnabled x:Key="IsFeedEnabled" />
+        <converters:ConvertImagePathForTeamToImage x:Key="ConvertImagePathForTeamToImage" />        
         <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
     </UserControl.Resources>
     <Grid>
@@ -91,13 +90,13 @@
                 <DataGridTemplateColumn CanUserResize="False" Header="Score" Width="70" MaxWidth="70" MinWidth="70" Visibility="{Binding Data.ShowScores, Converter={StaticResource VisibilityConverter}, Source={StaticResource Proxy}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="19" FontWeight="Bold" />
+                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="19" FontWeight="Bold" Foreground="#373752" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <Image Grid.ColumnSpan="2" Margin="563.433,467,59,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png" Stretch="Fill"/>
+            <Image Grid.ColumnSpan="2" Margin="563.433,467,59,0" Grid.RowSpan="2" Source="/StreamLauncher.Wpf;component/Images/hockeystreamslogo.png"/>
             <Label Grid.ColumnSpan="2" Content="Location:" HorizontalAlignment="Left" Margin="0,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
             <Label Grid.ColumnSpan="2" Content="Quality:" HorizontalAlignment="Left" Margin="277.079,478.66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" />
             <Label Grid.ColumnSpan="2" Content="Filter Event:" HorizontalAlignment="Left" Margin="0,12.38,0,0" Grid.RowSpan="2" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="White" />

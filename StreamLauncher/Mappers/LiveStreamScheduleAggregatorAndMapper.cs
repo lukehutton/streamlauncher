@@ -42,9 +42,10 @@ namespace StreamLauncher.Mappers
                 Feeds = from f in feeds
                     select new Feed
                     {
-                        Game = " {0} at {1}".Fmt(f.AwayTeam, f.HomeTeam),
+                        Game = SetGame(f),
                         FeedType = SetFeedType(f),
-                        StreamId = Convert.ToInt32(f.Id)
+                        StreamId = Convert.ToInt32(f.Id),
+                        IsPlaying = f.IsPlaying == "1"
                     },
                 HomeTeam = feed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength),
                 AwayTeam = feed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength),
@@ -57,6 +58,19 @@ namespace StreamLauncher.Mappers
             };
 
             return hockeyStream;
+        }
+
+        private static string SetGame(LiveStreamDto f)
+        {
+            if (f.AwayTeam.IsNullOrEmpty())
+            {
+                return f.HomeTeam;
+            }
+            if (f.HomeTeam.IsNullOrEmpty())
+            {
+                return f.AwayTeam;
+            }
+            return "{0} at {1}".Fmt(f.AwayTeam, f.HomeTeam);
         }
 
         private static string SetFeedType(LiveStreamDto liveStreamDto)

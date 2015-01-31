@@ -4,7 +4,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
         x:Class="StreamLauncher.Wpf.Views.ChooseFeedsWindow"
-        Title="Choose Feed" Height="236.486" Width="503" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
+        Title="{Binding ChooseFeedsTitle}" Height="215.486" Width="545" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
         DataContext="{Binding Path=ChooseFeeds, Source={StaticResource Locator}}"      
         infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
     >
@@ -20,7 +20,7 @@
             <ItemsControl ItemsSource="{Binding Feeds}">
                 <ItemsControl.ItemTemplate>					
                     <DataTemplate>
-                        <Button Margin="5" Content="{Binding FeedType}" Command="{Binding Path=DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter ="{Binding StreamId}" FontFamily="Segoe UI" FontSize="18" FontWeight="Bold" />						
+                            <Button Margin="5" IsEnabled="{Binding IsPlaying}" Content="{Binding FeedType}" Command="{Binding Path=DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter ="{Binding StreamId}" FontFamily="Segoe UI" FontSize="20" FontWeight="Bold" />						
                     </DataTemplate>					
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

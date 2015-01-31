@@ -91,6 +91,7 @@
     <Compile Include="Messages\AuthenticateMessage.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
     <Compile Include="Messages\BusyStatusMessage.cs" />
+    <Compile Include="Messages\MessengerTokens.cs" />
     <Compile Include="Models\EventType.cs" />
     <Compile Include="Models\Feed.cs" />
     <Compile Include="Models\HockeyStream.cs" />

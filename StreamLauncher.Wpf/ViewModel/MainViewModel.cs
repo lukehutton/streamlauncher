@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using GalaSoft.MvvmLight;
@@ -18,7 +17,7 @@ using StreamLauncher.Wpf.Views;
 namespace StreamLauncher.Wpf.ViewModel
 {
     public class MainViewModel : ViewModelBase, IMainViewModel
-    {
+    {        
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
@@ -63,7 +62,7 @@ namespace StreamLauncher.Wpf.ViewModel
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
             Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);
-            Messenger.Default.Register<BusyStatusMessage>(this, HandleBusyStatusMessage);
+            Messenger.Default.Register<BusyStatusMessage>(this, MessengerTokens.MainViewModelToken, HandleBusyStatusMessage);
             Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
         }
 

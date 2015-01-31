@@ -130,7 +130,6 @@
     <Compile Include="Infrastructure\BindingListener.cs" />
     <Compile Include="Infrastructure\BindingProxy.cs" />
     <Compile Include="Infrastructure\Converters\ConvertImagePathForFeedToImage.cs" />
-    <Compile Include="Infrastructure\Converters\IsFeedEnabled.cs" />
     <Compile Include="Infrastructure\DialogCloser.cs" />
     <Compile Include="StartUp\BootStrapper.cs" />
     <Compile Include="ViewModel\ILoginViewModel.cs" />

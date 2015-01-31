@@ -9,6 +9,4 @@
 * Set level of api logging to DEBUG and make logging level into user setting
 * Issue 9 fix:
 ** more than 2 feeds - either show play button with dialog with feeds (double click plays too), put list of feeds with team name when home or way feed and feed name with unknown feed type, show is busy on play feeds dialog? close dialog after playing (error no not)
-** add buttons dynamically http://stackoverflow.com/questions/11095189/adding-controls-dynamically-in-wpf-mvvm
 ** make text grey if not playing (see favourite color converter)
-** reimport logo

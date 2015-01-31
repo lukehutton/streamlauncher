@@ -55,6 +55,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private string _favouriteTeam;
         private string _showScoresText;
+        private HockeyStream _selectedStream;        
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -127,7 +128,15 @@ namespace StreamLauncher.Wpf.ViewModel
             _dialogService.ShowDialog<SettingsWindow>(settingsViewModel);
         }
 
-        public HockeyStream SelectedStream { get; set; }
+        public HockeyStream SelectedStream
+        {
+            get { return _selectedStream; }
+            set
+            {
+                _selectedStream = value;
+                RaisePropertyChanged();                
+            } 
+        }
 
         private void HandleChooseFeedsCommand()
         {            
@@ -154,7 +163,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private Task HandleGetStreamsCommand()
         {
-            _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."));
+            _messengerService.Send(new BusyStatusMessage(true, "Getting streams..."), MessengerTokens.MainViewModelToken);
 
             return Task.Run(() => GetStreams()).ContinueWith(task =>
             {
@@ -176,7 +185,7 @@ namespace StreamLauncher.Wpf.ViewModel
                 {
                     _dialogService.ShowMessage("We couldn't find any streams.", "Streams not found", "OK");
                 }                                 
-                _messengerService.Send(new BusyStatusMessage(false, ""));
+                _messengerService.Send(new BusyStatusMessage(false, ""), MessengerTokens.MainViewModelToken);
             }, TaskScheduler.FromCurrentSynchronizationContext());              
         }
 
