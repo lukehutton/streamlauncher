@@ -61,6 +61,11 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             BusyText = busyStatusMessage.Status;
             IsBusy = busyStatusMessage.IsBusy;
+
+            if (!IsBusy && BusyText.IsNullOrEmpty())
+            {
+                DialogResult = false;
+            }
         }
 
         private Task HandlePlayCommand(int streamId)
