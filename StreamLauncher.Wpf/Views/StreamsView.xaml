@@ -5,6 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:StreamLauncher.Wpf.Infrastructure.Converters"
              xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:command="http://www.galasoft.ch/mvvmlight"
              mc:Ignorable="d" 
              DataContext="{Binding Path=Streams, Source={StaticResource Locator}}"
              d:DesignHeight="300" d:DesignWidth="300" Width="885" Height="520">    
@@ -35,6 +37,11 @@
             <DataGrid.Resources>
                 <infrastructure:BindingProxy x:Key="Proxy" Data="{Binding}" />
             </DataGrid.Resources>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <command:EventToCommand Command="{Binding ChooseFeedsCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>

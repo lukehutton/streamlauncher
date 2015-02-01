@@ -4,7 +4,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:infrastructure="clr-namespace:StreamLauncher.Wpf.Infrastructure"
         x:Class="StreamLauncher.Wpf.Views.ChooseFeedsWindow"
-        Title="{Binding ChooseFeedsTitle}" Height="215.486" Width="545" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
+        Title="{Binding ChooseFeedsTitle}" Height="209.486" Width="545" ResizeMode="NoResize" Icon="..\Images\hs16x16.png" WindowStartupLocation="CenterScreen"
         DataContext="{Binding Path=ChooseFeeds, Source={StaticResource Locator}}"      
         infrastructure:DialogCloser.DialogResult="{Binding DialogResult}"
     >
