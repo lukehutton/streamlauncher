@@ -32,18 +32,21 @@
             <Button Grid.ColumnSpan="2" Content="{StaticResource RefreshIcon}" HorizontalAlignment="Left" Margin="842,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding GetStreamsCommand}" />
             <Button Grid.ColumnSpan="2" Content="{StaticResource SettingsIcon}" HorizontalAlignment="Left" Margin="783,0,0,0" Style="{DynamicResource SimpleButton}" Grid.RowSpan="2" VerticalAlignment="Top" Width="43" Height="41" RenderTransformOrigin="0.922,0.875" Command="{Binding SettingsCommand}" />
             <DataGrid Name="StreamsDataGrid" SelectionMode="Single" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,46,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Height="421" Width="885" ItemsSource="{Binding Streams, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStream, Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True">
-                <DataGrid.Resources>
-                    <infrastructure:BindingProxy x:Key="Proxy" Data="{Binding}" />
-                </DataGrid.Resources>
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsFavorite}" Value="true">
-                                <Setter Property="Background" Value="LightBlue"></Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.RowStyle>
+            <DataGrid.Resources>
+                <infrastructure:BindingProxy x:Key="Proxy" Data="{Binding}" />
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsFavorite}" Value="true">
+                            <Setter Property="Background" Value="LightBlue"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsPlaying}" Value="false">
+                            <Setter Property="TextBlock.Foreground" Value="#333333"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+             </DataGrid.RowStyle>
                 <DataGrid.Columns>
                     <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False">
                         <DataGridTemplateColumn.CellTemplate>
@@ -55,14 +58,14 @@
                 <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Home" Width="191" MaxWidth="191" MinWidth="191">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
+                            <TextBlock Text="{Binding HomeTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Away" Width="191" MaxWidth="191" MinWidth="191">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
+                                <TextBlock Text="{Binding AwayTeam}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="15" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -76,21 +79,21 @@
                 <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Start Time" Width="120" MaxWidth="120" MinWidth="120">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding StartTime}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
+                            <TextBlock Text="{Binding StartTime}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False" CanUserReorder="False" CanUserSort="False" Header="Period" Width="94" MaxWidth="94" MinWidth="94">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label Content="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
+                                <TextBlock Text="{Binding PeriodAndTimeLeft}" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 <DataGridTemplateColumn CanUserResize="False" Header="Score" Width="70" MaxWidth="70" MinWidth="70" Visibility="{Binding Data.ShowScores, Converter={StaticResource VisibilityConverter}, Source={StaticResource Proxy}}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                            <Label Content="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0" FontFamily="Segoe UI" FontSize="19" FontWeight="Bold" Foreground="#373752" />
+                                <TextBlock Text="{Binding Score}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Segoe UI" FontSize="19" FontWeight="Bold" Foreground="#373752" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
