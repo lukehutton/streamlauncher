@@ -74,6 +74,7 @@
     <Compile Include="ViewModel\MainModelViewTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\SettingsViewModelTests.cs" />
+    <Compile Include="ViewModel\ChooseViewModelTests.cs" />
     <Compile Include="ViewModel\StreamsViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>

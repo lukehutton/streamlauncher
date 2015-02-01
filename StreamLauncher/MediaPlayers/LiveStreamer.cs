@@ -52,7 +52,7 @@ namespace StreamLauncher.MediaPlayers
                 throw exception;
             }
 
-            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."));
+            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."), MessengerTokens.ChooseFeedsViewModelToken);
 
             Task.Run(() =>
             {
@@ -109,7 +109,7 @@ namespace StreamLauncher.MediaPlayers
                 Log.Error(message);
                 _dialogService.ShowMessage(message, "Error", "OK");
             }
-            _messengerService.Send(new BusyStatusMessage(false, ""));
+            _messengerService.Send(new BusyStatusMessage(false, ""), MessengerTokens.ChooseFeedsViewModelToken);
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -119,7 +119,7 @@ namespace StreamLauncher.MediaPlayers
                 if (e.Data.Contains("Starting player"))
                 {
                     Log.Info("Stream started playing.");
-                    _messengerService.Send(new BusyStatusMessage(false, ""));
+                    _messengerService.Send(new BusyStatusMessage(false, ""), MessengerTokens.ChooseFeedsViewModelToken);
                 }
                 _output.AppendLine(e.Data);
             }

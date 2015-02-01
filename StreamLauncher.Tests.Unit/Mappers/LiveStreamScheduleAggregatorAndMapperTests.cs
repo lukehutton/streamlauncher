@@ -70,25 +70,21 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldMapAllFields()
             {
-                Assert.That(_hockeyStreams.First().HomeTeam, Is.EqualTo("New Jersey Devils"));
-                Assert.That(_hockeyStreams.First().AwayTeam, Is.EqualTo("Tampa Bay Lightning"));
-                Assert.That(_hockeyStreams.First().StartTime, Is.EqualTo("4:00 PM PST"));
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34172));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34173));
-                Assert.That(_hockeyStreams.First().Score, Is.EqualTo("2 - 5"));
-                Assert.That(_hockeyStreams.First().IsPlaying, Is.True);
-                Assert.That(_hockeyStreams.First().HomeImagePath, Is.EqualTo(@"../Images/Teams/New Jersey Devils.png"));
-                Assert.That(_hockeyStreams.First().AwayImagePath, Is.EqualTo(@"../Images/Teams/Tampa Bay Lightning.png"));
-                Assert.That(_hockeyStreams.First().EventType, Is.EqualTo(EventType.NHL));
-                Assert.That(_hockeyStreams.First().PlayHomeFeedText, Is.EqualTo("Home Feed"));
-                Assert.That(_hockeyStreams.First().PlayAwayFeedText, Is.EqualTo("Away Feed"));
-            }
-
-            [Test]
-            public void ItShouldReturnFeedThatHasHomeAndAwayFeed()
-            {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34172));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34173));
+                var stream = _hockeyStreams.First();
+                Assert.That(stream.Feeds.Count(x => x.StreamId == 34172), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.StreamId == 34173), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.FeedType == "New Jersey Devils Feed"), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.FeedType == "Tampa Bay Lightning Feed"), Is.EqualTo(1));                                
+                Assert.That(stream.Feeds.Count(x => x.IsPlaying), Is.EqualTo(2));
+                Assert.That(stream.Feeds.Count(x => x.Game == "Tampa Bay Lightning at New Jersey Devils"), Is.EqualTo(2));                                
+                Assert.That(stream.HomeTeam, Is.EqualTo("New Jersey Devils"));
+                Assert.That(stream.AwayTeam, Is.EqualTo("Tampa Bay Lightning"));
+                Assert.That(stream.StartTime, Is.EqualTo("4:00 PM PST"));
+                Assert.That(stream.Score, Is.EqualTo("2 - 5"));
+                Assert.That(stream.IsPlaying, Is.True);
+                Assert.That(stream.HomeImagePath, Is.EqualTo(@"../Images/Teams/New Jersey Devils.png"));
+                Assert.That(stream.AwayImagePath, Is.EqualTo(@"../Images/Teams/Tampa Bay Lightning.png"));
+                Assert.That(stream.EventType, Is.EqualTo(EventType.NHL));
             }
         }
 
@@ -129,8 +125,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasOnlyHomeFeed()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34181));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(0));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34181), Is.EqualTo(1));
             }
         }
 
@@ -171,8 +166,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasOnlyAwayFeed()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(0));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34179));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34179), Is.EqualTo(1));
             }
         }
 
@@ -213,15 +207,13 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasNullFeedType()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34180));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(0));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34180), Is.EqualTo(1));                
             }
             
             [Test]
             public void ItShouldReturnCorrectPlayFeedText()
             {
-                Assert.That(_hockeyStreams.First().PlayHomeFeedText, Is.EqualTo("Play Feed"));
-                Assert.That(_hockeyStreams.First().PlayAwayFeedText, Is.EqualTo(null));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "Play Feed"), Is.EqualTo(1));
             }
         }
 
@@ -274,15 +266,15 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34189));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34190));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));                
             }
 
             [Test]
             public void ItShouldReturnCorrectPlayFeedText()
             {
-                Assert.That(_hockeyStreams.First().PlayHomeFeedText, Is.EqualTo("NBC Feed"));
-                Assert.That(_hockeyStreams.First().PlayAwayFeedText, Is.EqualTo("Away Feed"));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "Calgary Flames Feed"), Is.EqualTo(1));
             }
         }
         public class WhenAggregateUnknownFeedTypeAndHomeFeedType : GivenAnAggregator
@@ -334,15 +326,15 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34190));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34189));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));      
             }
 
             [Test]
             public void ItShouldReturnCorrectPlayFeedText()
             {
-                Assert.That(_hockeyStreams.First().PlayHomeFeedText, Is.EqualTo("Home Feed"));
-                Assert.That(_hockeyStreams.First().PlayAwayFeedText, Is.EqualTo("NBC Feed"));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "New York Islanders Feed"), Is.EqualTo(1));
             }
         }
 
@@ -395,15 +387,15 @@ namespace StreamLauncher.Tests.Unit.Mappers
             [Test]
             public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
             {
-                Assert.That(_hockeyStreams.First().HomeStreamId, Is.EqualTo(34189));
-                Assert.That(_hockeyStreams.First().AwayStreamId, Is.EqualTo(34190));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));      
             }
 
             [Test]
             public void ItShouldReturnCorrectPlayFeedText()
             {
-                Assert.That(_hockeyStreams.First().PlayHomeFeedText, Is.EqualTo("NBC Feed"));
-                Assert.That(_hockeyStreams.First().PlayAwayFeedText, Is.EqualTo("RDS Feed"));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "RDS Feed"), Is.EqualTo(1));                
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using StreamLauncher.Dtos;
-
-namespace StreamLauncher.Models
+﻿namespace StreamLauncher.Models
 {
     public class LiveStream
     {

@@ -6,7 +6,12 @@ namespace StreamLauncher.Services
     {
         public void Send<TMessage>(TMessage message)
         {
-            Messenger.Default.Send(message);
+            Messenger.Default.Send(message); 
+        }
+
+        public void Send<TMessage>(TMessage message, object token)
+        {
+            Messenger.Default.Send(message, token);
         }
     }
 }

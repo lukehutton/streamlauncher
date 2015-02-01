@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StreamLauncher.Filters;
-using StreamLauncher.MediaPlayers;
 using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
@@ -22,8 +21,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
         {
             protected IDialogService DialogService;
             protected IHockeyStreamFilter HockeyStreamFilter;
-            protected IHockeyStreamRepository HockeyStreamRepository;
-            protected ILiveStreamer LiveStreamer;
+            protected IHockeyStreamRepository HockeyStreamRepository;            
             protected IStreamLocationRepository StreamLocationRepository;
             protected IUserSettings UserSettings;
             protected IMessengerService MessengerService;
@@ -39,11 +37,10 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 DialogService = MockRepository.GenerateMock<IDialogService>();
                 HockeyStreamRepository = MockRepository.GenerateMock<IHockeyStreamRepository>();
                 HockeyStreamFilter = MockRepository.GenerateMock<IHockeyStreamFilter>();
-                StreamLocationRepository = MockRepository.GenerateMock<IStreamLocationRepository>();
-                LiveStreamer = MockRepository.GenerateMock<ILiveStreamer>();
+                StreamLocationRepository = MockRepository.GenerateMock<IStreamLocationRepository>();                
                 MessengerService = MockRepository.GenerateMock<IMessengerService>();
                 ViewModel = new StreamsViewModel(HockeyStreamRepository, HockeyStreamFilter, StreamLocationRepository,
-                    LiveStreamer, UserSettings, DialogService, ViewModelLocator, MessengerService);
+                    UserSettings, DialogService, ViewModelLocator, MessengerService);
             }
         }
 
@@ -128,7 +125,9 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldSendBusyMessageToGetStreams()
             {
                 MessengerService.AssertWasCalled(
-                    x => x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams...")));
+                    x =>
+                        x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams..."),
+                            Arg<Guid>.Matches(y => y == MessengerTokens.MainViewModelToken)));
             }
 
             [Test]
@@ -169,7 +168,9 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldSendBusyMessageToGetStreams()
             {
                 MessengerService.AssertWasCalled(
-                    x => x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams...")));
+                    x =>
+                        x.Send(Arg<BusyStatusMessage>.Matches(y => y.IsBusy && y.Status == "Getting streams..."),
+                            Arg<Guid>.Matches(y => y == MessengerTokens.MainViewModelToken)));
             }
 
             [Test]
@@ -192,41 +193,6 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 Assert.That(ViewModel.AllHockeyStreams.First().HomeTeam, Is.EqualTo("*" + ViewModel.FavouriteTeam));
                 Assert.That(ViewModel.AllHockeyStreams.First().IsFavorite, Is.True);
             }
-        }
-
-        [TestFixture]
-        public class WhenPlayHomeFeedCommand : GivenAStreamsViewModel
-        {
-            [TestFixtureSetUp]
-            public void When()
-            {
-                ViewModel.SelectedStream = new HockeyStream
-                {
-                    HomeStreamId = 2342,
-                    AwayTeam = "Canucks",
-                    HomeTeam = "Maple Leafs"
-                };
-                ViewModel.SelectedQuality = "High Quality (3200Kbps HD)";
-                ViewModel.SelectedLocation = "North America - West";
-                HockeyStreamRepository.Expect(x => x.GetLiveStream(2342, "North America - West", Quality.HD)).Return(Task.FromResult(new LiveStream
-                {
-                    Source = @"RTMP:\\somewhere"
-                }));
-                var task = ViewModel.PlayHomeFeedCommand.ExecuteAsync();
-                task.Wait();
-            }
-
-            [Test]
-            public void ItShouldGetLiveStreamWithSelectedStreamIdAndLocationAndQuality()
-            {
-                HockeyStreamRepository.AssertWasCalled(x => x.GetLiveStream(2342, "North America - West", Quality.HD));
-            }
-
-            [Test]
-            public void ItShouldPlayStreamSource()
-            {
-                LiveStreamer.AssertWasCalled(x => x.Play("Canucks at Maple Leafs", @"RTMP:\\somewhere", Quality.HD));
-            }
-        }
+        }       
     }
 }
