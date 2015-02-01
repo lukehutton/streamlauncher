@@ -7,6 +7,5 @@
 * Auto-update app via clickonce
 * Auto refresh of streams
 * Set level of api logging to DEBUG and make logging level into user setting
-* Issue 9 fix:
-** fix tests
+* Run test coverage tools and cover missing
 * Add no location option

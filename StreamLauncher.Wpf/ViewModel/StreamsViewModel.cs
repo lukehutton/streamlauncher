@@ -142,7 +142,7 @@ namespace StreamLauncher.Wpf.ViewModel
         {            
             var showFeedsViewModel = _viewModelLocator.ChooseFeeds;
             var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
-            showFeedsViewModel.Init(SelectedStream.Feeds, SelectedLocation,  quality);         
+            showFeedsViewModel.Init(SelectedStream.Feeds, SelectedLocation, quality);         
             _dialogService.ShowDialog<ChooseFeedsWindow>(showFeedsViewModel);
         }      
 
