@@ -28,8 +28,6 @@ namespace StreamLauncher.Design
         {
             return new HockeyStream
             {                
-                HomeStreamId = index,
-                AwayStreamId = index,
                 EventType = EventType.NHL,
                 HomeImagePath = @"../Images/Teams/Vancouver Canucks.png",                
                 HomeTeam = "Home Team {0}".Fmt(index),

@@ -17,7 +17,6 @@ Features
 * On/off scoring
 * Choose from multiple media players via [Livestreamer](http://livestreamer.tanuki.se/en/latest/)
 * Uses [RTMPDump](http://rtmpdump.mplayerhq.hu/) 
-* One click away to play
 
 Roadmap
 ----------
@@ -32,10 +31,11 @@ Prerequisites
  - [.NET Framework 4.5](http://www.microsoft.com/en-us/download/details.aspx?id=30653) [Required] 
  - [Microsoft Visual C++ 2008 Redistributable Package](http://www.microsoft.com/en-us/download/details.aspx?id=29) [Required]
  - [Livestreamer (CMD)](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) [Required] 
- - One of the following media players:
+ - One from the following media players:
    - [VLC Media Player](http://www.videolan.org/vlc/index.html) 
    - [MPC-HC](http://mpc-hc.org/)
    - [mplayer2](http://www.mplayer2.org/)
+   - See more supported players [here](http://livestreamer.tanuki.se/en/latest/players.html#player-compatibility)
 
 Downloads
 -------
@@ -52,7 +52,7 @@ How to install
 
 1. Install prequisites above: 
   1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
-  2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5.
+  2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5. (Alternatively, try [MPC-HC](http://mpc-hc.org/) or [mplayer2](http://www.mplayer2.org/))
 2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
   1. Download StreamLauncher.Wpf.zip
   2. Unzip to any directory

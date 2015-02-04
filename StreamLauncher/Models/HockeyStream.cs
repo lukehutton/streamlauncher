@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StreamLauncher.Models
 {
     public class HockeyStream
     {        
-        public int HomeStreamId { get; set; }       
-        public int AwayStreamId { get; set; }
+        public IEnumerable<Feed> Feeds { get; set; }        
         public EventType EventType { get; set; }
         public string HomeImagePath { get; set; }
         public string HomeTeam { get; set; }
@@ -15,8 +15,6 @@ namespace StreamLauncher.Models
         public string StartTime { get; set; }
         public string PeriodAndTimeLeft { get; set; }
         public bool IsPlaying { get; set; }
-        public string PlayHomeFeedText { get; set; }
-        public string PlayAwayFeedText { get; set; }
         public TimeSpan StartTimeSpan { get; set; }
         public bool IsFavorite { get; set; }
     }

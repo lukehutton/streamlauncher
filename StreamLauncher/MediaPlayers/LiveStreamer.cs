@@ -26,6 +26,7 @@ namespace StreamLauncher.MediaPlayers
         private readonly IMessengerService _messengerService;
         private readonly IFileHelper _fileHelper;
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private string _game;
 
         public LiveStreamer(IUserSettings userSettings, IDialogService dialogService, IMessengerService messengerService, IFileHelper fileHelper)
         {
@@ -52,7 +53,9 @@ namespace StreamLauncher.MediaPlayers
                 throw exception;
             }
 
-            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."));
+            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."), MessengerTokens.ChooseFeedsViewModelToken);
+
+            _game = game;
 
             Task.Run(() =>
             {
@@ -109,28 +112,36 @@ namespace StreamLauncher.MediaPlayers
                 Log.Error(message);
                 _dialogService.ShowMessage(message, "Error", "OK");
             }
-            _messengerService.Send(new BusyStatusMessage(false, ""));
+            _messengerService.Send(new BusyStatusMessage(false, ""), MessengerTokens.ChooseFeedsViewModelToken);
         }
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
+            if (string.IsNullOrEmpty(e.Data)) return;
+
+            if (e.Data.Contains("Starting player"))
             {
-                if (e.Data.Contains("Starting player"))
-                {
-                    Log.Info("Stream started playing.");
-                    _messengerService.Send(new BusyStatusMessage(false, ""));
-                }
-                _output.AppendLine(e.Data);
+                Log.Info("Stream started playing.");
+                _messengerService.Send(new BusyStatusMessage(false, "Playing"), MessengerTokens.ChooseFeedsViewModelToken);
             }
+            else if (e.Data.Contains("error"))
+            {
+                var message = string.Format("Could not play stream {0}.", _game);
+                Log.Error(message);
+                _dialogService.ShowMessage(message, "Error", "OK");
+            }
+            else if (e.Data.Contains("Stream ended"))
+            {                    
+                Log.Info("Player closed and stream ended.");                    
+            }
+            _output.AppendLine(e.Data);
         }
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
-            {
-                _output.AppendLine(e.Data);
-            }
+            if (string.IsNullOrEmpty(e.Data)) return;
+
+            _output.AppendLine(e.Data);
         }
     }
 }

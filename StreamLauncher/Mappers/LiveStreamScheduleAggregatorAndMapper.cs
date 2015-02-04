@@ -10,27 +10,21 @@ using StreamLauncher.Util;
 namespace StreamLauncher.Mappers
 {
     public class LiveStreamScheduleAggregatorAndMapper : ILiveStreamScheduleAggregatorAndMapper
-    {        
+    {
         public IEnumerable<HockeyStream> AggregateAndMap(GetLiveStreamsResponseDto getLiveStreamsResponseDto)
         {
             var schedule = getLiveStreamsResponseDto.Schedule;
-            
             var allTeams = schedule.Select(x => x.HomeTeam).Distinct();
 
             var hockeyStreams = new List<HockeyStream>();
             foreach (var team in allTeams)
             {
-                var homeFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Home Feed");
-                var awayFeed = schedule.Find(x => x.HomeTeam == team && x.FeedType == "Away Feed");
-                var noFeedType = schedule.Find(x => x.HomeTeam == team && x.FeedType == null);
-                var stream = MapHockeyStream(homeFeed, awayFeed, noFeedType);
-                if (stream != null)
-                {
-                    var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
-                    var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
-                    stream.StartTimeSpan = startTime.TimeOfDay;
-                    hockeyStreams.Add(stream);
-                }
+                var feeds = schedule.FindAll(x => x.HomeTeam == team);
+                var stream = MapHockeyStream(feeds);
+                var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
+                var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
+                stream.StartTimeSpan = startTime.TimeOfDay;
+                hockeyStreams.Add(stream);
             }
             return hockeyStreams.OrderBy(x => x.StartTimeSpan);
         }
@@ -40,53 +34,61 @@ namespace StreamLauncher.Mappers
             return string.Format(@"../Images/Teams/{0}.png", team);
         }
 
-        private static HockeyStream MapHockeyStream(LiveStreamDto homeFeed, LiveStreamDto awayFeed, LiveStreamDto noFeedType)
+        private static HockeyStream MapHockeyStream(List<LiveStreamDto> feeds)
         {
-            var hockeyStream = new HockeyStream();
-            if (noFeedType != null)
+            var feed = feeds.First();
+            var hockeyStream = new HockeyStream
             {
-                hockeyStream.HomeStreamId = Convert.ToInt32(noFeedType.Id);
-                hockeyStream.HomeTeam = noFeedType.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.AwayTeam = noFeedType.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.StartTime = noFeedType.StartTime;
-                hockeyStream.EventType = EventTypeParser.Parse(noFeedType.Event);
-                hockeyStream.IsPlaying = noFeedType.IsPlaying == "1";
-                hockeyStream.Score = noFeedType.HomeScore + " - " + noFeedType.AwayScore;
-                hockeyStream.HomeImagePath = GetImagePathForTeam(noFeedType.HomeTeam);
-                hockeyStream.AwayImagePath = GetImagePathForTeam(noFeedType.AwayTeam);
-                hockeyStream.PlayHomeFeedText = "Play Feed";             
-                return hockeyStream;
-            }            
+                Feeds = from f in feeds
+                    select new Feed
+                    {
+                        Game = SetGame(f),
+                        FeedType = SetFeedType(f),
+                        StreamId = Convert.ToInt32(f.Id),
+                        IsPlaying = f.IsPlaying == "1"
+                    },
+                HomeTeam = feed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength),
+                AwayTeam = feed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength),
+                StartTime = feed.StartTime,
+                EventType = EventTypeParser.Parse(feed.Event),
+                IsPlaying = feed.IsPlaying == "1",
+                Score = feed.HomeScore + " - " + feed.AwayScore,
+                HomeImagePath = GetImagePathForTeam(feed.HomeTeam),
+                AwayImagePath = GetImagePathForTeam(feed.AwayTeam)
+            };
 
-            if (homeFeed != null)
+            return hockeyStream;
+        }
+
+        private static string SetGame(LiveStreamDto f)
+        {
+            if (f.AwayTeam.IsNullOrEmpty())
             {
-                hockeyStream.HomeStreamId = Convert.ToInt32(homeFeed.Id);
-                hockeyStream.HomeTeam = homeFeed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.AwayTeam = homeFeed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.StartTime = homeFeed.StartTime;
-                hockeyStream.EventType = EventTypeParser.Parse(homeFeed.Event);
-                hockeyStream.IsPlaying = homeFeed.IsPlaying == "1";
-                hockeyStream.Score = homeFeed.HomeScore + " - " + homeFeed.AwayScore;
-                hockeyStream.HomeImagePath = GetImagePathForTeam(homeFeed.HomeTeam);
-                hockeyStream.AwayImagePath = GetImagePathForTeam(homeFeed.AwayTeam);
-                hockeyStream.PlayHomeFeedText = "Home Feed";
+                return f.HomeTeam;
+            }
+            if (f.HomeTeam.IsNullOrEmpty())
+            {
+                return f.AwayTeam;
+            }
+            return "{0} at {1}".Fmt(f.AwayTeam, f.HomeTeam);
+        }
+
+        private static string SetFeedType(LiveStreamDto liveStreamDto)
+        {
+            if (liveStreamDto.FeedType.IsNullOrEmpty())
+            {
+                return "Play Feed";
             }
 
-            if (awayFeed != null)
+            switch (liveStreamDto.FeedType)
             {
-                hockeyStream.AwayStreamId = Convert.ToInt32(awayFeed.Id);
-                hockeyStream.HomeTeam = awayFeed.HomeTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.AwayTeam = awayFeed.AwayTeam.MaxStrLen(AppConstants.MaxTeamStringLength);
-                hockeyStream.StartTime = awayFeed.StartTime;
-                hockeyStream.EventType = EventTypeParser.Parse(awayFeed.Event);
-                hockeyStream.IsPlaying = awayFeed.IsPlaying == "1";
-                hockeyStream.Score = awayFeed.HomeScore + " - " + awayFeed.AwayScore;
-                hockeyStream.HomeImagePath = GetImagePathForTeam(awayFeed.HomeTeam);
-                hockeyStream.AwayImagePath = GetImagePathForTeam(awayFeed.AwayTeam);
-                hockeyStream.PlayAwayFeedText = "Away Feed";
-            }            
-
-            return hockeyStream.HomeStreamId == 0 && hockeyStream.AwayStreamId == 0 ? null : hockeyStream;
+                case "Home Feed":
+                    return "{0} Feed".Fmt(liveStreamDto.HomeTeam);
+                case "Away Feed":
+                    return "{0} Feed".Fmt(liveStreamDto.AwayTeam);
+                default:
+                    return liveStreamDto.FeedType;
+            }
         }
     }
 }

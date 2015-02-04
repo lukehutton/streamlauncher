@@ -49,7 +49,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 EnvironmentHelper.Expect(x => x.Is64BitEnvironment()).Return(true);
                 UserSettings.Expect(x => x.LiveStreamerPath).Return(string.Empty);
                 UserSettings.Expect(x => x.MediaPlayerPath).Return(string.Empty);
-                UserSettings.Expect(x => x.MediaPlayerArguments).Return(string.Empty);
+                UserSettings.Expect(x => x.MediaPlayerArguments).Return(null);
                 UserSettings.Expect(x => x.PreferredEventType).Return(string.Empty);
                 UserSettings.Expect(x => x.PreferredLocation).Return(string.Empty);
                 ViewModel.Init();

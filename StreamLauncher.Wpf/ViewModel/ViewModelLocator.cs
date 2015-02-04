@@ -31,6 +31,11 @@ namespace StreamLauncher.Wpf.ViewModel
             get { return ServiceLocator.Current.GetInstance<SettingsViewModel>(Guid.NewGuid().ToString()); }
         }
 
+        public IChooseFeedsViewModel ChooseFeeds
+        {
+            get { return ServiceLocator.Current.GetInstance<ChooseFeedsViewModel>(Guid.NewGuid().ToString()); }            
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

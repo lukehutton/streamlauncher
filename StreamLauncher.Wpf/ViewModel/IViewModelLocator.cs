@@ -6,5 +6,6 @@ namespace StreamLauncher.Wpf.ViewModel
         StreamsViewModel Streams { get; }
         ILoginViewModel Login { get; }
         ISettingsViewModel Settings { get; }
+        IChooseFeedsViewModel ChooseFeeds { get; }
     }
 }

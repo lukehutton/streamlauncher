@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using log4net;
 using StreamLauncher.Api;
 using StreamLauncher.Messages;
 using StreamLauncher.Repositories;
@@ -19,6 +20,8 @@ namespace StreamLauncher.Wpf.ViewModel
 {
     public class MainViewModel : ViewModelBase, IMainViewModel
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IUserSettings _userSettings;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IAuthenticationService _authenticationService;
@@ -63,7 +66,7 @@ namespace StreamLauncher.Wpf.ViewModel
             Closing = new RelayCommand<CancelEventArgs>(HandleClosingCommand);
 
             Messenger.Default.Register<LoginSuccessfulMessage>(this, HandleLoginSuccessfulMessage);
-            Messenger.Default.Register<BusyStatusMessage>(this, HandleBusyStatusMessage);
+            Messenger.Default.Register<BusyStatusMessage>(this, MessengerTokens.MainViewModelToken, HandleBusyStatusMessage);
             Messenger.Default.Register<AuthenticateMessage>(this, HandleAuthenticateMessage);
         }
 
@@ -150,6 +153,8 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             _userSettings.Save();
             _applicationDispatcher.Shutdown();
+            Log.Info("Application shutting down.");
+            
         }
         
         private void OpenLoginDialog(string userName = "", string errorMessage = "")

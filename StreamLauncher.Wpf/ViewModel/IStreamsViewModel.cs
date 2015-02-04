@@ -11,8 +11,7 @@ namespace StreamLauncher.Wpf.ViewModel
     {
         AsyncRelayCommand GetStreamsCommand { get; }
         RelayCommand SettingsCommand { get; }
-        AsyncRelayCommand PlayHomeFeedCommand { get; }
-        AsyncRelayCommand PlayAwayFeedCommand { get; }
+        RelayCommand ChooseFeedsCommand { get; }        
         bool ShowScores { get; set; }
         string ShowScoresText { get; set; }
         HockeyStream SelectedStream { get; set; }

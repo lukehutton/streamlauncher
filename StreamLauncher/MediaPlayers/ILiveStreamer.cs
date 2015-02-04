@@ -1,4 +1,5 @@
-﻿using StreamLauncher.Repositories;
+﻿using System.Threading.Tasks;
+using StreamLauncher.Repositories;
 
 namespace StreamLauncher.MediaPlayers
 {

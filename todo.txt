@@ -7,3 +7,5 @@
 * Auto-update app via clickonce
 * Auto refresh of streams
 * Set level of api logging to DEBUG and make logging level into user setting
+* Run test coverage tools and cover missing
+* Add no location option

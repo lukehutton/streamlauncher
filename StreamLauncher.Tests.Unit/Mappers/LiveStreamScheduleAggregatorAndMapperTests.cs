@@ -10,90 +10,44 @@ namespace StreamLauncher.Tests.Unit.Mappers
     [TestFixture]
     public class LiveStreamScheduleAggregatorAndMapperTests
     {
-        public class GivenAListOfFeedsAndAggregator
+        public class GivenAnAggregator
         {
             protected ILiveStreamScheduleAggregatorAndMapper LiveStreamScheduleAggregatorAndMapper;
-            protected List<LiveStreamDto> LiveStreams;
 
             [TestFixtureSetUp]
             public void Given()
             {
-                LiveStreams = BuildLiveStreams();
                 LiveStreamScheduleAggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper();
+            }
+        }
+
+        public class WhenAggregateTwoHomeAndAwayFeeds : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
             }
 
             private List<LiveStreamDto> BuildLiveStreams()
             {
                 return new List<LiveStreamDto>
                 {
-                    new LiveStreamDto // no feed type
-                    {
-                        Id = "34180",           
-                        StartTime = "7:30 PM PST",
-                        AwayTeam = "New York Rangers",
-                        HomeTeam = "Minnesota Wild",
-                        FeedType = null,
-                        AwayScore = "0",
-                        HomeScore = "0",
-                        IsPlaying = "0",
-                        Event = "NHL"
-                    },
-                    new LiveStreamDto // single home feed only
-                    {
-                        Id = "34181",           
-                        StartTime = "8:00 PM PST",
-                        AwayTeam = "San Jose Sharks",
-                        HomeTeam = "Anaheim Ducks",
-                        FeedType = "Home Feed",
-                        AwayScore = "0",
-                        HomeScore = "0",
-                        IsPlaying = "0",
-                        Event = "NHL"
-                    },
-                    new LiveStreamDto // single away feed only
-                    {
-                        Id = "34179",           
-                        StartTime = "7:00 PM PST",
-                        AwayTeam = "Boston Bruins",
-                        HomeTeam = "Ottawa Senators",
-                        FeedType = "Away Feed",
-                        AwayScore = "0",
-                        HomeScore = "0",
-                        IsPlaying = "0",
-                        Event = "NHL"
-                    },
                     new LiveStreamDto // home and away feeds
                     {
-                        Id = "34173",           
+                        Id = "34173",
                         StartTime = "4:00 PM PST",
                         AwayTeam = "Tampa Bay Lightning",
                         HomeTeam = "New Jersey Devils",
                         FeedType = "Away Feed",
                         AwayScore = "5",
-                        HomeScore = "2",
-                        IsPlaying = "1",
-                        Event = "NHL"
-                    },
-                    new LiveStreamDto // home and away feeds
-                    {
-                        Id = "34175",
-                        StartTime = "5:00 PM PST",
-                        AwayTeam = "Vancouver Canucks",
-                        HomeTeam = "Toronto Maple Leafs",
-                        FeedType = "Away Feed",
-                        AwayScore = "3",
-                        HomeScore = "2",
-                        IsPlaying = "1",
-                        Event = "NHL"
-                    },
-                    new LiveStreamDto // home and away feeds
-                    {
-                        Id = "34176",
-                        StartTime = "5:00 PM PST",
-                        AwayTeam = "Vancouver Canucks",
-                        HomeTeam = "Toronto Maple Leafs",
-                        FeedType = "Home Feed",
-                        AwayScore = "3",
                         HomeScore = "2",
                         IsPlaying = "1",
                         Event = "NHL"
@@ -112,69 +66,336 @@ namespace StreamLauncher.Tests.Unit.Mappers
                     }
                 };
             }
-        }
-
-        [TestFixture]
-        public class WhenAggregateAndMap : GivenAListOfFeedsAndAggregator
-        {
-            private IEnumerable<HockeyStream> _hockeyStreams;
-
-            [SetUp]
-            public void When()
-            {
-                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
-                {
-                    Schedule = LiveStreams
-                });
-            }
-
-            [Test]
-            public void ItShouldReturnFiveHockeyStreams()
-            {
-                Assert.That(_hockeyStreams.Count(), Is.EqualTo(5));
-            }
 
             [Test]
             public void ItShouldMapAllFields()
-            {                            
-                Assert.That(_hockeyStreams.ElementAt(0).HomeTeam, Is.EqualTo("New Jersey Devils"));
-                Assert.That(_hockeyStreams.ElementAt(0).AwayTeam, Is.EqualTo("Tampa Bay Lightning"));
-                Assert.That(_hockeyStreams.ElementAt(0).StartTime, Is.EqualTo("4:00 PM PST"));
-                Assert.That(_hockeyStreams.ElementAt(0).HomeStreamId, Is.EqualTo(34172));
-                Assert.That(_hockeyStreams.ElementAt(0).AwayStreamId, Is.EqualTo(34173));
-                Assert.That(_hockeyStreams.ElementAt(0).Score, Is.EqualTo("2 - 5"));
-                Assert.That(_hockeyStreams.ElementAt(0).IsPlaying, Is.True);
-                Assert.That(_hockeyStreams.ElementAt(0).HomeImagePath, Is.EqualTo(@"../Images/Teams/New Jersey Devils.png"));
-                Assert.That(_hockeyStreams.ElementAt(0).AwayImagePath, Is.EqualTo(@"../Images/Teams/Tampa Bay Lightning.png"));
-                Assert.That(_hockeyStreams.ElementAt(0).EventType, Is.EqualTo(EventType.NHL));               
+            {
+                var stream = _hockeyStreams.First();
+                Assert.That(stream.Feeds.Count(x => x.StreamId == 34172), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.StreamId == 34173), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.FeedType == "New Jersey Devils Feed"), Is.EqualTo(1));
+                Assert.That(stream.Feeds.Count(x => x.FeedType == "Tampa Bay Lightning Feed"), Is.EqualTo(1));                                
+                Assert.That(stream.Feeds.Count(x => x.IsPlaying), Is.EqualTo(2));
+                Assert.That(stream.Feeds.Count(x => x.Game == "Tampa Bay Lightning at New Jersey Devils"), Is.EqualTo(2));                                
+                Assert.That(stream.HomeTeam, Is.EqualTo("New Jersey Devils"));
+                Assert.That(stream.AwayTeam, Is.EqualTo("Tampa Bay Lightning"));
+                Assert.That(stream.StartTime, Is.EqualTo("4:00 PM PST"));
+                Assert.That(stream.Score, Is.EqualTo("2 - 5"));
+                Assert.That(stream.IsPlaying, Is.True);
+                Assert.That(stream.HomeImagePath, Is.EqualTo(@"../Images/Teams/New Jersey Devils.png"));
+                Assert.That(stream.AwayImagePath, Is.EqualTo(@"../Images/Teams/Tampa Bay Lightning.png"));
+                Assert.That(stream.EventType, Is.EqualTo(EventType.NHL));
+            }
+        }
+
+        public class WhenAggregateSingleHomeFeed : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // single home feed only
+                    {
+                        Id = "34181",
+                        StartTime = "8:00 PM PST",
+                        AwayTeam = "San Jose Sharks",
+                        HomeTeam = "Anaheim Ducks",
+                        FeedType = "Home Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
             }
 
             [Test]
-            public void ItShouldReturnFeedsThatHaveHomeAndAwayFeeds()
-            {                
-                Assert.That(_hockeyStreams.ElementAt(0).HomeStreamId, Is.EqualTo(34172));
-                Assert.That(_hockeyStreams.ElementAt(0).AwayStreamId, Is.EqualTo(34173));
+            public void ItShouldReturnFeedThatHasOnlyHomeFeed()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34181), Is.EqualTo(1));
+            }
+        }
+
+        public class WhenAggregateSingleAwayFeed : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // single away feed only
+                    {
+                        Id = "34179",
+                        StartTime = "7:00 PM PST",
+                        AwayTeam = "Boston Bruins",
+                        HomeTeam = "Ottawa Senators",
+                        FeedType = "Away Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
             }
 
             [Test]
-            public void ItShouldReturnFeedsThatHaveNoFeedTypes()
-            {                
-                Assert.That(_hockeyStreams.ElementAt(3).HomeStreamId, Is.EqualTo(34180));
-                Assert.That(_hockeyStreams.ElementAt(3).AwayStreamId, Is.EqualTo(0));
+            public void ItShouldReturnFeedThatHasOnlyAwayFeed()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34179), Is.EqualTo(1));
+            }
+        }
+
+        public class WhenAggregateNullFeed : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // null feed type
+                    {
+                        Id = "34180",
+                        StartTime = "7:30 PM PST",
+                        AwayTeam = "New York Rangers",
+                        HomeTeam = "Minnesota Wild",
+                        FeedType = null,
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
             }
 
             [Test]
-            public void ItShouldReturnFeedsThatHaveOnlyAwayFeeds()
-            {             
-                Assert.That(_hockeyStreams.ElementAt(2).HomeStreamId, Is.EqualTo(0));
-                Assert.That(_hockeyStreams.ElementAt(2).AwayStreamId, Is.EqualTo(34179));
+            public void ItShouldReturnFeedThatHasNullFeedType()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34180), Is.EqualTo(1));                
+            }
+            
+            [Test]
+            public void ItShouldReturnCorrectPlayFeedText()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "Play Feed"), Is.EqualTo(1));
+            }
+        }
+
+        public class WhenAggregateUnknownFeedTypeAndAwayFeedType : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // unknown feed type
+                    {
+                        Id = "34189",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "NBC Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    },
+                    new LiveStreamDto // away feed type
+                    {
+                        Id = "34190",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "Away Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
             }
 
             [Test]
-            public void ItShouldReturnFeedsThatHaveOnlyHomeFeeds()
-            {                
-                Assert.That(_hockeyStreams.ElementAt(4).HomeStreamId, Is.EqualTo(34181));
-                Assert.That(_hockeyStreams.ElementAt(4).AwayStreamId, Is.EqualTo(0));
+            public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));                
+            }
+
+            [Test]
+            public void ItShouldReturnCorrectPlayFeedText()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "Calgary Flames Feed"), Is.EqualTo(1));
+            }
+        }
+        public class WhenAggregateUnknownFeedTypeAndHomeFeedType : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // unknown feed type
+                    {
+                        Id = "34189",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "NBC Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    },
+                    new LiveStreamDto // home feed type
+                    {
+                        Id = "34190",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "Home Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
+            }
+
+            [Test]
+            public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));      
+            }
+
+            [Test]
+            public void ItShouldReturnCorrectPlayFeedText()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "New York Islanders Feed"), Is.EqualTo(1));
+            }
+        }
+
+        public class WhenAggregateTwoUnknownFeedType : GivenAnAggregator
+        {
+            private IEnumerable<HockeyStream> _hockeyStreams;
+
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var liveStreams = BuildLiveStreams();
+
+                _hockeyStreams = LiveStreamScheduleAggregatorAndMapper.AggregateAndMap(new GetLiveStreamsResponseDto
+                {
+                    Schedule = liveStreams
+                });
+            }
+
+            private List<LiveStreamDto> BuildLiveStreams()
+            {
+                return new List<LiveStreamDto>
+                {
+                    new LiveStreamDto // unknown feed type
+                    {
+                        Id = "34189",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "NBC Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    },
+                    new LiveStreamDto // unknown feed type
+                    {
+                        Id = "34190",
+                        StartTime = "7:45 PM PST",
+                        AwayTeam = "Calgary Flames",
+                        HomeTeam = "New York Islanders",
+                        FeedType = "RDS Feed",
+                        AwayScore = "0",
+                        HomeScore = "0",
+                        IsPlaying = "0",
+                        Event = "NHL"
+                    }
+                };
+            }
+
+            [Test]
+            public void ItShouldReturnFeedThatHasUnknownAndAwayFeedType()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34189), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.StreamId == 34190), Is.EqualTo(1));      
+            }
+
+            [Test]
+            public void ItShouldReturnCorrectPlayFeedText()
+            {
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "NBC Feed"), Is.EqualTo(1));
+                Assert.That(_hockeyStreams.First().Feeds.Count(x => x.FeedType == "RDS Feed"), Is.EqualTo(1));                
             }
         }
     }
