@@ -39,7 +39,7 @@ Prerequisites
 
 Downloads
 -------
-You are more than welcome to take the code provided and compile a version of it yourself, or you can find the latest release candidates here: [downloads](https://github.com/lukehutton/streamlauncher/releases).
+You are more than welcome to take the code provided and compile a version of it yourself, or you can find the latest version, 1.0.0.107, here: [downloads](https://github.com/lukehutton/streamlauncher/releases).
 
 Issues
 -------
@@ -53,7 +53,7 @@ How to install
 1. Install prequisites above: 
   1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
   2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5. (Alternatively, try [MPC-HC](http://mpc-hc.org/) or [mplayer2](http://www.mplayer2.org/))
-2. Download and install latest in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
+2. Download and install latest version, 1.0.0.107, in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
   1. Download StreamLauncher.Wpf.zip
   2. Unzip to any directory
   3. Run setup.exe
