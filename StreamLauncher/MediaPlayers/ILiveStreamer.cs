@@ -5,7 +5,7 @@ namespace StreamLauncher.MediaPlayers
 {
     public interface ILiveStreamer
     {
-        Task Play(string game, string streamSource, Quality quality);
+        void Play(string game, string streamSource, Quality quality);
         void SaveConfig();
     }
 }

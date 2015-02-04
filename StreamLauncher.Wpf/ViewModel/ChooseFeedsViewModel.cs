@@ -61,43 +61,24 @@ namespace StreamLauncher.Wpf.ViewModel
         {
             BusyText = busyStatusMessage.Status;
             IsBusy = busyStatusMessage.IsBusy;
+
+            if (!IsBusy && BusyText == "Playing")
+            {
+                DialogResult = false;
+            }
         }
 
-        private async Task HandlePlayCommand(int streamId)
+        private Task HandlePlayCommand(int streamId)
         {
-            //var context = TaskScheduler.FromCurrentSynchronizationContext();            
-//            return
-//                Task.Run(
-//                    () =>
-//                    {
-//                        PlayFeed(streamId)
-//                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
-//                                context);
-//                    });
-            try
-            {
-                await PlayFeed(streamId);
-            }
-            catch (StreamNotFoundException)
-            {
-                _dialogService.ShowError(string.Format("Live feed for {0} not found", _game), "Error", "OK");
-            }
-            catch (HockeyStreamsApiBadRequest)
-            {
-                _dialogService.ShowError("You must have PREMIUM membership to use this app.", "Error", "OK");
-            }
-            catch (LiveStreamerExecutableNotFound)
-            {
-                ShowSettingsDialog("Livestreamer Path does not exist.");
-            }
-            catch (MediaPlayerNotFound)
-            {
-                ShowSettingsDialog("Media Player Path does not exist.");
-            }
-            catch (Exception ex)
-            {
-                Log.Error("An exception occurred while playing stream.", ex);
-            }
+            var context = TaskScheduler.FromCurrentSynchronizationContext();            
+            return
+                Task.Run(
+                    () =>
+                    {
+                        PlayFeed(streamId)
+                            .ContinueWith(HandleExceptionWhenPlayingIfAny,
+                                context);
+                    });
         }
 
         private void HandleExceptionWhenPlayingIfAny(Task task)
@@ -146,9 +127,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             IsBusy = false;
 
-            await _liveStreamer.Play(_game, stream.Source, _quality);
-
-            DialogResult = false;
+            _liveStreamer.Play(_game, stream.Source, _quality);            
         }
 
         public void Init(IEnumerable<Feed> feeds, string location, Quality quality)
