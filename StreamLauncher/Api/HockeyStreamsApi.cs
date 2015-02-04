@@ -22,9 +22,7 @@ namespace StreamLauncher.Api
         {
             var client = new RestClient { BaseUrl = new Uri(BaseUrl) };            
 
-            LogRequest(request, client);
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            LogRequest(request, client);            
 
             var response = client.Execute<T>(request);
             

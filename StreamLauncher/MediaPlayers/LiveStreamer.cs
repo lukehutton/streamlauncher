@@ -121,7 +121,7 @@ namespace StreamLauncher.MediaPlayers
 
             if (e.Data.Contains("Starting player"))
             {
-                Log.Info("Stream started playing.");
+                Log.InfoFormat("Stream {0} started playing.", _game);
                 _messengerService.Send(new BusyStatusMessage(false, "Playing"), MessengerTokens.ChooseFeedsViewModelToken);
             }
             else if (e.Data.Contains("error"))
@@ -132,7 +132,7 @@ namespace StreamLauncher.MediaPlayers
             }
             else if (e.Data.Contains("Stream ended"))
             {                    
-                Log.Info("Player closed and stream ended.");                    
+                Log.InfoFormat("Stream {0} ended and player closed.", _game);
             }
             _output.AppendLine(e.Data);
         }
