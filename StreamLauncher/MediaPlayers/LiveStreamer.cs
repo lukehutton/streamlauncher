@@ -35,7 +35,7 @@ namespace StreamLauncher.MediaPlayers
             _fileHelper = fileHelper;
         }
 
-        public void Play(string game, string streamSource, Quality quality)
+        public Task Play(string game, string streamSource, Quality quality)
         {
             if (!_fileHelper.FileExists(_userSettings.LiveStreamerPath))
             {                
@@ -54,7 +54,7 @@ namespace StreamLauncher.MediaPlayers
 
             _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."), MessengerTokens.ChooseFeedsViewModelToken);
 
-            Task.Run(() =>
+            return Task.Run(() =>
             {
                 _output.Clear();
 

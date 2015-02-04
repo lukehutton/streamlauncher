@@ -20,7 +20,7 @@
             <ItemsControl ItemsSource="{Binding Feeds}">
                 <ItemsControl.ItemTemplate>					
                     <DataTemplate>
-                            <Button Margin="5" IsEnabled="{Binding IsPlaying}" Content="{Binding FeedType}" Command="{Binding Path=DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter ="{Binding StreamId}" FontFamily="Segoe UI" FontSize="20" FontWeight="Bold" />						
+                            <Button Margin="5" Content="{Binding FeedType}" Command="{Binding Path=DataContext.PlayCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter ="{Binding StreamId}" FontFamily="Segoe UI" FontSize="20" FontWeight="Bold" />						
                     </DataTemplate>					
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
