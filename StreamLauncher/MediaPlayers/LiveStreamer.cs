@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using log4net;
@@ -77,8 +78,9 @@ namespace StreamLauncher.MediaPlayers
                     process.Wait();
                     if (process.ExitCode != 0 || _output.ToString().Contains("error"))
                     {
-                        var exception = new LiveStreamerError(game);
-                        Log.Error(string.Format("Could not play stream {0}. Reason: {1}", game, _output), exception);
+                        var message = string.Format("Could not play stream {0}. Reason: {1}", game, _output);
+                        var exception = new LiveStreamerError(message);                        
+                        Log.Error(message, exception);
                         throw exception;
                     }
                 }
@@ -108,8 +110,13 @@ namespace StreamLauncher.MediaPlayers
         {         
             if (exception.InnerException is LiveStreamerError)
             {
-                var message = string.Format("No live feed for {0} available.", exception.InnerException.Message);
-                Log.Error(message);
+                var message = exception.InnerException.Message;
+                if (message.Contains("The application has failed to start because its side-by-side configuration is incorrect"))
+                {
+                    message =
+                        "Prerequisite Microsoft Visual C++ 2008 Redistributable Package is required. Please download and install from http://www.microsoft.com/en-us/download/details.aspx?id=29";
+                }
+                Log.Error(message, exception.InnerException);
                 _dialogService.ShowMessage(message, "Error", "OK");
             }
             _messengerService.Send(new BusyStatusMessage(false, ""), MessengerTokens.ChooseFeedsViewModelToken);
@@ -125,10 +132,9 @@ namespace StreamLauncher.MediaPlayers
                 _messengerService.Send(new BusyStatusMessage(false, "Playing"), MessengerTokens.ChooseFeedsViewModelToken);
             }
             else if (e.Data.Contains("error"))
-            {
+            {             
                 var message = string.Format("Could not play stream {0}. Reason: {1}", _game, e.Data);
-                Log.Error(message);
-                _dialogService.ShowMessage(message, "Error", "OK");
+                Log.Error(message);                
             }
             else if (e.Data.Contains("Stream ended"))
             {                    
