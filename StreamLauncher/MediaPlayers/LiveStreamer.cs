@@ -78,7 +78,7 @@ namespace StreamLauncher.MediaPlayers
                     if (process.ExitCode != 0 || _output.ToString().Contains("error"))
                     {
                         var exception = new LiveStreamerError(game);
-                        Log.Error(string.Format("Could not play stream {0}", game), exception);
+                        Log.Error(string.Format("Could not play stream {0}. Reason: {1}", game, _output), exception);
                         throw exception;
                     }
                 }
@@ -126,7 +126,7 @@ namespace StreamLauncher.MediaPlayers
             }
             else if (e.Data.Contains("error"))
             {
-                var message = string.Format("Could not play stream {0}.", _game);
+                var message = string.Format("Could not play stream {0}. Reason: {1}", _game, e.Data);
                 Log.Error(message);
                 _dialogService.ShowMessage(message, "Error", "OK");
             }
