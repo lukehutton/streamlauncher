@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using log4net;
@@ -132,9 +131,8 @@ namespace StreamLauncher.MediaPlayers
                 _messengerService.Send(new BusyStatusMessage(false, "Playing"), MessengerTokens.ChooseFeedsViewModelToken);
             }
             else if (e.Data.Contains("error"))
-            {             
-                var message = string.Format("Could not play stream {0}. Reason: {1}", _game, e.Data);
-                Log.Error(message);                
+            {
+                Log.ErrorFormat("Could not play stream {0}. Reason: {1}", _game, e.Data);
             }
             else if (e.Data.Contains("Stream ended"))
             {                    
