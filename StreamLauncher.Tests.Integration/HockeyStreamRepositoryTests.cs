@@ -66,7 +66,8 @@ namespace StreamLauncher.Tests.Integration
             public new void Given()
             {                
                 var apiRequiringToken = new HockeyStreamsApiRequiringToken(TokenProvider);
-                var aggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper();
+                var extractTimeOfDayFromStream = new ExtractTimeOfDayFromStream();
+                var aggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper(extractTimeOfDayFromStream);
                 var apiKeyProvider = new ApiKeyProvider();
                 var apiRequiringScoresApiKey = new HockeyStreamsApiRequiringScoresApiKey(apiKeyProvider);
                 var scoresRepository = new ScoresRepository(apiRequiringScoresApiKey);
