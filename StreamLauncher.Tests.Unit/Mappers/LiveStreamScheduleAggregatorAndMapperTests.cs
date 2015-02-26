@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Rhino.Mocks;
 using StreamLauncher.Dtos;
 using StreamLauncher.Mappers;
 using StreamLauncher.Models;
@@ -12,12 +13,15 @@ namespace StreamLauncher.Tests.Unit.Mappers
     {
         public class GivenAnAggregator
         {
+            protected IExtractTimeOfDayFromStream ExtractTimeOfDayFromStream;
             protected ILiveStreamScheduleAggregatorAndMapper LiveStreamScheduleAggregatorAndMapper;
 
             [TestFixtureSetUp]
             public void Given()
             {
-                LiveStreamScheduleAggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper();
+                ExtractTimeOfDayFromStream = MockRepository.GenerateStub<IExtractTimeOfDayFromStream>();
+
+                LiveStreamScheduleAggregatorAndMapper = new LiveStreamScheduleAggregatorAndMapper(ExtractTimeOfDayFromStream);
             }
         }
 
