@@ -19,7 +19,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             }
         }
 
-        public class WhenGivenAnExtractTimeOfDayFrom24HourTime : GivenAnExtractTimeOfDayFromStream
+        public class WhenExtractTimeOfDayFrom24HourTime : GivenAnExtractTimeOfDayFromStream
         {
             private TimeSpan _timeOfDay;
 
@@ -40,7 +40,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             }
         }   
         
-        public class WhenGivenAnExtractTimeOfDayFromNon24HourTime : GivenAnExtractTimeOfDayFromStream
+        public class WhenExtractTimeOfDayFromNon24HourTime : GivenAnExtractTimeOfDayFromStream
         {
             private TimeSpan _timeOfDay;
 
@@ -61,7 +61,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             }
         }
         
-        public class WhenGivenAnExtractTimeOfDayFromBadTime : GivenAnExtractTimeOfDayFromStream
+        public class WhenExtractTimeOfDayFromBadTime : GivenAnExtractTimeOfDayFromStream
         {
             private TimeSpan _timeOfDay;
 
@@ -76,7 +76,7 @@ namespace StreamLauncher.Tests.Unit.Mappers
             }
 
             [Test]
-            public void ItShouldSetTimeOfDay()
+            public void ItShouldDefaultTimeOfDayToMidnight()
             {
                 Assert.That(_timeOfDay, Is.EqualTo(TimeSpan.FromHours(0)));
             }
