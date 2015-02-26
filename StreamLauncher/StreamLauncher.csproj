@@ -84,6 +84,8 @@
     <Compile Include="Filters\HockeyStreamFilterSpecification.cs" />
     <Compile Include="Filters\IHockeyStreamFilter.cs" />
     <Compile Include="Dtos\GetLocationsResponseDto.cs" />
+    <Compile Include="Mappers\ExtractTimeOfDayFromStream.cs" />
+    <Compile Include="Mappers\IExtractTimeOfDayFromStream.cs" />
     <Compile Include="MediaPlayers\ILiveStreamer.cs" />
     <Compile Include="MediaPlayers\LiveStreamer.cs" />
     <Compile Include="MediaPlayers\Vlc.cs" />

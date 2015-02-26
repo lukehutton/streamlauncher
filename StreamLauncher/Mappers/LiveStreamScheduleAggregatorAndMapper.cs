@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using StreamLauncher.Constants;
 using StreamLauncher.Dtos;
@@ -11,6 +10,13 @@ namespace StreamLauncher.Mappers
 {
     public class LiveStreamScheduleAggregatorAndMapper : ILiveStreamScheduleAggregatorAndMapper
     {
+        private readonly IExtractTimeOfDayFromStream _extractTimeOfDayFromStream;
+
+        public LiveStreamScheduleAggregatorAndMapper(IExtractTimeOfDayFromStream extractTimeOfDayFromStream)
+        {
+            _extractTimeOfDayFromStream = extractTimeOfDayFromStream;
+        }
+
         public IEnumerable<HockeyStream> AggregateAndMap(GetLiveStreamsResponseDto getLiveStreamsResponseDto)
         {
             var schedule = getLiveStreamsResponseDto.Schedule;
@@ -21,9 +27,7 @@ namespace StreamLauncher.Mappers
             {
                 var feeds = schedule.FindAll(x => x.HomeTeam == team);
                 var stream = MapHockeyStream(feeds);
-                var timeWithoutTimeZone = stream.StartTime.Substring(0, stream.StartTime.LastIndexOf(' '));
-                var startTime = DateTime.ParseExact(timeWithoutTimeZone, "h:mm tt", CultureInfo.InvariantCulture);
-                stream.StartTimeSpan = startTime.TimeOfDay;
+                stream.StartTimeSpan = _extractTimeOfDayFromStream.ExtractTimeOfDay(stream);
                 hockeyStreams.Add(stream);
             }
             return hockeyStreams.OrderBy(x => x.StartTimeSpan);
