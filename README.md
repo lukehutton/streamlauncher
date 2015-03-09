@@ -64,6 +64,12 @@ How to install
   1. (See http://livestreamer.readthedocs.org/en/latest/issues.html#enable-caching-in-your-player)
   2. i.e. for vlc, --file-caching=5000 and for mplayer2, -cache 4096
 
+How to upgrade
+-------
+0. Check for any updates to your media player (i.e VLC) and Livestreamer and install if any.
+1. Uninstall "Streams Launcher" from Control Panel > Programs and Features.
+2. Download the latest release, unzip (extract) and run setup.exe
+
 Build History
 -------
 See [build history](https://ci.appveyor.com/project/lukehutton/streamlauncher/history) at CI/CD cloud provider [Appveyor](http://www.appveyor.com)
