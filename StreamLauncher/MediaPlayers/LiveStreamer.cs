@@ -53,7 +53,7 @@ namespace StreamLauncher.MediaPlayers
                 throw exception;
             }
 
-            _messengerService.Send(new BusyStatusMessage(true, "Playing stream..."), MessengerTokens.ChooseFeedsViewModelToken);
+            _messengerService.Send(new BusyStatusMessage(true, "Playing feed..."), MessengerTokens.ChooseFeedsViewModelToken);
 
             _game = game;
 
@@ -68,7 +68,7 @@ namespace StreamLauncher.MediaPlayers
                     streamSource,
                     qualityString,
                     _userSettings.RtmpTimeOutInSeconds);
-                Log.InfoFormat("Attempting to play stream {0} with cmd.exe {1} using media player at {2}.", game, arguments, _userSettings.MediaPlayerPath);
+                Log.InfoFormat("Attempting to play feed {0} with cmd.exe {1} using media player at {2}.", game, arguments, _userSettings.MediaPlayerPath);
                 using (var process = new ProcessUtil("cmd.exe", arguments))
                 {
                     process.Start();
@@ -77,7 +77,7 @@ namespace StreamLauncher.MediaPlayers
                     process.Wait();
                     if (process.ExitCode != 0 || _output.ToString().Contains("error"))
                     {
-                        var message = string.Format("Could not play stream {0}. Reason: {1}", game, _output);
+                        var message = string.Format("Could not play feed {0}. Reason: {1}", game, _output);
                         var exception = new LiveStreamerError(message);                        
                         Log.Error(message, exception);
                         throw exception;
@@ -127,16 +127,16 @@ namespace StreamLauncher.MediaPlayers
 
             if (e.Data.Contains("Starting player"))
             {
-                Log.InfoFormat("Stream {0} started playing.", _game);
+                Log.InfoFormat("Feed {0} started playing.", _game);
                 _messengerService.Send(new BusyStatusMessage(false, "Playing"), MessengerTokens.ChooseFeedsViewModelToken);
             }
             else if (e.Data.Contains("error"))
             {
-                Log.ErrorFormat("Could not play stream {0}. Reason: {1}", _game, e.Data);
+                Log.ErrorFormat("Could not play feed {0}. Reason: {1}", _game, e.Data);
             }
             else if (e.Data.Contains("Stream ended"))
             {                    
-                Log.InfoFormat("Stream {0} ended and player closed.", _game);
+                Log.InfoFormat("Feed {0} ended and player closed.", _game);
             }
             _output.AppendLine(e.Data);
         }

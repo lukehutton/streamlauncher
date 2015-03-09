@@ -156,7 +156,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
             GetLocations();
             SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
-            ShowScores = true;
+            ShowScores = _userSettings.ShowScoring ?? true;
 
             HandleGetStreamsCommand();            
         }

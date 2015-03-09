@@ -120,7 +120,7 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private async Task PlayFeed(int streamId)
         {            
-            BusyText = "Getting stream...";
+            BusyText = "Getting feed...";
             IsBusy = true;
 
             var stream = await _hockeyStreamRepository.GetLiveStream(streamId, _location, _quality);
