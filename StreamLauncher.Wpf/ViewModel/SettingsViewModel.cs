@@ -171,6 +171,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.PreferredEventType = PreferredEventType;
             _userSettings.PreferredLocation = PreferredLocation;
             _userSettings.RtmpTimeOutInSeconds = RtmpTimeOutInSeconds;
+            _userSettings.ShowScoring = ShowScoring;
 
             var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any()) 
