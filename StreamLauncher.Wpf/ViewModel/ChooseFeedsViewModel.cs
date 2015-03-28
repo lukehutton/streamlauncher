@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Windows.Interop;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using log4net;
@@ -62,9 +64,12 @@ namespace StreamLauncher.Wpf.ViewModel
             BusyText = busyStatusMessage.Status;
             IsBusy = busyStatusMessage.IsBusy;
 
-            if (!IsBusy && BusyText == "Playing")
+            if (!IsBusy && (BusyText == "Playing" || BusyText.Contains("Error")))
             {
-                DialogResult = false;
+                if (ComponentDispatcher.IsThreadModal)
+                {
+                    DialogResult = false;
+                }
             }
         }
 
@@ -87,6 +92,8 @@ namespace StreamLauncher.Wpf.ViewModel
             if (ex is AggregateException && ex.InnerException != null)
             {
                 ex = ex.InnerException;
+                IsBusy = false;
+                Log.Error("An exception occurred while playing feed.", ex);
                 if (ex is StreamNotFoundException)
                 {
                     _dialogService.ShowError(string.Format("Live feed for {0} not found", _game), "Error", "OK");
@@ -103,9 +110,13 @@ namespace StreamLauncher.Wpf.ViewModel
                 {
                     ShowSettingsDialog("Media Player Path does not exist.");
                 }
+                else if (ex is TimeoutException)
+                {
+                    _dialogService.ShowError("Timeout exceeded attempting to play feed. Please try again.", "Error", "OK");
+                }
                 else
                 {
-                    Log.Error("An exception occurred while playing stream.", ex);
+                    _dialogService.ShowError("An exception has occurred attempting to play feed. See logs for more details.", "Error", "OK");
                 }
             }
         }
