@@ -15,13 +15,13 @@ namespace StreamLauncher.Api
     public class BaseHockeyStreamsApi
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private const int ApiTimeOutInSecs = 10;
 
         const string BaseUrl = "https://api.hockeystreams.com";
 
         public T Execute<T>(RestRequest request) where T : new()
         {
-            var client = new RestClient { BaseUrl = new Uri(BaseUrl) };            
-
+            var client = new RestClient {BaseUrl = new Uri(BaseUrl), Timeout = ApiTimeOutInSecs*1000};
             LogRequest(request, client);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;

@@ -133,6 +133,7 @@ namespace StreamLauncher.MediaPlayers
             else if (e.Data.Contains("error"))
             {
                 Log.ErrorFormat("Could not play feed {0}. Reason: {1}", _game, e.Data);
+                _messengerService.Send(new BusyStatusMessage(false, "Error playing feed"), MessengerTokens.ChooseFeedsViewModelToken);
             }
             else if (e.Data.Contains("Stream ended"))
             {                    
