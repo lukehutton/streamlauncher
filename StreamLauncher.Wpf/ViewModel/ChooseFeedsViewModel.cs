@@ -64,9 +64,16 @@ namespace StreamLauncher.Wpf.ViewModel
             BusyText = busyStatusMessage.Status;
             IsBusy = busyStatusMessage.IsBusy;
 
-            if (!IsBusy && (BusyText == "Playing" || BusyText.Contains("Error")) && DialogResult != null)
+            if (!IsBusy && (BusyText == "Playing" || BusyText.Contains("Error")))
             {
-                DialogResult = false;
+                try
+                {
+                    DialogResult = false;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Log.Error(ex);
+                }
             }
         }
 
