@@ -22,12 +22,11 @@ namespace StreamLauncher.Api
         public T Execute<T>(RestRequest request) where T : new()
         {
             var client = new RestClient {BaseUrl = new Uri(BaseUrl), Timeout = ApiTimeOutInSecs*1000};
-            LogRequest(request, client);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            var response = client.Execute<T>(request);
-            
+            LogRequest(request, client);
+            var response = Retry.Do(() => RestResponse<T>(request, client), TimeSpan.FromSeconds(1));            
             LogResponse(response);
 
             if (response.ErrorException != null)
@@ -45,6 +44,11 @@ namespace StreamLauncher.Api
                 throw new ApplicationException(string.Format("Error. Api returned {0} status", response.StatusCode));
             }
             return response.Data; // 200 OK
+        }
+
+        private static IRestResponse<T> RestResponse<T>(RestRequest request, RestClient client) where T : new()
+        {
+            return client.Execute<T>(request);
         }
 
         private static void LogResponse<T>(IRestResponse<T> response) where T : new()

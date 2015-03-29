@@ -140,6 +140,7 @@
     <Compile Include="Util\IFileHelper.cs" />
     <Compile Include="Util\IThreadSleeper.cs" />
     <Compile Include="Util\ProcessUtil.cs" />
+    <Compile Include="Util\RetryAction.cs" />
     <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="Util\ThreadSleeper.cs" />
     <Compile Include="Validators\IUserSettingsValidator.cs" />
