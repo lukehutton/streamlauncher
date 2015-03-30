@@ -4,7 +4,6 @@
       <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Styles/Simple Styles.xaml" />
       </ResourceDictionary.MergedDictionaries>
-      <viewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
       <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:StreamLauncher.Wpf.ViewModel" />
     </ResourceDictionary>
   </Application.Resources>
