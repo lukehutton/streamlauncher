@@ -139,7 +139,8 @@ namespace StreamLauncher.Wpf.ViewModel
         }
 
         private void HandleChooseFeedsCommand()
-        {            
+        {
+            if (SelectedStream == null) return;
             var showFeedsViewModel = _viewModelLocator.ChooseFeeds;
             var quality = SelectedQuality == Qualities.First() ? Quality.HD : Quality.SD;
             showFeedsViewModel.Init(SelectedStream.Feeds, SelectedLocation, quality);         
