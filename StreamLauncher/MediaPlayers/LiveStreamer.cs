@@ -38,9 +38,9 @@ namespace StreamLauncher.MediaPlayers
 
         public void Play(string game, string streamSource, Quality quality)
         {
-            if (!_fileHelper.FileExists(_userSettings.LiveStreamerPath))
-            {                
-                var message = string.Format("Live Streamer at path {0} not found.", _userSettings.LiveStreamerPath);
+            if (!_fileHelper.FileExistsCaseSensitive(_userSettings.LiveStreamerPath))
+            {
+                var message = string.Format("Live Streamer at path {0} not found. Livestreamer executable name is case sensitive.", _userSettings.LiveStreamerPath);
                 var exception = new LiveStreamerExecutableNotFound(message);        
                 Log.Error(exception.Message, exception);
                 throw exception;

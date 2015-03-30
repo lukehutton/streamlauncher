@@ -25,9 +25,9 @@ namespace StreamLauncher.Validators
                 yield return "Media Player Path must not be empty.";                
             }
 
-            if (!_fileHelper.FileExists(userSettings.LiveStreamerPath))
+            if (!_fileHelper.FileExistsCaseSensitive(userSettings.LiveStreamerPath))
             {
-                yield return "Livestreamer Path does not exist.";
+                yield return "Livestreamer Path does not exist. Livestreamer executable name is case sensitive.";
 
             }
 
