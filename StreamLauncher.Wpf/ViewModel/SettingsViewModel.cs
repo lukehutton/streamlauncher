@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using StreamLauncher.MediaPlayers;
+using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Services;
 using StreamLauncher.Validators;
 using StreamLauncher.Util;
 using StreamLauncher.Wpf.Infrastructure;
@@ -15,12 +17,18 @@ namespace StreamLauncher.Wpf.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
+        private const string DefaultEventType = "NHL";
+        private const string DefaultLocation = "North America - West";
+        private const int DefaultRtmpTimeOutInSeconds = 5;
+        private const int DefaultRefreshStreamsIntervalInMinutes = 2;
+
         private readonly IUserSettings _userSettings;
         private readonly ILiveStreamer _liveStreamer;
         private readonly IUserSettingsValidator _userSettingsValidator;
         private readonly IStreamLocationRepository _streamLocationRepository;
         private readonly IEnvironmentHelper _environmentHelper;
         private readonly IThreadSleeper _threadSleeper;
+        private readonly IMessengerService _messengerService;
 
         private string _busyText;
         private bool _isBusy;
@@ -36,6 +44,8 @@ namespace StreamLauncher.Wpf.ViewModel
         private int _rtmpTimeOutInSeconds;
         private bool _showScoring;
         private string _preferredQuality;
+        private bool _refreshStreamsEnabled;
+        private int _refreshStreamsIntervalInMinutes;
 
         public AsyncRelayCommand SaveCommand { get; private set; }
         public RelayCommand CancelCommand { get; private set; }
@@ -46,7 +56,8 @@ namespace StreamLauncher.Wpf.ViewModel
             IUserSettingsValidator userSettingsValidator, 
             IStreamLocationRepository streamLocationRepository,
             IEnvironmentHelper environmentHelper,
-            IThreadSleeper threadSleeper)
+            IThreadSleeper threadSleeper, 
+            IMessengerService messengerService)
         {
             _userSettings = userSettings;
             _liveStreamer = liveStreamer;
@@ -54,6 +65,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _streamLocationRepository = streamLocationRepository;
             _environmentHelper = environmentHelper;
             _threadSleeper = threadSleeper;
+            _messengerService = messengerService;
 
             Locations = new ObservableCollection<StreamLocation>();
 
@@ -89,11 +101,33 @@ namespace StreamLauncher.Wpf.ViewModel
 
             MediaPlayerArguments = _userSettings.MediaPlayerArguments ?? Vlc.DefaultArgs;
 
-            PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? "NHL" : _userSettings.PreferredEventType;
-            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
-            RtmpTimeOutInSeconds = _userSettings.RtmpTimeOutInSeconds ?? 5;            
+            PreferredEventType = _userSettings.PreferredEventType.IsNullOrEmpty() ? DefaultEventType : _userSettings.PreferredEventType;
+            PreferredLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? DefaultLocation : _userSettings.PreferredLocation;            
+            RtmpTimeOutInSeconds = _userSettings.RtmpTimeOutInSeconds ?? DefaultRtmpTimeOutInSeconds;            
             ShowScoring = _userSettings.ShowScoring ?? true;            
-            PreferredQuality = _userSettings.PreferredQuality.IsNullOrEmpty() ? Qualities.First() : _userSettings.PreferredQuality;            
+            PreferredQuality = _userSettings.PreferredQuality.IsNullOrEmpty() ? Qualities.First() : _userSettings.PreferredQuality;
+            RefreshStreamsEnabled = _userSettings.RefreshStreamsEnabled ?? true;
+            RefreshStreamsIntervalInMinutes = _userSettings.RefreshStreamsIntervalInMinutes ?? DefaultRefreshStreamsIntervalInMinutes;
+        }
+
+        public int RefreshStreamsIntervalInMinutes
+        {
+            get { return _refreshStreamsIntervalInMinutes; }
+            set
+            {
+                _refreshStreamsIntervalInMinutes = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool RefreshStreamsEnabled
+        {
+            get { return _refreshStreamsEnabled; }
+            set
+            {
+                _refreshStreamsEnabled = value;
+                RaisePropertyChanged();
+            }
         }
 
         public string PreferredQuality
@@ -172,6 +206,8 @@ namespace StreamLauncher.Wpf.ViewModel
             _userSettings.PreferredLocation = PreferredLocation;
             _userSettings.RtmpTimeOutInSeconds = RtmpTimeOutInSeconds;
             _userSettings.ShowScoring = ShowScoring;
+            _userSettings.RefreshStreamsEnabled = RefreshStreamsEnabled;
+            _userSettings.RefreshStreamsIntervalInMinutes = RefreshStreamsIntervalInMinutes;
 
             var brokenRules =_userSettingsValidator.BrokenRules(_userSettings).ToList();
             if (brokenRules.Any()) 
@@ -180,7 +216,9 @@ namespace StreamLauncher.Wpf.ViewModel
                 return;
             }
 
-            await SaveSettingsAndLiveStreamerConfigAsync();            
+            await SaveSettingsAndLiveStreamerConfigAsync();
+
+            _messengerService.Send(new UserSettingsUpdated(), MessengerTokens.StreamsViewModelToken);
         }
 
         private async Task SaveSettingsAndLiveStreamerConfigAsync()

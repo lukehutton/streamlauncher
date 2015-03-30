@@ -53,6 +53,7 @@ namespace StreamLauncher.Wpf.StartUp
                 SimpleIoc.Default.Register<IApplicationDispatcher, ApplicationDispatcher>();
                 SimpleIoc.Default.Register<IFileHelper, FileHelper>();
                 SimpleIoc.Default.Register<IExtractTimeOfDayFromStream, ExtractTimeOfDayFromStream>();
+                SimpleIoc.Default.Register<IPeriodicTaskRunner, PeriodicTaskRunner>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();

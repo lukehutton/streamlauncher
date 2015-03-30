@@ -44,5 +44,11 @@
     <Setting Name="HockeystreamsScoresApiKey" Type="System.String" Scope="Application">
       <Value Profile="(Default)">3560abdc296d1019a8ba8b0d893f07a3</Value>
     </Setting>
+    <Setting Name="RefreshStreamsEnabled" Type="System.Nullable&lt;System.Boolean&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RefreshStreamsIntervalInMinutes" Type="System.Nullable&lt;System.Int32&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

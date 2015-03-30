@@ -103,6 +103,7 @@
     <Compile Include="MediaPlayers\ILiveStreamer.cs" />
     <Compile Include="MediaPlayers\LiveStreamer.cs" />
     <Compile Include="MediaPlayers\Vlc.cs" />
+    <Compile Include="Messages\UserSettingsUpdated.cs" />
     <Compile Include="Messages\AuthenticatedMessage.cs" />
     <Compile Include="Messages\AuthenticateMessage.cs" />
     <Compile Include="Messages\LoginSuccessfulMessage.cs" />
@@ -152,7 +153,9 @@
     <Compile Include="Util\IApplicationDispatcher.cs" />
     <Compile Include="Util\IEnvironmentHelper.cs" />
     <Compile Include="Util\IFileHelper.cs" />
+    <Compile Include="Util\IPeriodicTaskRunner.cs" />
     <Compile Include="Util\IThreadSleeper.cs" />
+    <Compile Include="Util\PeriodicTaskRunner.cs" />
     <Compile Include="Util\ProcessUtil.cs" />
     <Compile Include="Util\RetryAction.cs" />
     <Compile Include="Util\StringExtensions.cs" />

@@ -5,6 +5,7 @@ using Rhino.Mocks;
 using StreamLauncher.MediaPlayers;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
+using StreamLauncher.Services;
 using StreamLauncher.Util;
 using StreamLauncher.Validators;
 using StreamLauncher.Wpf.ViewModel;
@@ -22,6 +23,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IUserSettings UserSettings;
             protected IUserSettingsValidator UserSettingsValidator;
             protected IThreadSleeper ThreadSleeper;
+            protected IMessengerService MessengerService;
             protected ISettingsViewModel ViewModel;
 
             [TestFixtureSetUp]
@@ -33,9 +35,16 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 StreamLocationRepository = MockRepository.GenerateStub<IStreamLocationRepository>();
                 EnvironmentHelper = MockRepository.GenerateStub<IEnvironmentHelper>();
                 ThreadSleeper = MockRepository.GenerateStub<IThreadSleeper>();
+                MessengerService = MockRepository.GenerateStub<IMessengerService>();
 
-                ViewModel = new SettingsViewModel(UserSettings, LiveStreamer, UserSettingsValidator,
-                    StreamLocationRepository, EnvironmentHelper, ThreadSleeper);
+                ViewModel = new SettingsViewModel(
+                    UserSettings,
+                    LiveStreamer, 
+                    UserSettingsValidator,
+                    StreamLocationRepository,
+                    EnvironmentHelper, 
+                    ThreadSleeper,
+                    MessengerService);
             }
         }
 

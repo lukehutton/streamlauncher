@@ -10,6 +10,7 @@ using StreamLauncher.Messages;
 using StreamLauncher.Models;
 using StreamLauncher.Repositories;
 using StreamLauncher.Services;
+using StreamLauncher.Util;
 using StreamLauncher.Wpf.ViewModel;
 
 namespace StreamLauncher.Tests.Unit.ViewModel
@@ -25,6 +26,7 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             protected IStreamLocationRepository StreamLocationRepository;
             protected IUserSettings UserSettings;
             protected IMessengerService MessengerService;
+            protected IPeriodicTaskRunner PeriodicTaskRunner;
             protected IViewModelLocator ViewModelLocator;
 
             protected IStreamsViewModel ViewModel;
@@ -39,8 +41,16 @@ namespace StreamLauncher.Tests.Unit.ViewModel
                 HockeyStreamFilter = MockRepository.GenerateMock<IHockeyStreamFilter>();
                 StreamLocationRepository = MockRepository.GenerateMock<IStreamLocationRepository>();                
                 MessengerService = MockRepository.GenerateMock<IMessengerService>();
-                ViewModel = new StreamsViewModel(HockeyStreamRepository, HockeyStreamFilter, StreamLocationRepository,
-                    UserSettings, DialogService, ViewModelLocator, MessengerService);
+                PeriodicTaskRunner = MockRepository.GenerateMock<IPeriodicTaskRunner>();
+                ViewModel = new StreamsViewModel(
+                    HockeyStreamRepository, 
+                    HockeyStreamFilter,
+                    StreamLocationRepository,
+                    UserSettings, 
+                    DialogService, 
+                    ViewModelLocator, 
+                    MessengerService,
+                    PeriodicTaskRunner);
             }
         }
 
@@ -55,6 +65,8 @@ namespace StreamLauncher.Tests.Unit.ViewModel
 
                 UserSettings.Expect(x => x.PreferredEventType).Return("NHL");
                 UserSettings.Expect(x => x.PreferredLocation).Return("North America - East");
+                UserSettings.Expect(x => x.RefreshStreamsEnabled).Return(true);
+                UserSettings.Expect(x => x.RefreshStreamsIntervalInMinutes).Return(2);
                 StreamLocationRepository.Expect(x => x.GetLocations()).Return(new List<StreamLocation>());
                 HockeyStreamRepository.Expect(x => x.GetLiveStreams(Arg<DateTime>.Is.Anything))
                     .Return(Task.FromResult<IEnumerable<HockeyStream>>(new List<HockeyStream>()));
@@ -102,6 +114,15 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             public void ItShouldSetPrefferedLocation()
             {
                 Assert.That(ViewModel.SelectedLocation, Is.EqualTo("North America - East"));
+            }           
+            
+            [Test]
+            public void ItShouldAutoRefreshStreams()
+            {
+                PeriodicTaskRunner.AssertWasCalled(
+                    x =>
+                        x.Run(Arg<Action>.Is.Anything, Arg<TimeSpan>.Matches(y => y == TimeSpan.FromMinutes(2)),
+                            Arg<CancellationToken>.Is.Anything));
             }
         }    
         
@@ -192,6 +213,31 @@ namespace StreamLauncher.Tests.Unit.ViewModel
             {
                 Assert.That(ViewModel.AllHockeyStreams.First().HomeTeam, Is.EqualTo("*" + ViewModel.FavouriteTeam));
                 Assert.That(ViewModel.AllHockeyStreams.First().IsFavorite, Is.True);
+            }
+        }             
+        
+        [TestFixture]
+        public class WhenHandleSettingsUpdatedMessage : GivenAStreamsViewModel
+        {
+            [TestFixtureSetUp]
+            public void When()
+            {
+                var context = new SynchronizationContext();
+                SynchronizationContext.SetSynchronizationContext(context);
+
+                UserSettings.Expect(x => x.RefreshStreamsEnabled).Return(true);
+                UserSettings.Expect(x => x.RefreshStreamsIntervalInMinutes).Return(2);
+
+                ViewModel.HandleUserSettingsUpdatedMessage(new UserSettingsUpdated());
+            }
+
+            [Test]
+            public void ItShouldAutoRefreshStreams()
+            {
+                PeriodicTaskRunner.AssertWasCalled(
+                    x =>
+                        x.Run(Arg<Action>.Is.Anything, Arg<TimeSpan>.Matches(y => y == TimeSpan.FromMinutes(2)),
+                            Arg<CancellationToken>.Is.Anything));
             }
         }       
     }
