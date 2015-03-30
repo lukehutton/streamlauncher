@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using GalaSoft.MvvmLight;
@@ -55,7 +56,8 @@ namespace StreamLauncher.Wpf.ViewModel
 
         private string _favouriteTeam;
         private string _showScoresText;
-        private HockeyStream _selectedStream;        
+        private HockeyStream _selectedStream;
+        private readonly IPeriodicTaskRunner _periodicTaskRunner;
 
         public StreamsViewModel(
             IHockeyStreamRepository hockeyStreamRepository,
@@ -64,8 +66,8 @@ namespace StreamLauncher.Wpf.ViewModel
             IUserSettings userSettings,
             IDialogService dialogService,
             IViewModelLocator viewModelLocator,
-            IMessengerService messengerService
-            )
+            IMessengerService messengerService, 
+            IPeriodicTaskRunner periodicTaskRunner)
         {
             _hockeyStreamRepository = hockeyStreamRepository;
             _hockeyStreamFilter = hockeyStreamFilter;
@@ -74,6 +76,7 @@ namespace StreamLauncher.Wpf.ViewModel
             _dialogService = dialogService;
             _viewModelLocator = viewModelLocator;
             _messengerService = messengerService;
+            _periodicTaskRunner = periodicTaskRunner;
 
             Streams = new ObservableCollection<HockeyStream>();                        
             Locations = new ObservableCollection<StreamLocation>();
@@ -83,7 +86,15 @@ namespace StreamLauncher.Wpf.ViewModel
             ChooseFeedsCommand = new RelayCommand(HandleChooseFeedsCommand);            
                         
             Messenger.Default.Register<AuthenticatedMessage>(this, HandleAuthenticationSuccessfulMessage);
+            Messenger.Default.Register<UserSettingsUpdated>(this, MessengerTokens.StreamsViewModelToken, HandleUserSettingsUpdatedMessage);
             BindingOperations.CollectionRegistering += BindingOperations_CollectionRegistering;
+        }
+
+        public void HandleUserSettingsUpdatedMessage(UserSettingsUpdated userSettingsUpdated)
+        {
+            if (_userSettings.ShowScoring != null) ShowScores = _userSettings.ShowScoring.Value;
+
+            AutoRefreshStreams();
         }
 
         private void BindingOperations_CollectionRegistering(object sender, CollectionRegisteringEventArgs e)
@@ -159,8 +170,25 @@ namespace StreamLauncher.Wpf.ViewModel
             SelectedLocation = _userSettings.PreferredLocation.IsNullOrEmpty() ? "North America - West" : _userSettings.PreferredLocation;            
             ShowScores = _userSettings.ShowScoring ?? true;
 
-            HandleGetStreamsCommand();            
+            HandleGetStreamsCommand();
+        
+            AutoRefreshStreams();
         }
+
+        private void AutoRefreshStreams()
+        {     
+            if (AutoRefreshStreamsCancelTokenSource != null) AutoRefreshStreamsCancelTokenSource.Cancel();
+
+            if (_userSettings.RefreshStreamsEnabled != null && !_userSettings.RefreshStreamsEnabled.Value) return;
+
+            AutoRefreshStreamsCancelTokenSource = new CancellationTokenSource();
+            if (_userSettings.RefreshStreamsIntervalInMinutes == null) return;
+            _periodicTaskRunner.Run(() => HandleGetStreamsCommand(),
+                TimeSpan.FromMinutes(_userSettings.RefreshStreamsIntervalInMinutes.Value),
+                AutoRefreshStreamsCancelTokenSource.Token);
+        }
+
+        public CancellationTokenSource AutoRefreshStreamsCancelTokenSource { get; set; }
 
         private Task HandleGetStreamsCommand()
         {

@@ -28,5 +28,6 @@ namespace StreamLauncher.Wpf.ViewModel
         ObservableCollection<StreamLocation> Locations { get; set; }
         List<HockeyStream> AllHockeyStreams { get; }
         void HandleAuthenticationSuccessfulMessage(AuthenticatedMessage authenticatedMessage);
+        void HandleUserSettingsUpdatedMessage(UserSettingsUpdated userSettingsUpdated);
     }
 }

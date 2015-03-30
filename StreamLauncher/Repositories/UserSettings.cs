@@ -76,6 +76,18 @@ namespace StreamLauncher.Repositories
             set { Settings.Default.PreferredQuality = value; }
         }
 
+        public bool? RefreshStreamsEnabled
+        {
+            get { return Settings.Default.RefreshStreamsEnabled; }
+            set { Settings.Default.RefreshStreamsEnabled = value; }
+        }
+
+        public int? RefreshStreamsIntervalInMinutes
+        {
+            get { return Settings.Default.RefreshStreamsIntervalInMinutes; }
+            set { Settings.Default.RefreshStreamsIntervalInMinutes = value; }
+        }
+
         public void Save()
         {
             Settings.Default.Save();

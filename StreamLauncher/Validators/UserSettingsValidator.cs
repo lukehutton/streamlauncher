@@ -39,6 +39,11 @@ namespace StreamLauncher.Validators
             if (userSettings.RtmpTimeOutInSeconds < 1)
             {
                 yield return "RTMP Timeout (seconds) must be greater than 0.";
+            }            
+            
+            if (userSettings.RefreshStreamsIntervalInMinutes < 1)
+            {
+                yield return "Auto-refresh Interval (minutes) must be greater than 0.";
             }
         }         
     }

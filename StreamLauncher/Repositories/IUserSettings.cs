@@ -14,6 +14,8 @@
         int? RtmpTimeOutInSeconds { get; set; }
         bool? ShowScoring { get; set; }
         string PreferredQuality { get; set; }
+        bool? RefreshStreamsEnabled { get; set; }
+        int? RefreshStreamsIntervalInMinutes { get; set; }
         void Save();
     }
 }
