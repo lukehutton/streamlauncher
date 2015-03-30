@@ -38,7 +38,7 @@ namespace StreamLauncher.Tests.Unit.Validators
                     MediaPlayerPath = "media player",
                     RtmpTimeOutInSeconds = -1
                 };
-                FileHelper.Expect(x => x.FileExists(settings.LiveStreamerPath)).Return(true);
+                FileHelper.Expect(x => x.FileExistsCaseSensitive(settings.LiveStreamerPath)).Return(true);
                 FileHelper.Expect(x => x.FileExists(settings.MediaPlayerPath)).Return(true);
                 _brokenRules = UserSettingsValidator.BrokenRules(settings);
             }
