@@ -51,8 +51,8 @@ How to install
 *Tested on both Windows 7 and Windows 8.1 x64 based systems.
 
 1. Install prequisites above: 
-  1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.11.1.
-  2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.1.5. (Alternatively, try [MPC-HC](http://mpc-hc.org/) or [mplayer2](http://www.mplayer2.org/))
+  1. Install [Livestreamer](http://livestreamer.tanuki.se/en/latest/install.html#windows-binaries) bundled with RTMPDump (not .zip installation). Tested with v1.12.1.
+  2. Install [VLC Media Player](http://www.videolan.org/vlc/index.html). Tested with v2.2.1. (Alternatively, try [MPC-HC](http://mpc-hc.org/) or [mplayer2](http://www.mplayer2.org/))
 2. Download and install latest version in [downloads](https://github.com/lukehutton/streamlauncher/releases)   
   1. Download StreamLauncher.Wpf.zip
   2. Unzip to any directory
